@@ -10,7 +10,7 @@ export default function OnboardingSequence({ onComplete }) {
     const questions = [
         { key: 'name', type: 'text', q: "First, what should we call you?" },
         { key: 'age', type: 'number', q: "How old are you?" },
-        { key: 'stream', type: 'radio', q: "What's your current academic stream?", options: ['Science', 'Commerce', 'Arts', 'Engineering', 'Other'] },
+        { key: 'stream', type: 'radio', q: "What's your current academic stream?", options: ['Science', 'Commerce', 'Arts', 'Engineering','' ,'Other'] },
         { key: 'interests', type: 'checkbox', q: "Which subjects spark your interest? (Pick a few)", options: ['Mathematics', 'Physics', 'Computer Science', 'Design', 'Business', 'Biology'] },
         { key: 'projectExperience', type: 'radio', q: "Have you worked on any personal or academic projects?", options: ['Yes, a few', 'Just getting started', 'No, not yet'] },
         { key: 'teamPreference', type: 'radio', q: "Do you prefer working in a team or independently?", options: ['In a Team', 'Independently', 'A bit of both'] },

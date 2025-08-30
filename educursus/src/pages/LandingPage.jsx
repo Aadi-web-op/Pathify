@@ -1,65 +1,113 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { AnimatedText } from '../components/AnimatedText';
-import { playFuturisticSound } from '../hooks/useSound';
-import { EducursusLogo } from '../assets/icons';
 
-export default function LandingPage({ startOnboarding }) {
-    const featureSections = [
-        { title: "Personalized Onboarding.", description: "Answer a few quick questions about your skills and interests. Our AI uses this information to build a profile that understands your unique starting point.", visual: () => <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 300 }}><svg width="200" height="200" viewBox="0 0 200 200"><path d="M50 150 Q100 50 150 150" stroke="var(--accent)" strokeWidth="4" fill="none" strokeLinecap="round"/><circle cx="50" cy="150" r="8" fill="var(--accent-dark)"/><circle cx="150" cy="150" r="8" fill="var(--accent-dark)"/><circle cx="100" cy="93" r="12" fill="var(--bg)" stroke="var(--accent-dark)" strokeWidth="4"/></svg></motion.div> },
-        { title: "AI-Curated Career Paths.", description: "Receive career suggestions perfectly aligned with your profile. Discover roles you might not have considered and see how your skills map to real-world jobs.", visual: () => <motion.div whileHover={{ scale: 1.1, rotate: -5 }} transition={{ type: "spring", stiffness: 300 }}><svg width="200" height="200" viewBox="0 0 200 200"><rect x="40" y="40" width="120" height="120" rx="10" fill="var(--bg)" stroke="var(--accent)" strokeWidth="4"/><path d="M70 70h60M70 100h60M70 130h40" stroke="var(--accent-dark)" strokeWidth="4" strokeLinecap="round"/></svg></motion.div> },
-        { title: "Dynamic Learning Roadmaps.", description: "Once you choose a path, our AI generates a step-by-step learning roadmap. It's a clear plan from foundation to expert, broken down into manageable phases.", visual: () => <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 300 }}><svg width="200" height="200" viewBox="0 0 200 200"><path d="M40 60h120M40 100h120M40 140h120" stroke="#CBD5E1" strokeWidth="4" strokeLinecap="round"/><circle cx="40" cy="60" r="8" fill="var(--accent-dark)"/><circle cx="80" cy="100" r="8" fill="var(--accent-dark)"/><circle cx="40" cy="140" r="8" fill="var(--accent-dark)"/></svg></motion.div> },
-        { title: "Track Your Progress.", description: "Check off skills as you learn them and visualize your growth with our skill radar. See how close you are to your goal and stay motivated on your journey.", visual: () => <motion.div whileHover={{ scale: 1.1, rotate: -5 }} transition={{ type: "spring", stiffness: 300 }}><svg width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="60" fill="none" stroke="#CBD5E1" strokeWidth="4"/><path d="M100 100 L 160 100 A 60 60 0 0 1 100 40 Z" fill="var(--accent)" fillOpacity="0.7"/></svg></motion.div> }
-    ];
+// --- Mock Implementations (for demonstration) ---
+const callGeminiAPI = async (prompt) => {
+    console.log("Calling Gemini with prompt:", prompt);
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API delay
+    return "Based on your profile, you have a strong analytical mindset suited for tech roles. Your interest in both Computer Science and team collaboration suggests a great potential in fields like software engineering or product management. Keep exploring your project ideas!";
+};
+
+const GeminiLoader = () => <div className="text-accent-text">Analyzing your profile...</div>;
+
+const AITypingEffect = ({ text }) => {
+    // A simple component to display text, a real one would have a typing effect.
+    return <p className="text-center text-lg text-slate-300">{text}</p>;
+};
+
+const playFuturisticSound = (sound) => console.log(`Playing sound: ${sound || 'click'}`);
+
+const LogOutIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
+);
+// --- End Mock Implementations ---
+
+
+export default function Dashboard({ profile, progress, onLogout }) {
+    const [analysis, setAnalysis] = useState('');
+    const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
+    const [level, setLevel] = useState('Explorer');
+
+    // If profile data is not yet available, show a loading state.
+    // This prevents errors from trying to access properties of `undefined`.
+    if (!profile || !progress) {
+        return (
+            <div className="w-full h-full flex items-center justify-center p-8"><GeminiLoader /></div>
+        );
+    }
+
+    useEffect(() => {
+        const completedCount = Object.values(progress).filter(p => p).length;
+        if (completedCount > 15) setLevel('Industry Ready');
+        else if (completedCount > 8) setLevel('Skilled');
+        else setLevel('Explorer');
+    }, [progress]);
+
+    const handleAnalysis = async () => {
+        playFuturisticSound();
+        setIsLoadingAnalysis(true);
+        setAnalysis('');
+        const prompt = `Analyze this student profile and provide a short, encouraging summary (2-3 sentences) of their potential strengths and direction. Profile: Age: ${profile.age}, Stream: ${profile.stream}, Interests: ${profile.interests.join(', ')}, Career Interests: ${profile.careerInterests.join(', ')}, Project Experience: ${profile.projectExperience}, Team Preference: ${profile.teamPreference}, Problem Solving Style: ${profile.problemSolvingStyle}, 5-year Goal: ${profile.longTermGoal}.`;
+        try {
+            const result = await callGeminiAPI(prompt);
+            setAnalysis(result);
+        } catch (error) {
+            setAnalysis("Sorry, I couldn't generate an analysis at this moment.");
+        } finally {
+            setIsLoadingAnalysis(false);
+        }
+    };
+
+    const handleLogout = () => {
+        playFuturisticSound('logout');
+        // The `onLogout` prop is a function passed down from the parent component (e.g., App.jsx).
+        // When this button is clicked, we call this function to tell the parent component
+        // to handle the logout logic, which should include switching the view back to the LandingPage.
+        if (onLogout) {
+            onLogout();
+        }
+    };
 
     return (
-        <div className="w-full">
-            <header className="fixed top-0 left-0 right-0 z-10 bg-white/50 dark:bg-slate-900/50 backdrop-blur-lg">
-                <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <EducursusLogo />
-                        <span className="font-bold text-xl text-black dark:text-text-primary">Educursus</span>
+        <div className="relative p-4 md:p-8">
+            <motion.button
+                onClick={handleLogout}
+                whileHover={{ scale: 1.05, rotate: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="absolute top-4 right-4 z-10 flex items-center gap-2 bg-slate-700/50 hover:bg-slate-600/70 text-slate-300 font-semibold py-2 px-4 rounded-lg border border-slate-600 transition-colors"
+                aria-label="Logout"
+            >
+                <LogOutIcon />
+                Logout
+            </motion.button>
+
+            <h1 className="text-4xl font-bold text-black dark:text-text-primary mb-2">Welcome back, <span className="text-accent-text">{profile.name}</span>!</h1>
+            <p className="text-text-secondary mb-8">Your personalized career console is ready. Let's explore your future.</p>
+            <div className="grid md:grid-cols-3 gap-8">
+                <div className="holographic-card p-6 rounded-2xl md:col-span-2">
+                    <h2 className="text-2xl font-bold text-accent-text-dark mb-4">Student Profile</h2>
+                    <div className="grid grid-cols-2 gap-4 text-black dark:text-text-primary">
+                        <p><strong>Age:</strong> {profile.age}</p>
+                        <p><strong>Stream:</strong> {profile.stream}</p>
+                        <p><strong>Learning Style:</strong> {profile.learningStyle || 'N/A'}</p>
+                        <p><strong>Work Env:</strong> {profile.workEnv || 'N/A'}</p>
                     </div>
-                    <div className="hidden md:flex items-center gap-8 text-text-secondary font-semibold">
-                        <a href="#features" className="hover:text-accent-text transition-colors">Features</a>
-                        <a href="#" className="hover:text-accent-text transition-colors">FAQ</a>
-                        <a href="#" className="hover:text-accent-text transition-colors">Contact</a>
-                    </div>
-                </nav>
-            </header>
-            <main>
-                <section className="min-h-screen flex flex-col items-center justify-center text-center p-4 pt-20">
-                    <AnimatedText text="Architect Your Future." el="h1" className="text-5xl md:text-7xl font-extrabold mb-4 text-black dark:text-text-primary" />
-                    <AnimatedText text="Educursus is your personal AI co-pilot, transforming your interests into a clear, actionable career roadmap. Stop guessing, start building." el="p" className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto mb-8" />
-                    <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration: 0.5, delay: 1.5}}>
-                        <button onClick={() => { startOnboarding(); playFuturisticSound(); }} className="primary-btn px-10 py-4 text-lg">
-                            Calibrate My Career Path
-                        </button>
-                    </motion.div>
-                </section>
-                <section id="features" className="py-20">
-                    {featureSections.map((feature, index) => (
-                        <div key={index} className={`container mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-12 ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                            <motion.div initial={{opacity: 0, x: -50}} whileInView={{opacity: 1, x: 0}} viewport={{ once: true, amount: 0.5 }} transition={{duration: 0.6}} className="md:w-1/2 flex justify-center">
-                                <feature.visual />
-                            </motion.div>
-                            <div className="md:w-1/2">
-                                <AnimatedText text={feature.title} el="h2" className="text-3xl md:text-4xl font-extrabold mb-4 text-black dark:text-text-primary" />
-                                <AnimatedText text={feature.description} el="p" className="text-text-secondary text-lg" />
-                            </div>
-                        </div>
-                    ))}
-                </section>
-                <section className="text-center py-20 px-4">
-                    <AnimatedText text="Ready to Build Your Future?" el="h2" className="text-4xl md:text-5xl font-extrabold mb-4 text-black dark:text-text-primary" />
-                    <AnimatedText text="Your personalized career plan is just a few clicks away." el="p" className="text-lg text-text-secondary max-w-xl mx-auto mb-8" />
-                    <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{duration: 0.5, delay: 0.8}}>
-                        <button onClick={() => { startOnboarding(); playFuturisticSound(); }} className="primary-btn px-12 py-4 text-xl">
-                            Start Now For Free
-                        </button>
-                    </motion.div>
-                </section>
-            </main>
+                </div>
+                <div className="holographic-card p-6 rounded-2xl flex flex-col justify-center items-center">
+                    <h2 className="text-xl font-bold text-accent-text-dark mb-2">Your Level</h2>
+                    <p className="text-3xl font-extrabold text-accent-text">{level}</p>
+                    <p className="text-sm text-text-secondary mt-1">{Object.values(progress).filter(p => p).length} skills completed</p>
+                </div>
+                <div className="holographic-card p-8 rounded-2xl flex flex-col justify-center items-center min-h-[150px] md:col-span-3">
+                    <h2 className="text-2xl font-bold text-accent-text-dark mb-4">AI-Powered Profile Analysis ✨</h2>
+                    {isLoadingAnalysis ? <GeminiLoader /> : analysis ? ( <AITypingEffect text={analysis} /> ) : ( <button onClick={handleAnalysis} className="primary-btn px-6 py-3">Generate My Analysis</button> )}
+                </div>
+            </div>
         </div>
     );
 }
+
