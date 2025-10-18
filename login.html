@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="images/logo.png">
     <title>Login & Sign Up</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -155,7 +153,6 @@
 </head>
 <body class="flex items-center justify-center min-h-screen p-4 signup-bg">
 
-    <!-- Background shapes container -->
     <ul class="background-shapes">
         <li></li>
         <li></li>
@@ -169,20 +166,17 @@
         <li></li>
     </ul>
 
-    <!-- Main container for the authentication card -->
     <div class="form-container w-full max-w-md p-8 space-y-8 rounded-2xl shadow-2xl">
         
-        <!-- Wrapper for positioning the two forms -->
         <div class="relative overflow-hidden min-h-[560px]">
 
-            <!-- Sign Up Form -->
             <div id="signup-form" class="form-wrapper form-visible">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold text-gray-800">Create Account</h1>
                     <p class="mt-2 text-sm text-gray-600">Join us and start your journey today.</p>
                 </div>
 
-                <form class="mt-8 space-y-6" id="signup-form-element">
+                <form class="mt-8 space-y-6" id="signup-form-element" onsubmit="return false;">
                     <div class="space-y-4 rounded-md">
                         <div class="interactive-element rounded-lg">
                             <label for="signup-name" class="sr-only">Full Name</label>
@@ -199,14 +193,15 @@
                     </div>
 
                     <div>
-                         <button type="button" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out" data-redirect ="questions.html">
+                         <button type="button" id="signup-submit-btn" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
                             <span class="btn-text">Sign Up</span>
                             <span class="loader hidden"></span>
                          </button>
                     </div>
                 </form>
+                
+                <p id="signup-error-message" class="text-center text-red-600 font-medium mt-4 hidden"></p>
 
-                <!-- ... Social Login and switcher link ... -->
                 <div class="mt-6">
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
@@ -217,7 +212,6 @@
                         </div>
                     </div>
                     <div class="mt-6 grid grid-cols-3 gap-3">
-                        <!-- Google Button -->
                         <div>
                             <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign up with Google</span>
@@ -229,7 +223,6 @@
                                 </svg>
                             </a>
                         </div>
-                        <!-- Github Button -->
                         <div>
                             <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign up with GitHub</span>
@@ -238,7 +231,6 @@
                                 </svg>
                             </a>
                         </div>
-                        <!-- LinkedIn Button -->
                         <div>
                            <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign up with LinkedIn</span>
@@ -257,13 +249,12 @@
                 </p>
             </div>
 
-            <!-- Login Form -->
             <div id="login-form" class="form-wrapper form-hidden w-full">
                 <div class="text-center">
                     <h1 class="text-3xl font-bold text-gray-800">Welcome Back!</h1>
                     <p class="mt-2 text-sm text-gray-600">Sign in to continue to your account.</p>
                 </div>
-                 <form class="mt-8 space-y-6" id="login-form-element">
+                 <form class="mt-8 space-y-6" id="login-form-element" onsubmit="return false;">
                     <div class="space-y-4 rounded-md">
                         <div class="interactive-element rounded-lg">
                             <label for="login-email" class="sr-only">Email address</label>
@@ -285,13 +276,15 @@
                     </div>
 
                     <div>
-                        <button type="button" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out" data-redirect="dashboard.html">
+                        <button type="button" id="login-submit-btn" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
                            <span class="btn-text">Sign In</span>
                            <span class="loader hidden"></span>
                         </button>
                     </div>
                 </form>
-                <!-- ... Social Login and switcher link ... -->
+
+                <p id="login-error-message" class="text-center text-red-600 font-medium mt-4 hidden"></p>
+
                 <div class="mt-6">
                      <div class="relative">
                         <div class="absolute inset-0 flex items-center">
@@ -302,8 +295,7 @@
                         </div>
                     </div>
                      <div class="mt-6 grid grid-cols-3 gap-3">
-                         <!-- Google Button -->
-                        <div>
+                         <div>
                             <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign in with Google</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -314,7 +306,6 @@
                                 </svg>
                             </a>
                         </div>
-                        <!-- Github Button -->
                         <div>
                             <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign in with GitHub</span>
@@ -323,7 +314,6 @@
                                 </svg>
                             </a>
                         </div>
-                        <!-- LinkedIn Button -->
                         <div>
                            <a href="#" class="w-full social-btn inline-flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition duration-150 ease-in-out">
                                 <span class="sr-only">Sign in with LinkedIn</span>
@@ -345,12 +335,19 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Form switching logic ---
-            const signupForm = document.getElementById('signup-form');
-            const loginForm = document.getElementById('login-form');
-            const showLoginBtn = document.getElementById('show-login');
-            const showSignupBtn = document.getElementById('show-signup');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Base URL for your API ---
+        const API_URL = 'http://127.0.0.1:8000'; // Your FastAPI server
+
+        // --- Get Error Message Elements ---
+        const signupErrorEl = document.getElementById('signup-error-message');
+        const loginErrorEl = document.getElementById('login-error-message');
+
+        // --- Form switching logic (KEPT AS-IS) ---
+        const signupForm = document.getElementById('signup-form');
+        const loginForm = document.getElementById('login-form');
+        const showLoginBtn = document.getElementById('show-login');
+        const showSignupBtn = document.getElementById('show-signup');
 
         showLoginBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -376,34 +373,125 @@
             }, 100);
         });
 
-        // --- Form submission and redirection logic ---
-        document.querySelectorAll('.submit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const form = button.closest('form');
-                // The form check is optional, but good for validation
-                if (form && form.checkValidity()) {
-                    e.preventDefault(); // Still needed to prevent form submission
+        // --- UPDATED: Sign Up Form Logic ---
+        const signupButton = document.getElementById('signup-submit-btn');
+        signupButton.addEventListener('click', async (e) => {
+            e.preventDefault();
 
-                    const btnText = button.querySelector('.btn-text');
-                    const loader = button.querySelector('.loader');
-                    const redirectUrl = button.dataset.redirect;
+            // Clear old errors
+            signupErrorEl.textContent = '';
+            signupErrorEl.classList.add('hidden');
 
-                    btnText.classList.add('hidden');
-                    loader.classList.remove('hidden');
-                    button.disabled = true;
+            // Find the button's text and loader spans
+            const btnText = signupButton.querySelector('.btn-text');
+            const loader = signupButton.querySelector('.loader');
 
-                    // Simulate a network request
-                    setTimeout(() => {
-                        // After the delay, redirect the user
-                        if (redirectUrl) {
-                            window.location.href = redirectUrl;
-                        }
-                    }, 1000); // 2-second delay
+            // Show loader and disable button
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+            signupButton.disabled = true;
+
+            // Get form data
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            // NOTE: We are ignoring the 'Full Name' field for now
+            // const name = document.getElementById('signup-name').value;
+
+            const userData = {
+                email: email,
+                password: password
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/register/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.status === 201) {
+                    // Success! No alert, just switch forms.
+                    showLoginBtn.click(); // Programmatically switch to the login form
+                } else {
+                    // Show backend error
+                    const errorData = await response.json();
+                    signupErrorEl.textContent = `Error: ${errorData.detail || 'Unknown error'}`;
+                    signupErrorEl.classList.remove('hidden');
                 }
-            });
+            } catch (error) {
+                // Show network/server error
+                console.error('Error:', error);
+                signupErrorEl.textContent = 'Oops! Something went wrong. Is the server running?';
+                signupErrorEl.classList.remove('hidden');
+            } finally {
+                // Hide loader and re-enable button
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
+                signupButton.disabled = false;
+            }
+        });
+
+        // --- UPDATED: Login Form Logic ---
+        const loginButton = document.getElementById('login-submit-btn');
+        loginButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            // Clear old errors
+            loginErrorEl.textContent = '';
+            loginErrorEl.classList.add('hidden');
+
+            // Find the button's text and loader spans
+            const btnText = loginButton.querySelector('.btn-text');
+            const loader = loginButton.querySelector('.loader');
+
+            // Show loader and disable button
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+            loginButton.disabled = true;
+
+            // Get form data
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // For login, we send FormData as required by OAuth2PasswordRequestForm
+            const formData = new FormData();
+            formData.append('username', email); // API expects 'username'
+            formData.append('password', password);
+
+            try {
+                const response = await fetch(`${API_URL}/api/login/`, {
+                    method: 'POST',
+                    body: formData // No Content-Type header needed, browser sets it
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    
+                    // Save the token to localStorage
+                    localStorage.setItem('userToken', data.access_token);
+
+                    // Success! No alert, just redirect.
+                    const redirectUrl = loginButton.dataset.redirect || 'dashboard.html'; // Or 'index.html', etc.
+                    window.location.href = redirectUrl;
+                } else {
+                    // Show backend error
+                    const errorData = await response.json();
+                    loginErrorEl.textContent = `Oops! ${errorData.detail || 'Incorrect email or password'}`;
+                    loginErrorEl.classList.remove('hidden');
+                }
+            } catch (error) {
+                // Show network/server error
+                console.error('Error:', error);
+                loginErrorEl.textContent = 'Yikes! Could not connect. Check your internet.';
+                loginErrorEl.classList.remove('hidden');
+            } finally {
+                // Hide loader and re-enable button
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
+                loginButton.disabled = false;
+            }
         });
     });
     </script>
-</body>
+    </body>
 </html>
-
