@@ -377,6 +377,35 @@
         .question-container.active {
             display: block;
         }
+        
+        /* [NEW] Small loading spinner for dynamic questions */
+        .mini-loader-container {
+            display: none; /* Hidden by default */
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+        }
+        .mini-loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .mini-loader-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
 
         .question-title {
             font-size: 1.5rem;
@@ -771,9 +800,7 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        /* @keyframes spin defined above */
 
         .loading-title {
             font-size: 1.25rem;
@@ -908,9 +935,9 @@
                 <div class="logo-text">Pathify</div>
             </div>
             <div class="progress-info">
-                <div class="progress-text" id="headerText">Question <span id="questionNumber">1</span> of 12</div>
+                <div class="progress-text" id="headerText">Question <span id="questionNumber">1</span> of 4</div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="progress-bar" id="progressBar" style="width: 11.1111%;"></div>
                 </div>
             </div>
         </div>
@@ -962,29 +989,38 @@
             <!-- Question Container -->
             <div id="questionContainer" class="question-container">
                 <div class="card">
-                    <h2 id="questionTitle" class="question-title"></h2>
-                    <p id="questionSubtitle" class="question-subtitle"></p>
+                    <!-- [NEW] Mini-loader for dynamic questions -->
+                    <div id="miniLoader" class="mini-loader-container" style="display: none;">
+                        <div class="mini-loader"></div>
+                        <p class="mini-loader-text">Personalizing your next questions...</p>
+                    </div>
 
-                    <!-- Multiple Choice Options -->
-                    <div id="optionsContainer" class="options-container"></div>
+                    <!-- Question Content (will be hidden during mini-load) -->
+                    <div id="questionContent" style="display: block;">
+                        <h2 id="questionTitle" class="question-title"></h2>
+                        <p id="questionSubtitle" class="question-subtitle"></p>
 
-                    <!-- Scale Container -->
-                    <div id="scaleContainer" class="scale-container">
-                        <div class="scale-labels">
-                            <span class="scale-label">Strongly Disagree</span>
-                            <span class="scale-label">Strongly Agree</span>
+                        <!-- Multiple Choice Options -->
+                        <div id="optionsContainer" class="options-container" style="display: none;"></div>
+
+                        <!-- Scale Container -->
+                        <div id="scaleContainer" class="scale-container">
+                            <div class="scale-labels">
+                                <span class="scale-label">Strongly Disagree</span>
+                                <span class="scale-label">Strongly Agree</span>
+                            </div>
+                            <div class="scale-buttons" id="scaleButtons"><button class="scale-btn" data-value="1">1</button><button class="scale-btn" data-value="2">2</button><button class="scale-btn" data-value="3">3</button><button class="scale-btn" data-value="4">4</button><button class="scale-btn" data-value="5">5</button></div>
                         </div>
-                        <div class="scale-buttons" id="scaleButtons"></div>
                     </div>
                 </div>
 
                 <!-- Navigation -->
                 <div class="navigation">
-                    <button id="prevBtn" class="btn btn-outline" disabled>
+                    <button id="prevBtn" class="btn btn-outline" disabled="">
                         <i class="fas fa-arrow-left"></i>
                         Previous
                     </button>
-                    <button id="nextBtn" class="btn btn-primary" disabled>
+                    <button id="nextBtn" class="btn btn-primary" disabled="">
                         Next
                         <i class="fas fa-arrow-right"></i>
                     </button>
@@ -1010,7 +1046,7 @@
                     <p class="selection-subtitle">Select 1-2 careers that interest you most to continue your journey</p>
 
                     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <button id="continueBtn" class="btn btn-primary btn-lg" disabled>
+                        <button id="continueBtn" class="btn btn-primary btn-lg" disabled="">
                             <i class="fas fa-arrow-right"></i>
                             Continue with Selected Careers
                         </button>
@@ -1028,7 +1064,7 @@
         </div>
     </main>
 
-    <!-- Loading Screen -->
+    <!-- Loading Screen (for final results) -->
     <div id="loadingScreen" class="loading-screen">
         <div class="loading-content">
             <div class="loading-spinner">
@@ -1050,10 +1086,14 @@
     </div>
 
     <script>
-        // Question Bank
-        const questionBank = [
+        // --- [NEW] API URL ---
+        const API_URL = `${window.location.protocol}//${window.location.host}`;
+
+        // --- [NEW] Static Question Bank ---
+        const STATIC_QUESTIONS = [
             {
                 id: 1,
+                key: "age", // Used for the API
                 title: "What is your age range?",
                 subtitle: "This helps us provide age-appropriate career guidance.",
                 type: "multiple-choice",
@@ -1061,6 +1101,7 @@
             },
             {
                 id: 2,
+                key: "education",
                 title: "What is your highest level of education?", 
                 subtitle: "This gives us insight into your academic background.",
                 type: "multiple-choice",
@@ -1068,6 +1109,7 @@
             },
             {
                 id: 3,
+                key: "experience",
                 title: "How many years of professional work experience do you have?",
                 subtitle: "Internships and part-time roles count!",
                 type: "multiple-choice",
@@ -1075,73 +1117,71 @@
             },
             {
                 id: 4,
+                key: "curiosity",
                 title: "I am curious about many different things and enjoy exploring new ideas.",
                 subtitle: "Rate how much you agree with this statement.",
                 type: "scale"
-            },
+            }
+        ];
+        
+        // [NEW] Fallback questions if the Gemini API fails
+        const FALLBACK_DYNAMIC_QUESTIONS = [
             {
                 id: 5,
-                title: "I am well-organized, reliable, and I pay close attention to details.",
+                key: "analytical",
+                title: "I enjoy solving complex logical puzzles or math problems.",
                 subtitle: "Rate how much you agree with this statement.",
                 type: "scale"
             },
             {
                 id: 6,
-                title: "I feel energized in social situations and enjoy being around people.",
-                subtitle: "Rate how much you agree with this statement.",
-                type: "scale"
+                key: "creative",
+                title: "Which of these creative activities do you enjoy the most?",
+                subtitle: "Select the one that best describes you.",
+                type: "multiple-choice",
+                options: ["Visual design (drawing, web design)", "Writing or storytelling", "Building or crafting new things", "Music or performance", "I'm not very creative"]
             },
             {
                 id: 7,
-                title: "I enjoy helping others and tend to be compassionate and cooperative.",
+                key: "social",
+                title: "I prefer working in a team rather than working alone.",
                 subtitle: "Rate how much you agree with this statement.",
                 type: "scale"
             },
             {
                 id: 8,
-                title: "I tend to stay calm and emotionally stable, even in stressful situations.",
-                subtitle: "Rate how much you agree with this statement.",
-                type: "scale"
+                key: "work_preference",
+                title: "What kind of tasks do you find most satisfying?",
+                subtitle: "Choose the one you prefer.",
+                type: "multiple-choice",
+                options: ["Organizing and planning", "Analyzing data and finding patterns", "Helping and teaching others", "Leading a team or project"]
             },
             {
                 id: 9,
-                title: "Which of these technical areas best represents your strongest skill?",
-                subtitle: "Think about what you are best at or enjoy doing most.",
-                type: "multiple-choice",
-                options: ["Programming", "Data Analysis", "Project Management", "Design (Graphic, UI/UX)", "Writing/Content Creation", "Office Software (Excel, etc.)"]
-            },
-            {
-                id: 10,
-                title: "And what about your strongest soft skill?",
-                subtitle: "This is just as important as your technical abilities.",
-                type: "multiple-choice",
-                options: ["Problem-solving", "Communication", "Creativity", "Leadership", "Teamwork"]
-            },
-            {
-                id: 11,
-                title: "Which industry are you most interested in working in?",
-                subtitle: "This helps us match you to the right environment.",
-                type: "multiple-choice",
-                options: ["Technology", "Healthcare", "Finance", "Education", "Creative & Design", "Sales", "Other"]
-            },
-            {
-                id: 12,
-                title: "What is your ideal work style?",
-                subtitle: "Let us know how you prefer to work.",
-                type: "multiple-choice",
-                options: ["Fully Remote", "In an office (On-site)", "A mix of both (Hybrid)", "Primarily Independent Work"]
+                key: "tech_interest",
+                title: "How interested are you in the latest technology trends (like AI, Web3)?",
+                subtitle: "Rate your level of interest.",
+                type: "scale"
             }
         ];
 
+
+        // --- [NEW] Dynamic Question Bank (will be filled by AI) ---
+        let dynamicQuestions = [];
+        let allQuestions = [...STATIC_QUESTIONS]; // Start with static questions
+
         // State Management
         let currentQuestionIndex = 0;
-        let userResponses = {};
+        let userResponses = {}; // Will store all answers by 'key'
         let modelPredictions = null;
         let selectedCareers = new Set();
+        let authToken = null; // Will store the JWT
 
         // DOM Elements
         const welcomeScreen = document.getElementById('welcomeScreen');
         const questionContainer = document.getElementById('questionContainer');
+        const questionContent = document.getElementById('questionContent'); // Wrapper for question
+        const miniLoader = document.getElementById('miniLoader'); // Dynamic question loader
         const resultsSection = document.getElementById('resultsSection');
         const loadingScreen = document.getElementById('loadingScreen');
         const startAssessmentBtn = document.getElementById('startAssessment');
@@ -1169,16 +1209,20 @@
         });
 
         function initializeApp() {
+            // [NEW] Auth Guard
+            authToken = localStorage.getItem('userToken');
+            if (!authToken) {
+                console.log("No token found, redirecting to login.");
+                window.location.href = '/login';
+                return; // Stop execution
+            }
+
             startAssessmentBtn.addEventListener('click', startAssessment);
             prevBtn.addEventListener('click', previousQuestion);
             nextBtn.addEventListener('click', nextQuestion);
             continueBtn.addEventListener('click', finalizeSelection);
             retakeBtn.addEventListener('click', retakeAssessment);
-
-            // Initialize robot assistant
             robotAssistant.addEventListener('click', handleRobotClick);
-
-            // Create scale buttons once
             createScaleButtons();
         }
 
@@ -1189,7 +1233,7 @@
                 button.className = 'scale-btn';
                 button.textContent = i;
                 button.setAttribute('data-value', i);
-                button.addEventListener('click', () => selectScale(i));
+                button.addEventListener('click', (e) => selectScale(e.target));
                 scaleButtons.appendChild(button);
             }
         }
@@ -1202,11 +1246,12 @@
 
         function loadQuestion(index) {
             currentQuestionIndex = index;
-            const question = questionBank[index];
+            const question = allQuestions[index];
 
             // Update progress
             questionNumber.textContent = index + 1;
-            progressBar.style.width = `${((index + 1) / questionBank.length) * 100}%`;
+            headerText.textContent = `Question ${index + 1} of ${allQuestions.length}`;
+            progressBar.style.width = `${((index + 1) / allQuestions.length) * 100}%`;
 
             // Load question content
             questionTitle.textContent = question.title;
@@ -1214,33 +1259,27 @@
 
             // Clear and setup UI
             optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'none';
+            scaleContainer.classList.remove('active');
 
             if (question.type === 'multiple-choice') {
                 optionsContainer.style.display = 'flex';
-                scaleContainer.classList.remove('active');
-
                 question.options.forEach(option => {
                     const button = document.createElement('button');
                     button.className = 'option-btn';
                     button.textContent = option;
-
-                    // Check if previously selected
-                    if (userResponses[question.id] === option) {
+                    if (userResponses[question.key] === option) {
                         button.classList.add('selected');
                     }
-
-                    button.addEventListener('click', () => selectOption(question.id, option));
+                    button.addEventListener('click', () => selectOption(question.key, option));
                     optionsContainer.appendChild(button);
                 });
             } else if (question.type === 'scale') {
-                optionsContainer.style.display = 'none';
                 scaleContainer.classList.add('active');
-
-                // Reset scale buttons
                 const buttons = scaleButtons.querySelectorAll('.scale-btn');
                 buttons.forEach(btn => {
                     btn.classList.remove('selected');
-                    if (userResponses[question.id] == btn.dataset.value) {
+                    if (userResponses[question.key] == btn.dataset.value) {
                         btn.classList.add('selected');
                     }
                 });
@@ -1248,40 +1287,37 @@
 
             // Update navigation
             prevBtn.disabled = index === 0;
-            nextBtn.disabled = !userResponses[question.id];
+            nextBtn.disabled = !userResponses[question.key];
 
             // Update next button text
-            if (index === questionBank.length - 1) {
+            if (index === allQuestions.length - 1) {
                 nextBtn.innerHTML = 'Get My Career Matches <i class="fas fa-compass"></i>';
             } else {
                 nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
             }
+            
+            // Hide loader, show content
+            miniLoader.style.display = 'none';
+            questionContent.style.display = 'block';
         }
 
-        function selectOption(questionId, value) {
-            userResponses[questionId] = value;
-
-            // Update UI
+        function selectOption(questionKey, value) {
+            userResponses[questionKey] = value;
             optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
-                btn.classList.remove('selected');
+                btn.classList.toggle('selected', btn.textContent === value);
             });
-            event.target.classList.add('selected');
-
-            // Enable next button
             nextBtn.disabled = false;
         }
 
-        function selectScale(value) {
-            const question = questionBank[currentQuestionIndex];
-            userResponses[question.id] = parseInt(value);
-
-            // Update UI
+        function selectScale(targetButton) {
+            const question = allQuestions[currentQuestionIndex];
+            const value = parseInt(targetButton.dataset.value);
+            userResponses[question.key] = value;
+            
             scaleButtons.querySelectorAll('.scale-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            event.target.classList.add('selected');
-
-            // Enable next button
+            targetButton.classList.add('selected');
             nextBtn.disabled = false;
         }
 
@@ -1291,32 +1327,105 @@
             }
         }
 
-        function nextQuestion() {
-            if (currentQuestionIndex < questionBank.length - 1) {
+        async function nextQuestion() {
+            // Check if we just finished the static questions
+            if (currentQuestionIndex === STATIC_QUESTIONS.length - 1) {
+                await fetchDynamicQuestions();
+            } 
+            // Check if we're not at the end of the *total* questions
+            else if (currentQuestionIndex < allQuestions.length - 1) {
                 loadQuestion(currentQuestionIndex + 1);
-            } else {
-                submitToModel();
+            } 
+            // We are at the end of all questions
+            else {
+                await submitToModel();
+            }
+        }
+        
+        // [MODIFIED] Function to fetch dynamic questions with fallback
+        async function fetchDynamicQuestions() {
+            console.log("Fetching dynamic questions...");
+            questionContent.style.display = 'none';
+            miniLoader.style.display = 'block';
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+
+            const staticData = {
+                age: userResponses['age'] || "Not specified",
+                education: userResponses['education'] || "Not specified",
+                experience: userResponses['experience'] || "Not specified",
+                curiosity: userResponses['curiosity'] || 3
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/generate-dynamic-questions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(staticData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json(); 
+                    dynamicQuestions = data.questions.map((q, i) => ({
+                        ...q,
+                        key: `dynamic_${i+1}` 
+                    }));
+                    console.log("Dynamic questions loaded:", dynamicQuestions);
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${response.status} - ${errorData.detail}`);
+                }
+            } catch (error) {
+                console.error("Failed to fetch dynamic questions:", error);
+                showTooltip("Could not load personalized questions. Using defaults.");
+                // [FIXED] Load fallback questions on error
+                dynamicQuestions = FALLBACK_DYNAMIC_QUESTIONS;
+            } finally {
+                // [FIXED] This code now runs in both success and failure
+                allQuestions = [...STATIC_QUESTIONS, ...dynamicQuestions];
+                loadQuestion(currentQuestionIndex + 1); // Load the first dynamic/fallback question
             }
         }
 
-        function submitToModel() {
-            // Show loading screen
+        // [NEW] This function now calls the Gemini backend
+        async function submitToModel() {
             questionContainer.classList.remove('active');
             loadingScreen.classList.add('active');
             headerText.textContent = 'Processing your career match...';
 
-            // Save user responses locally
-            const assessmentData = {
-                timestamp: new Date().toISOString(),
-                responses: userResponses
-            };
-            localStorage.setItem('pathify_assessment', JSON.stringify(assessmentData));
+            localStorage.setItem('pathify_assessment_backup', JSON.stringify(userResponses));
 
-            // Simulate progress then call model
-            simulateProgress().then(() => {
-                callFlaskModel(userResponses);
-            });
+            await simulateProgress(); 
+            
+            try {
+                console.log("Sending all answers to generate matches:", userResponses);
+                const response = await fetch(`${API_URL}/api/generate-matches`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(userResponses)
+                });
+
+                if (response.ok) {
+                    modelPredictions = await response.json(); 
+                    console.log("✅ AI Career matches received:", modelPredictions);
+                    showResults();
+                } else {
+                    const err = await response.json();
+                    throw new Error(err.detail || "Failed to get matches from AI");
+                }
+            } catch (error) {
+                console.error('❌ Error calling Gemini model for matches:', error);
+                showTooltip("AI matching failed, using fallback data.");
+                useFallbackData(); 
+            }
         }
+
 
         function simulateProgress() {
             return new Promise(resolve => {
@@ -1342,42 +1451,8 @@
             });
         }
 
-        async function callFlaskModel(responses) {
-            try {
-                // YOUR FLASK API ENDPOINT - UPDATE THIS URL
-                const FLASK_API_URL = 'http://127.0.0.1:5000/predict';
-
-                console.log('Sending to Flask model:', responses);
-
-                const response = await fetch(FLASK_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(responses)
-                });
-
-                if (response.ok) {
-                    const modelResult = await response.json();
-                    console.log('✅ Model response received:', modelResult);
-
-                    // Use REAL model data
-                    modelPredictions = modelResult;
-                    showResults();
-
-                } else {
-                    throw new Error(`Flask API error: ${response.status}`);
-                }
-
-            } catch (error) {
-                console.error('❌ Error calling Flask model:', error);
-                // Use fallback for demo/testing
-                useFallbackData();
-            }
-        }
-
+        // [MODIFIED] This is now just a fallback
         function useFallbackData() {
-            // FALLBACK DATA - only when model is not available
             modelPredictions = {
                 careers: [
                     {
@@ -1391,39 +1466,33 @@
                         confidence: 0.87,
                         description: "Analyze data to help organizations make informed decisions",
                         skills_match: ["Data Analysis", "Problem-solving", "Communication"]
-                    },
-                    {
-                        title: "UX/UI Designer",
-                        confidence: 0.82,
-                        description: "Design user interfaces and experiences for digital products",
-                        skills_match: ["Design", "Creativity", "User Research"]
-                    },
-                    {
-                        title: "Project Manager",
-                        confidence: 0.78,
-                        description: "Plan and oversee projects from start to finish",
-                        skills_match: ["Leadership", "Organization", "Communication"]
                     }
                 ]
             };
-
-            showResults();
+            // Ensure results are shown even in fallback
+            if (!resultsSection.classList.contains('active')) {
+                loadingScreen.classList.remove('active');
+                resultsSection.classList.add('active');
+                headerText.textContent = 'Select your preferred careers';
+                progressBar.style.width = '100%';
+            }
+            displayCareers();
         }
 
         function showResults() {
-            // Hide loading, show results
             loadingScreen.classList.remove('active');
             resultsSection.classList.add('active');
             headerText.textContent = 'Select your preferred careers';
             progressBar.style.width = '100%';
-
-            // Display career predictions
             displayCareers();
         }
 
         function displayCareers() {
             careersGrid.innerHTML = '';
-
+            if (!modelPredictions.careers || modelPredictions.careers.length === 0) {
+                careersGrid.innerHTML = "<p class='text-gray-600'>We couldn't find a strong match right now. Try retaking the assessment with more detailed answers!</p>";
+                return;
+            }
             modelPredictions.careers.forEach((career, index) => {
                 const careerCard = createCareerCard(career, index);
                 careersGrid.appendChild(careerCard);
@@ -1434,7 +1503,6 @@
             const card = document.createElement('div');
             card.className = 'career-card';
             card.setAttribute('data-career-index', index);
-
             const confidencePercentage = Math.round(career.confidence * 100);
             const confidenceClass = getConfidenceClass(career.confidence);
 
@@ -1449,7 +1517,6 @@
                         <div class="confidence-label">Match</div>
                     </div>
                 </div>
-
                 <div class="skills-section">
                     <div class="skills-title">Skills Match</div>
                     <div class="skills-list">
@@ -1458,7 +1525,6 @@
                         ).join('')}
                     </div>
                 </div>
-
                 <div class="card-footer">
                     <div style="display: flex; align-items: center; gap: 0.5rem; color: #64748b; font-size: 0.75rem;">
                         <i class="fas fa-chart-line"></i>
@@ -1469,9 +1535,7 @@
                     </div>
                 </div>
             `;
-
             card.addEventListener('click', () => toggleCareerSelection(index, card));
-
             return card;
         }
 
@@ -1483,30 +1547,23 @@
 
         function toggleCareerSelection(index, cardElement) {
             if (selectedCareers.has(index)) {
-                // Deselect
                 selectedCareers.delete(index);
                 cardElement.classList.remove('selected');
             } else {
-                // Select (max 2)
                 if (selectedCareers.size >= 2) {
                     showTooltip("You can select up to 2 careers");
                     return;
                 }
-
                 selectedCareers.add(index);
                 cardElement.classList.add('selected');
             }
-
             updateSelectionUI();
         }
 
         function updateSelectionUI() {
             const selectedCount = selectedCareers.size;
-
-            // Update continue button
             continueBtn.disabled = selectedCount === 0;
 
-            // Update counter text and styling
             if (selectedCount === 0) {
                 selectionCounter.textContent = 'Select at least 1 career to continue';
                 selectionCounter.className = 'selection-counter';
@@ -1519,33 +1576,52 @@
             }
         }
 
-        function finalizeSelection() {
+        async function finalizeSelection() {
             if (selectedCareers.size === 0) return;
 
-            // Create final data with REAL model predictions and user selections
             const selectedCareerData = Array.from(selectedCareers).map(index => modelPredictions.careers[index]);
-
             const finalData = {
                 timestamp: new Date().toISOString(),
                 original_responses: userResponses,
-                model_predictions: modelPredictions,  // REAL MODEL DATA
-                selected_careers: selectedCareerData,
-                user_selections: Array.from(selectedCareers)
+                model_predictions: modelPredictions,
+                selected_careers: selectedCareerData
             };
-
-            // Save final selection - THIS PRESERVES EVERYTHING
+            
             localStorage.setItem('pathify_final_selection', JSON.stringify(finalData));
+            console.log('✅ Final selection data prepared:', finalData);
 
-            console.log('✅ Final selection saved:', finalData);
+            try {
+                const response = await fetch(`${API_URL}/api/assessment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(finalData)
+                });
 
-            // Redirect to dashboard
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
+                if (response.ok) {
+                    console.log('✅ Assessment saved to database successfully!');
+                    showTooltip("Profile saved! Redirecting to dashboard...");
+                    setTimeout(() => {
+                        // [FIXED] Redirect to /dashboard (no .html)
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Could not save results.");
+                }
+            } catch (error) {
+                console.error('Failed to save assessment:', error);
+                showTooltip(`Error: ${error.message}`);
+            }
         }
+
 
         function retakeAssessment() {
             if (confirm('Are you sure you want to retake the assessment?')) {
+                localStorage.removeItem('pathify_final_selection');
+                localStorage.removeItem('pathify_assessment_backup');
                 location.reload();
             }
         }
@@ -1557,11 +1633,9 @@
                 "Your perfect career match is just ahead!",
                 "These results look fantastic for you!"
             ];
-
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
             showTooltip(randomMessage);
 
-            // Fun animation
             robotAssistant.style.transform = 'scale(0.9)';
             setTimeout(() => {
                 robotAssistant.style.transform = 'scale(1.1)';
@@ -1572,14 +1646,11 @@
         }
 
         function showTooltip(message) {
-            // Remove existing tooltips
             document.querySelectorAll('.tooltip').forEach(t => t.remove());
-
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
             tooltip.textContent = message;
             document.body.appendChild(tooltip);
-
             setTimeout(() => {
                 tooltip.remove();
             }, 3000);
