@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathify - Intelligent Dashboard</title>
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Icons & Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace']
+                    },
+                    colors: {
+                        neon: { blue: '#00f3ff', purple: '#bc13fe', pink: '#ff0055' }
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shine': 'shine 3s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        shine: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Styles */
+        body { overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+        
+        /* 3D Tilt Effect */
+        .tilt-card {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        /* Glassmorphism Variants */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Themes */
+        /* Aurora */
+        body[data-theme="aurora"] { background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%); }
+        body[data-theme="aurora"].dark { background: linear-gradient(to right, #0f0c29, #302b63, #24243e); }
+        
+        /* Neon */
+        body[data-theme="neon"] { background: #050505; color: #fff; }
+        body[data-theme="neon"] .glass-panel {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+        body[data-theme="neon"] .accent-text { color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); }
+        body[data-theme="neon"] .accent-bg { background: linear-gradient(45deg, #00f3ff, #bc13fe); }
+
+        /* Minimal */
+        body[data-theme="minimal"] { background: #f8fafc; }
+        body[data-theme="minimal"].dark { background: #020617; }
+        body[data-theme="minimal"] .glass-panel { background: transparent; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: none; }
+        body[data-theme="minimal"].dark .glass-panel { border: 1px solid rgba(255,255,255,0.1); }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Profile Ring */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Holographic Shine */
+        .holo-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .holo-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+            transform: skewX(-25deg) translateX(-150%);
+            animation: shine 6s infinite;
+        }
+
+        /* Floating Blobs (Background) */
+        .blob-bg {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: 0;
+            animation: blob 10s infinite alternate;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-700 min-h-screen relative selection:bg-blue-500 selection:text-white" data-theme="auto">
+    
+    <!-- Ambient Background Layer -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <canvas id="starfield" class="absolute inset-0 opacity-40"></canvas>
+        <div class="blob-bg bg-purple-400 dark:bg-purple-900 w-96 h-96 top-0 -left-20"></div>
+        <div class="blob-bg bg-blue-400 dark:bg-blue-900 w-96 h-96 bottom-0 -right-20 animation-delay-2000"></div>
+        <div class="blob-bg bg-pink-400 dark:bg-pink-900 w-80 h-80 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animation-delay-4000"></div>
+    </div>
+
+    <div class="flex h-screen relative z-10">
+
+        <!-- FUTURISTIC SIDEBAR -->
+        <aside class="hidden md:flex flex-col w-20 lg:w-72 glass-panel border-r-0 lg:border-r h-full transition-all duration-300 z-30">
+            <div class="p-6 flex items-center justify-center lg:justify-start gap-4">
+                <div class="relative group cursor-pointer" onclick="playHoverSound()">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="relative w-10 h-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-cyan-500 font-bold text-xl shadow-lg">
+                        <i class="fas fa-atom fa-spin-slow"></i>
+                    </div>
+                </div>
+                <span class="text-2xl font-bold tracking-tighter hidden lg:block bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 accent-text">Pathify</span>
+            </div>
+
+            <nav class="flex-1 px-3 space-y-3 mt-8">
+                <!-- Nav Item -->
+                <a href="#" class="flex items-center gap-4 px-3 lg:px-5 py-4 bg-gradient-to-r from-blue-500/10 to-transparent text-blue-600 dark:text-cyan-400 rounded-2xl border-l-4 border-blue-500 transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-grid-2 w-6 text-center text-lg"></i>
+                    <span class="font-medium hidden lg:block">Dashboard</span>
+                </a>
+                
+                <a href="/ksarth-chat" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-sparkles w-6 text-center text-lg group-hover:text-purple-500 transition-colors"></i>
+                    <span class="font-medium hidden lg:block">AI Companion</span>
+                </a>
+
+                <a href="/community" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-globe-americas w-6 text-center text-lg group-hover:text-pink-500 transition-colors"></i>
+                    <span class="font-medium hidden lg:block">Community</span>
+                </a>
+                
+                <a href="/gamification" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-medal w-6 text-center text-lg group-hover:text-yellow-500 transition-colors"></i>
+                    <span class="font-medium hidden lg:block">Achievements</span>
+                </a>
+            </nav>
+
+            <div class="p-6 border-t border-slate-200/20">
+                <div class="flex flex-col gap-4">
+                     <!-- Sound Toggle -->
+                     <button id="soundToggle" class="flex items-center gap-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors" onclick="toggleSound()">
+                        <i class="fas fa-volume-up w-6 text-center"></i>
+                        <span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>
+                    </button>
+
+                    <button onclick="logout()" class="flex items-center gap-4 text-red-500 hover:bg-red-500/10 px-4 py-3 rounded-xl transition-all w-full">
+                        <i class="fas fa-power-off w-6 text-center"></i>
+                        <span class="font-medium hidden lg:block">Log Out</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN SCROLL AREA -->
+        <main class="flex-1 h-full overflow-y-auto relative scroll-smooth perspective-1000">
+            
+            <!-- Floating Header -->
+            <header class="sticky top-0 z-40 px-6 py-4 glass-panel border-b border-slate-200/10 transition-all duration-300 mt-4 mx-4 rounded-2xl flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div id="time-badge" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                        <span id="clock-display">12:00 PM</span>
+                    </div>
+                    <h2 class="text-xl font-bold hidden sm:block" id="greeting-text">Welcome back</h2>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <!-- Theme Switcher -->
+                    <div class="relative group">
+                        <button class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" onclick="cycleTheme()">
+                            <i class="fas fa-palette text-slate-600 dark:text-cyan-400"></i>
+                        </button>
+                        <div class="absolute top-full right-0 mt-2 py-1 px-2 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                            Change Theme
+                        </div>
+                    </div>
+
+                    <!-- Profile Ring -->
+                    <div class="relative cursor-pointer group" onclick="openProfileModal()">
+                        <svg class="w-12 h-12 transform -rotate-90">
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="3" fill="transparent" class="text-slate-200 dark:text-slate-700" />
+                            <circle id="nav-progress" cx="24" cy="24" r="20" stroke="currentColor" stroke-width="3" fill="transparent" stroke-dasharray="125" stroke-dashoffset="30" stroke-linecap="round" class="text-blue-500 dark:text-cyan-400 transition-all duration-1000" />
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-inner" id="nav-initials">U</div>
+                        </div>
+                        <!-- Glow effect -->
+                        <div class="absolute inset-0 bg-blue-500 rounded-full blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-6 max-w-7xl mx-auto space-y-12 pb-32">
+
+                <!-- 1. HERO STATS (Tilt Effect) -->
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+                    <!-- XP Card -->
+                    <div class="glass-panel p-6 rounded-3xl tilt-card hover:shadow-2xl hover:shadow-blue-500/20 transition-all group relative overflow-hidden" onmouseenter="playHoverSound()">
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest">Experience</span>
+                                <i class="fas fa-bolt text-blue-500 text-xl group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <h3 class="text-4xl font-bold accent-text counter" id="stat-xp">0</h3>
+                            <div class="mt-2 w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-blue-500 h-full w-3/4 rounded-full holo-shine"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level Card -->
+                    <div class="glass-panel p-6 rounded-3xl tilt-card hover:shadow-2xl hover:shadow-purple-500/20 transition-all group relative overflow-hidden" onmouseenter="playHoverSound()">
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest">Current Level</span>
+                                <i class="fas fa-layer-group text-purple-500 text-xl group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <h3 class="text-4xl font-bold accent-text counter" id="stat-level">0</h3>
+                            <p class="text-sm text-purple-500 mt-1 font-medium">Novice Explorer</p>
+                        </div>
+                    </div>
+
+                    <!-- Streak Card -->
+                    <div class="glass-panel p-6 rounded-3xl tilt-card hover:shadow-2xl hover:shadow-orange-500/20 transition-all group relative overflow-hidden" onmouseenter="playHoverSound()">
+                         <div class="absolute -right-10 -top-10 w-32 h-32 bg-orange-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest">Streak</span>
+                                <i class="fas fa-fire text-orange-500 text-xl group-hover:scale-110 transition-transform" id="streak-fire"></i>
+                            </div>
+                            <h3 class="text-4xl font-bold accent-text counter" id="stat-streak">0</h3>
+                            <p class="text-sm text-slate-500 mt-1">Days Active</p>
+                        </div>
+                    </div>
+
+                    <!-- Modules Card -->
+                     <div class="glass-panel p-6 rounded-3xl tilt-card hover:shadow-2xl hover:shadow-emerald-500/20 transition-all group relative overflow-hidden" onmouseenter="playHoverSound()">
+                         <div class="absolute -right-10 -top-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-xs font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest">Modules</span>
+                                <i class="fas fa-cube text-emerald-500 text-xl group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <h3 class="text-4xl font-bold accent-text counter" id="stat-courses">0</h3>
+                            <p class="text-sm text-emerald-500 mt-1">+2 This week</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. ANALYTICS & MOTIVATION -->
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 reveal">
+                    <!-- Radar Chart -->
+                    <div class="lg:col-span-2 glass-panel p-8 rounded-3xl relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-6 relative z-10">
+                            <h3 class="text-xl font-bold flex items-center gap-2">
+                                <i class="fas fa-radar text-blue-500"></i> Skill Matrix
+                            </h3>
+                            <div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+                                <button class="px-3 py-1 text-xs font-bold rounded bg-white dark:bg-slate-700 shadow text-slate-900 dark:text-white transition-all" onclick="updateChart('current')">Current</button>
+                                <button class="px-3 py-1 text-xs font-bold rounded text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all" onclick="updateChart('target')">Target</button>
+                            </div>
+                        </div>
+                        <div class="h-72 w-full relative z-10">
+                            <canvas id="skillsRadar"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Motivation Lottie -->
+                    <div class="glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden group">
+                        <!-- Lottie Background -->
+                        <div id="lottie-bg" class="absolute inset-0 opacity-30 pointer-events-none transform scale-150"></div>
+                        
+                        <div class="relative z-10">
+                            <i class="fas fa-quote-left text-3xl text-blue-500/50 mb-4"></i>
+                            <h3 class="text-xl font-medium leading-relaxed italic" id="daily-quote">"The best way to predict the future is to create it."</h3>
+                            <p class="text-sm text-slate-500 mt-4 font-mono">— Peter Drucker</p>
+                        </div>
+
+                        <div class="relative z-10 mt-6">
+                            <div class="flex justify-between text-xs font-bold uppercase tracking-wider mb-2">
+                                <span>Daily Goal</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-3/4 rounded-full holo-shine"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. JOURNEY TIMELINE (Parallax) -->
+                <section class="glass-panel p-8 rounded-3xl reveal">
+                    <h3 class="text-xl font-bold mb-8">Your Trajectory</h3>
+                    <div class="relative">
+                        <!-- Animated Line -->
+                        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-700 -translate-y-1/2 z-0"></div>
+                        <div class="absolute top-1/2 left-0 w-1/3 h-0.5 bg-blue-500 -translate-y-1/2 z-0 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+
+                        <div class="relative z-10 flex justify-between px-4">
+                            <!-- Step 1 -->
+                            <div class="flex flex-col items-center gap-3 cursor-pointer group" onclick="fireConfetti()">
+                                <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg shadow-lg shadow-blue-500/40 group-hover:scale-125 transition-transform duration-300">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">Start</span>
+                            </div>
+
+                             <!-- Step 2 -->
+                            <div class="flex flex-col items-center gap-3 cursor-pointer group">
+                                <div class="w-12 h-12 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-4 border-blue-500 flex items-center justify-center text-lg shadow-lg group-hover:scale-125 transition-transform duration-300">
+                                    <i class="fas fa-crosshairs animate-spin-slow"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-blue-500">Assessment</span>
+                            </div>
+
+                             <!-- Step 3 (Locked) -->
+                            <div class="flex flex-col items-center gap-3 opacity-40">
+                                <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-lg">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-wider">Plan</span>
+                            </div>
+
+                             <!-- Step 4 (Locked) -->
+                            <div class="flex flex-col items-center gap-3 opacity-40">
+                                <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-lg">
+                                    <i class="fas fa-flag"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-wider">Goal</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. CAREERS (Grid with Hover Expand) -->
+                <section class="space-y-6 reveal">
+                    <div class="flex items-center justify-between">
+                         <h3 class="text-2xl font-bold">Top Recommendations</h3>
+                         <span class="px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-500 text-xs font-mono">AI CONFIDENCE: 98%</span>
+                    </div>
+
+                    <div id="selected-careers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Generated by JS -->
+                    </div>
+                </section>
+
+                 <!-- EMPTY STATE (Lottie) -->
+                <div id="empty-state" class="hidden text-center py-24 glass-panel rounded-3xl flex flex-col items-center justify-center">
+                    <div id="lottie-empty" class="w-64 h-64"></div>
+                    <h3 class="text-2xl font-bold mt-6">Awaiting Input</h3>
+                    <p class="text-slate-500 mb-8">Initialize your career protocol to generate matches.</p>
+                    <a href="/questions" class="relative px-8 py-4 bg-blue-600 text-white font-bold rounded-xl overflow-hidden group hover:scale-105 transition-transform">
+                        <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                        <span class="relative flex items-center gap-2">Initialize Protocol <i class="fas fa-arrow-right"></i></span>
+                    </a>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: PROFILE STATS -->
+    <div id="profileModal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-8 relative transform scale-90 transition-transform duration-300" id="profileModalContent">
+            <button class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors" onclick="closeProfileModal()"><i class="fas fa-times text-xl"></i></button>
+            
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 rounded-full p-1 bg-gradient-to-r from-blue-500 to-purple-500 mb-4">
+                    <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-3xl font-bold text-white" id="modal-initials">U</div>
+                </div>
+                <h2 class="text-2xl font-bold" id="modal-name">User</h2>
+                <p class="text-slate-500 font-mono text-sm" id="modal-email">user@example.com</p>
+
+                <div class="grid grid-cols-2 gap-4 w-full mt-8">
+                    <div class="bg-slate-100 dark:bg-slate-800/50 p-4 rounded-2xl text-center">
+                        <div class="text-2xl font-bold text-blue-500" id="modal-xp">0</div>
+                        <div class="text-xs uppercase tracking-widest text-slate-500">Total XP</div>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-slate-800/50 p-4 rounded-2xl text-center">
+                        <div class="text-2xl font-bold text-purple-500" id="modal-level">1</div>
+                        <div class="text-xs uppercase tracking-widest text-slate-500">Rank</div>
+                    </div>
+                </div>
+                
+                <button class="mt-8 w-full py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" onclick="closeProfileModal()">Close Panel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. CORE LOGIC ---
+        const API_URL = `${window.location.protocol}//${window.location.host}`;
+        let authToken = null;
+        let chartInstance = null;
+        let audioContext = null;
+        let isSoundEnabled = true;
+
+        // --- 2. AUDIO ENGINE (Synthesized sounds) ---
+        function initAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContext();
+            } catch (e) { console.log('Web Audio API not supported'); }
+        }
+
+        function playTone(freq = 600, type = 'sine', duration = 0.1) {
+            if (!audioContext || !isSoundEnabled) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+            gain.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start();
+            osc.stop(audioContext.currentTime + duration);
+        }
+
+        function playHoverSound() { playTone(400, 'sine', 0.1); }
+        function playClickSound() { playTone(800, 'triangle', 0.15); }
+        function playSuccessSound() { 
+            if (!audioContext || !isSoundEnabled) return;
+            playTone(600, 'sine', 0.1);
+            setTimeout(() => playTone(800, 'sine', 0.2), 100);
+        }
+
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            const btn = document.getElementById('soundToggle');
+            btn.innerHTML = isSoundEnabled 
+                ? '<i class="fas fa-volume-up w-6 text-center"></i><span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>'
+                : '<i class="fas fa-volume-mute w-6 text-center text-red-500"></i><span class="text-sm font-medium hidden lg:block text-red-500">UI Sounds: Off</span>';
+            if (isSoundEnabled && !audioContext) initAudio();
+        }
+
+        // --- 3. VISUALS & PARTICLES ---
+        function initParticles() {
+            const canvas = document.getElementById('starfield');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2;
+                    this.speedX = Math.random() * 0.5 - 0.25;
+                    this.speedY = Math.random() * 0.5 - 0.25;
+                    this.opacity = Math.random() * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.y > canvas.height) this.y = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(147, 197, 253, ${this.opacity})`; // Blueish
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < 50; i++) particles.push(new Particle());
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // --- 4. THEME & TIME LOGIC ---
+        const themes = ['auto', 'aurora', 'neon', 'minimal'];
+        let currentThemeIndex = 0;
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const theme = themes[currentThemeIndex];
+            setTheme(theme);
+            playClickSound();
+        }
+
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            const hour = new Date().getHours();
+            
+            // Auto Logic
+            if (theme === 'auto') {
+                document.body.removeAttribute('data-theme'); // Use default classes
+                if (hour >= 18 || hour < 6) document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+            } else if (theme === 'neon') {
+                document.documentElement.classList.add('dark');
+            } else {
+                 // Aurora/Minimal respect system pref or can be forced
+                 if (hour >= 18) document.documentElement.classList.add('dark');
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-display').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- 5. DATA & RENDER ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            initParticles();
+            initAudio(); // Initialize audio context context
+            
+            // Lottie
+            lottie.loadAnimation({
+                container: document.getElementById('lottie-bg'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'https://lottie.host/8b628509-6617-4786-b485-aa38234326d9/qXw7q0k84o.json'
+            });
+
+            // Scroll Reveal Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // Auth Check
+            authToken = localStorage.getItem('userToken');
+            if (!authToken) { window.location.href = '/login'; return; }
+            await loadUserData();
+        });
+
+        async function loadUserData() {
+            try {
+                const response = await fetch(`${API_URL}/api/users/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (response.ok) {
+                    const user = await response.json();
+                    renderDashboard(user);
+                } else {
+                    logout();
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function renderDashboard(user) {
+            // Header
+            document.getElementById('greeting-text').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+            const initials = user.name.substring(0,2).toUpperCase();
+            document.getElementById('nav-initials').textContent = initials;
+            document.getElementById('modal-initials').textContent = initials;
+            document.getElementById('modal-name').textContent = user.name;
+            document.getElementById('modal-email').textContent = user.email;
+
+            // Animate Counters
+            if (user.progress) {
+                animateValue('stat-xp', 0, user.progress.xp || 0, 2000);
+                animateValue('stat-level', 0, user.progress.level || 1, 1500);
+                animateValue('stat-streak', 0, user.progress.streak_days || 0, 1500);
+                animateValue('stat-courses', 0, user.progress.completed_courses || 0, 1500);
+                
+                document.getElementById('modal-xp').textContent = user.progress.xp || 0;
+                document.getElementById('modal-level').textContent = user.progress.level || 1;
+
+                // Profile Ring (XP based)
+                const percent = (user.progress.xp % 1000) / 10;
+                const circumference = 125;
+                const offset = circumference - (percent / 100) * circumference;
+                setTimeout(() => {
+                     document.getElementById('nav-progress').style.strokeDashoffset = offset;
+                }, 500);
+            }
+
+            // Careers
+            if (user.assessment && user.assessment.selected_careers && user.assessment.selected_careers.length > 0) {
+                renderCareers(user.assessment.selected_careers);
+                initChart(user.preferences.theme === 'dark');
+            } else {
+                document.getElementById('empty-state').classList.remove('hidden');
+            }
+        }
+
+        function renderCareers(careers) {
+            const container = document.getElementById('selected-careers-grid');
+            container.innerHTML = careers.map((career, i) => `
+                <div class="glass-panel p-6 rounded-3xl tilt-card group cursor-pointer relative overflow-hidden" style="animation: slideIn 0.5s ease-out forwards; animation-delay: ${i * 100}ms; opacity: 0;" onmouseenter="playHoverSound()">
+                    <div class="absolute left-0 top-0 w-1 h-full bg-blue-500 transform -translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-xl font-bold group-hover:text-blue-500 transition-colors">${career.title}</h3>
+                        <span class="text-2xl font-bold text-blue-500">${Math.round(career.confidence * 100)}%</span>
+                    </div>
+                    <!-- Animated Bar -->
+                    <div class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mb-4 overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 w-0 transition-all duration-1000 delay-300 rounded-full" style="width: ${Math.round(career.confidence * 100)}%"></div>
+                    </div>
+                    <p class="text-slate-500 text-sm mb-6 line-clamp-2">${career.description}</p>
+                    <button class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg">View Roadmap</button>
+                </div>
+            `).join('');
+            
+            // Trigger bar animation after render
+            setTimeout(() => {
+                document.querySelectorAll('.bg-gradient-to-r').forEach(el => el.style.width = el.style.width);
+            }, 100);
+        }
+
+        // --- CHART ---
+        function initChart(isDark) {
+            const ctx = document.getElementById('skillsRadar').getContext('2d');
+            const color = isDark ? '#94a3b8' : '#64748b';
+            const grid = isDark ? '#334155' : '#e2e8f0';
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Logic', 'Creativity', 'Tech', 'Communication', 'Leadership'],
+                    datasets: [{
+                        label: 'Current',
+                        data: [70, 60, 80, 75, 65],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: '#3b82f6',
+                        pointBackgroundColor: '#3b82f6',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { r: { angleLines: {color: grid}, grid: {color: grid}, pointLabels: {color: color}, ticks: {display: false} } },
+                    plugins: { legend: {display: false} }
+                }
+            });
+        }
+
+        // --- UTILS ---
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function fireConfetti() {
+            playSuccessSound();
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#00f3ff', '#bc13fe', '#ff0055'] });
+        }
+
+        function openProfileModal() {
+            const modal = document.getElementById('profileModal');
+            const content = document.getElementById('profileModalContent');
+            modal.classList.remove('hidden');
+            // Slight delay to allow display block to apply before opacity transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-90');
+                content.classList.add('scale-100');
+            }, 10);
+            playClickSound();
+        }
+
+        function closeProfileModal() {
+            const modal = document.getElementById('profileModal');
+            const content = document.getElementById('profileModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-90');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function logout() { localStorage.removeItem('userToken'); window.location.href = '/login'; }
+
+        // Tilt Effect Logic
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                if(x > 0 && x < rect.width && y > 0 && y < rect.height) {
+                    const xRot = ((y - rect.height/2) / rect.height) * -10;
+                    const yRot = ((x - rect.width/2) / rect.width) * 10;
+                    card.style.transform = `perspective(1000px) rotateX(${xRot}deg) rotateY(${yRot}deg) scale(1.02)`;
+                } else {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
