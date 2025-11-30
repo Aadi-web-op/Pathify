@@ -5,727 +5,673 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Workthrough - Pathify</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Link to main stylesheet -->
-    <link rel="stylesheet" href="style.css">
-    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace']
+                    },
+                    colors: {
+                        neon: { blue: '#22d3ee', purple: '#a855f7', pink: '#f472b6' }
+                    },
+                    animation: {
+                        'float': 'float 10s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s infinite',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pop-in': 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.5, transform: 'scale(1)' },
+                            '50%': { opacity: 1, transform: 'scale(1.05)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: 0, transform: 'scale(0.9) translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'scale(1) translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global Theme Sync -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <style>
+        /* --- CORE VISUALS --- */
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .dark body { background-color: #030712; color: #f8fafc; }
+
+        /* --- BACKGROUND ATMOSPHERE --- */
+        .universe-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -3;
+            background: radial-gradient(circle at 50% -20%, #eff6ff 0%, #dbeafe 40%, #f1f5f9 100%);
+            transition: background 0.5s ease;
+        }
+        .dark .universe-bg {
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #0f172a 40%, #020617 100%);
+        }
+
+        /* Animated Nebula Blobs */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite alternate;
+            z-index: -2;
         }
         
-        /* Roadmap Timeline */
-        .roadmap-timeline {
-            position: relative;
+        /* Holographic Grid */
+        .holo-grid {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            transform: perspective(1000px) rotateX(10deg) scale(1.1);
+            pointer-events: none;
         }
+
+        /* --- SIDEBAR STYLES --- */
+        #sidebar {
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            width: 18rem; 
+        }
+        #sidebar.collapsed { width: 0; opacity: 0; padding: 0; overflow: hidden; border: none; }
         
+        .sidebar-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+            padding-left: 1.5rem;
+        }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            border-left-color: transparent;
+        }
+        .dark .sidebar-item.active { background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%); }
+        .sidebar-item.active i { color: white !important; }
+
+        /* Floating Return Button */
+        #sidebar-return { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; }
+        #sidebar-return.hidden { transform: translateX(-200%); opacity: 0; pointer-events: none; }
+
+        /* --- GLASS PANELS --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- WORKTHROUGH SPECIFIC --- */
         .roadmap-timeline::before {
             content: '';
             position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
-            border-radius: 2px;
+            left: 19px; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, rgba(139, 92, 246, 0.1));
         }
-        
-        .roadmap-item {
-            position: relative;
-            margin-bottom: 2rem;
-            padding-left: 60px;
-        }
-        
+
         .roadmap-marker {
-            position: absolute;
-            left: 0;
-            top: 8px;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 2;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10; position: relative;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
         }
         
-        .roadmap-marker.completed {
-            background: linear-gradient(135deg, #10b981, #059669);
-            animation: completePulse 2s ease-in-out infinite;
-        }
-        
-        .roadmap-marker.current {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            animation: currentPulse 2s ease-in-out infinite;
-        }
-        
-        .roadmap-marker.upcoming {
-            background: linear-gradient(135deg, #6b7280, #4b5563);
-        }
+        .marker-done { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .marker-current { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; animation: pulseMarker 2s infinite; }
+        .marker-future { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 2px solid rgba(148, 163, 184, 0.3); }
         
         .roadmap-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative; overflow: hidden;
         }
-        
-        .roadmap-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
-        
-        .roadmap-card.completed {
-            border-left: 4px solid #10b981;
-        }
+        .roadmap-card:hover { transform: translateY(-4px); }
         
         .roadmap-card.current {
-            border-left: 4px solid #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.15);
         }
-        
-        .roadmap-card.upcoming {
-            border-left: 4px solid #6b7280;
-            opacity: 0.8;
-        }
-        
-        /* Progress Bar */
-        .progress-container {
-            background: #e5e7eb;
-            border-radius: 1rem;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            height: 100%;
-            border-radius: 1rem;
-            transition: width 1s ease;
-            position: relative;
-        }
-        
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        /* Skills Tags */
+        .roadmap-card.done { border-left: 4px solid #10b981; }
+
         .skill-tag {
-            background: linear-gradient(135deg, #ddd6fe, #c4b5fd);
-            color: #7c3aed;
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            margin: 0.25rem;
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
         }
-        
-        /* Completion Badge */
-        .completion-badge {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.375rem;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .dark .skill-tag { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+
+        @keyframes pulseMarker {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
         }
-        
-        /* Current Progress Card */
-        .current-progress {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border: 2px solid rgba(59, 130, 246, 0.3);
-        }
-        
-        /* Stats Cards */
-        .stat-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
-            border-left: 4px solid;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .stat-card-blue { border-left-color: #3b82f6; }
-        .stat-card-green { border-left-color: #10b981; }
-        .stat-card-purple { border-left-color: #8b5cf6; }
-        .stat-card-orange { border-left-color: #f59e0b; }
-        
-        /* Floating Background */
-        .floating-shape {
-            position: absolute;
+
+        /* Loader */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #3b82f6;
             border-radius: 50%;
-            filter: blur(40px);
-            animation: float 25s ease-in-out infinite;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
-        
-        .shape-1 {
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 70%);
-            top: 10%;
-            right: 10%;
-        }
-        
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 70%);
-            bottom: 20%;
-            left: 15%;
-            animation-delay: 12s;
-        }
-        
-        /* Animations */
-        @keyframes completePulse {
-            0%, 100% { box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(16, 185, 129, 0.5); }
-        }
-        
-        @keyframes currentPulse {
-            0%, 100% { box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(59, 130, 246, 0.6); }
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(120deg); }
-            66% { transform: translateY(10px) rotate(240deg); }
-        }
-        
-        /* Action Button */
-        .action-button {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            transition: all 0.3s ease;
-        }
-        
-        .action-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-        }
-        
-        /* Timeline Connector */
-        .timeline-connector {
-            position: relative;
-        }
-        
-        .timeline-connector::after {
-            content: '';
-            position: absolute;
-            left: 22px;
-            top: 50px;
-            width: 2px;
-            height: calc(100% - 50px);
-            background: linear-gradient(to bottom, #e5e7eb, transparent);
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Scrollbar */
+        .nav-scroll::-webkit-scrollbar { width: 4px; }
+        .nav-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 4px; }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            #sidebar { display: none; }
+            .glass-panel { border-radius: 0; border: none; }
+            .roadmap-timeline::before { left: 15px; }
         }
     </style>
 </head>
-<body class="min-h-screen relative">
+<body>
+
+    <!-- ATMOSPHERE -->
+    <div class="universe-bg"></div>
+    <div class="holo-grid"></div>
+    <div class="nebula bg-blue-600/20 w-[600px] h-[600px] top-[-20%] left-[-10%]" data-speed="0.02"></div>
+    <div class="nebula bg-purple-600/20 w-[500px] h-[500px] bottom-[-10%] right-[-10%]" data-speed="0.03"></div>
     
-    <!-- Floating Background Shapes -->
-    <div class="floating-shape shape-1"></div>
-    <div class="floating-shape shape-2"></div>
-    
-    <!-- Header -->
-    <nav class="bg-white/90 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-4">
-                    <button onclick="window.history.back()" class="text-gray-600 hover:text-blue-600 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
+    <div id="particles" class="fixed inset-0 pointer-events-none z-[-1]"></div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="flex h-screen relative z-10 overflow-hidden">
+
+        <!-- RETURN BUTTON -->
+        <button id="sidebar-return" onclick="toggleSidebar()" class="fixed top-6 left-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] flex items-center justify-center text-blue-500 hover:scale-110 hidden transition-all group">
+            <i class="fas fa-bars text-xl group-hover:text-blue-400"></i>
+        </button>
+
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="hidden md:flex flex-col glass-panel border-r-0 lg:border-r h-full z-40 relative shadow-2xl lg:shadow-none">
+            <div class="p-6 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+                        <div class="relative w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-cyan-500 font-bold text-lg shadow-lg">
+                            <i class="fas fa-atom fa-spin-slow"></i>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">Pathify</span>
+                </div>
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-blue-500 transition-all hover:rotate-180 p-2">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto nav-scroll py-2">
+                <a href="/dashboard" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-home w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">My Dashboard</span>
+                </a>
+                
+                <a href="/ksarth-chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-robot w-5 text-center text-lg group-hover:text-purple-400"></i>
+                    <span class="font-medium text-sm">Ksarth AI Chat</span>
+                </a>
+
+                <a href="/community" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-users w-5 text-center text-lg group-hover:text-pink-400"></i>
+                    <span class="font-medium text-sm">Pramukh Mandala</span>
+                </a>
+
+                <!-- Active Item -->
+                <a href="#" class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all group shadow-lg">
+                    <i class="fas fa-map-marked-alt w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">My Workthrough</span>
+                </a>
+                
+                <a href="/gamification" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-gamepad w-5 text-center text-lg group-hover:text-yellow-400"></i>
+                    <span class="font-medium text-sm">Gamification</span>
+                </a>
+
+                <a href="/certifications" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-certificate w-5 text-center text-lg group-hover:text-orange-400"></i>
+                    <span class="font-medium text-sm">Certifications</span>
+                </a>
+
+                <a href="/companyChat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-building w-5 text-center text-lg group-hover:text-blue-400"></i>
+                    <span class="font-medium text-sm flex-1">Company Chat</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">NEW</span>
+                </a>
+
+                <div class="h-4"></div>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-comment-alt w-5 text-center text-lg group-hover:text-cyan-400"></i>
+                    <span class="font-medium text-sm">Feedback</span>
+                </a>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-question-circle w-5 text-center text-lg group-hover:text-teal-400"></i>
+                    <span class="font-medium text-sm">FAQs</span>
+                </a>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-cog w-5 text-center text-lg group-hover:text-slate-200"></i>
+                    <span class="font-medium text-sm">Settings</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200/10 shrink-0">
+                <button onclick="logout()" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full group">
+                    <i class="fas fa-sign-out-alt w-5 text-center group-hover:rotate-90 transition-transform"></i>
+                    <span class="font-medium text-sm">Log Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col h-full relative transition-all duration-300 overflow-hidden">
+            
+            <!-- HEADER -->
+            <header class="flex items-center justify-between px-6 py-4 glass-panel border-b border-white/5 shrink-0 z-20">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden text-slate-400" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
+                    <button id="header-sidebar-toggle" onclick="toggleSidebar()" class="hidden w-10 h-10 rounded-full bg-white dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-bars"></i>
                     </button>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900">My Workthrough</h1>
-                        <p class="text-gray-600">Your personalized career roadmap</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="text-right">
-                        <p class="font-semibold text-gray-900" id="userNameHeader">Arjun Sharma</p>
-                        <p class="text-sm text-gray-600" id="userProfessionHeader">Software Engineer Path</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto p-6">
-        
-        <!-- Progress Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="stat-card stat-card-blue rounded-xl p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Completed Steps</p>
-                        <p class="text-2xl font-bold text-gray-900">8</p>
-                        <p class="text-sm text-green-600">↗ +2 this week</p>
-                    </div>
-                    <div class="p-3 bg-blue-100 rounded-full">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card stat-card-green rounded-xl p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Total Progress</p>
-                        <p class="text-2xl font-bold text-gray-900">67%</p>
-                        <p class="text-sm text-green-600">On track</p>
-                    </div>
-                    <div class="p-3 bg-green-100 rounded-full">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card stat-card-purple rounded-xl p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Skills Acquired</p>
-                        <p class="text-2xl font-bold text-gray-900">24</p>
-                        <p class="text-sm text-green-600">+5 new skills</p>
-                    </div>
-                    <div class="p-3 bg-purple-100 rounded-full">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card stat-card-orange rounded-xl p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Days Active</p>
-                        <p class="text-2xl font-bold text-gray-900">42</p>
-                        <p class="text-sm text-green-600">7-day streak</p>
-                    </div>
-                    <div class="p-3 bg-orange-100 rounded-full">
-                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Current Progress Card -->
-        <div class="current-progress rounded-2xl p-6 mb-8">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-900">Current Phase: Advanced Programming</h3>
-                    <p class="text-gray-600">Master data structures and algorithms</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-3xl font-bold text-blue-600">75%</p>
-                    <p class="text-sm text-gray-600">Progress</p>
-                </div>
-            </div>
-            
-            <div class="progress-container h-4 mb-4">
-                <div class="progress-bar" style="width: 75%"></div>
-            </div>
-            
-            <div class="flex items-center justify-between text-sm">
-                <span class="text-gray-600">3 of 4 milestones completed</span>
-                <span class="text-blue-600 font-medium">Est. completion: 2 weeks</span>
-            </div>
-        </div>
-        
-        <!-- Roadmap Timeline -->
-        <div class="grid lg:grid-cols-3 gap-8">
-            
-            <!-- Timeline -->
-            <div class="lg:col-span-2">
-                <div class="roadmap-card p-6 mb-6">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-6">Your Career Roadmap Journey</h3>
                     
-                    <div class="roadmap-timeline">
-                        
-                        <!-- Completed Phase 1 -->
-                        <div class="roadmap-item timeline-connector">
-                            <div class="roadmap-marker completed">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <div class="roadmap-card completed">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h4 class="text-lg font-semibold text-gray-900">Foundation Building</h4>
-                                    <div class="completion-badge">Completed</div>
-                                </div>
-                                <p class="text-gray-600 mb-3">
-                                    Master the fundamentals of programming and computer science concepts.
-                                </p>
-                                <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Skills Acquired:</p>
-                                    <div class="flex flex-wrap">
-                                        <span class="skill-tag">Python Basics</span>
-                                        <span class="skill-tag">Git & GitHub</span>
-                                        <span class="skill-tag">Problem Solving</span>
-                                        <span class="skill-tag">Code Logic</span>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    <p>📅 Completed: 4 weeks ago</p>
-                                    <p>⏱️ Duration: 6 weeks</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Completed Phase 2 -->
-                        <div class="roadmap-item timeline-connector">
-                            <div class="roadmap-marker completed">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <div class="roadmap-card completed">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h4 class="text-lg font-semibold text-gray-900">Web Development</h4>
-                                    <div class="completion-badge">Completed</div>
-                                </div>
-                                <p class="text-gray-600 mb-3">
-                                    Learn full-stack web development with modern frameworks and tools.
-                                </p>
-                                <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Skills Acquired:</p>
-                                    <div class="flex flex-wrap">
-                                        <span class="skill-tag">HTML/CSS</span>
-                                        <span class="skill-tag">JavaScript</span>
-                                        <span class="skill-tag">React.js</span>
-                                        <span class="skill-tag">Node.js</span>
-                                        <span class="skill-tag">MongoDB</span>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    <p>📅 Completed: 2 weeks ago</p>
-                                    <p>⏱️ Duration: 8 weeks</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Current Phase 3 -->
-                        <div class="roadmap-item timeline-connector">
-                            <div class="roadmap-marker current">
-                                <span class="text-sm font-bold">3</span>
-                            </div>
-                            <div class="roadmap-card current">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h4 class="text-lg font-semibold text-gray-900">Advanced Programming</h4>
-                                    <div class="px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium">In Progress</div>
-                                </div>
-                                <p class="text-gray-600 mb-3">
-                                    Deep dive into data structures, algorithms, and system design concepts.
-                                </p>
-                                <div class="mb-4">
-                                    <div class="progress-container h-2 mb-2">
-                                        <div class="progress-bar" style="width: 75%"></div>
-                                    </div>
-                                    <p class="text-sm text-blue-600">75% Complete</p>
-                                </div>
-                                <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Current Focus:</p>
-                                    <div class="flex flex-wrap">
-                                        <span class="skill-tag">Data Structures</span>
-                                        <span class="skill-tag">Algorithms</span>
-                                        <span class="skill-tag">System Design</span>
-                                        <span class="skill-tag">LeetCode</span>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    <p>📅 Started: 6 weeks ago</p>
-                                    <p>⏱️ Est. completion: 2 weeks</p>
-                                </div>
-                                <div class="mt-4">
-                                    <button class="action-button text-white px-4 py-2 rounded-lg text-sm font-medium">
-                                        Continue Learning
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Upcoming Phase 4 -->
-                        <div class="roadmap-item timeline-connector">
-                            <div class="roadmap-marker upcoming">
-                                <span class="text-sm font-bold">4</span>
-                            </div>
-                            <div class="roadmap-card upcoming">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h4 class="text-lg font-semibold text-gray-900">Interview Preparation</h4>
-                                    <div class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm font-medium">Upcoming</div>
-                                </div>
-                                <p class="text-gray-600 mb-3">
-                                    Prepare for technical interviews and job applications at top companies.
-                                </p>
-                                <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Planned Skills:</p>
-                                    <div class="flex flex-wrap">
-                                        <span class="skill-tag opacity-60">Mock Interviews</span>
-                                        <span class="skill-tag opacity-60">Behavioral Questions</span>
-                                        <span class="skill-tag opacity-60">Resume Building</span>
-                                        <span class="skill-tag opacity-60">Portfolio Projects</span>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    <p>📅 Planned start: 3 weeks</p>
-                                    <p>⏱️ Est. duration: 4 weeks</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Future Phase 5 -->
-                        <div class="roadmap-item">
-                            <div class="roadmap-marker upcoming">
-                                <span class="text-sm font-bold">5</span>
-                            </div>
-                            <div class="roadmap-card upcoming">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h4 class="text-lg font-semibold text-gray-900">Career Launch</h4>
-                                    <div class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm font-medium">Future</div>
-                                </div>
-                                <p class="text-gray-600 mb-3">
-                                    Land your dream job and continue professional development.
-                                </p>
-                                <div class="mb-3">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Goals:</p>
-                                    <div class="flex flex-wrap">
-                                        <span class="skill-tag opacity-60">Job Applications</span>
-                                        <span class="skill-tag opacity-60">Networking</span>
-                                        <span class="skill-tag opacity-60">First Role</span>
-                                        <span class="skill-tag opacity-60">Continuous Learning</span>
-                                    </div>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    <p>📅 Target: 2 months</p>
-                                    <p>⏱️ Ongoing journey</p>
-                                </div>
-                            </div>
-                        </div>
-                        
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-wide">My Workthrough</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono" id="userProfessionHeader">Loading Path...</p>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Sidebar -->
-            <div class="lg:col-span-1 space-y-6">
-                
-                <!-- Next Actions -->
-                <div class="roadmap-card p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Next Actions</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                                <span class="text-white text-xs">1</span>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-900">Complete Binary Trees</p>
-                                <p class="text-sm text-gray-600">Due in 3 days</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                                <span class="text-white text-xs">2</span>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-900">Practice Dynamic Programming</p>
-                                <p class="text-sm text-gray-600">Due in 1 week</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                                <span class="text-white text-xs">3</span>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-900">System Design Basics</p>
-                                <p class="text-sm text-gray-600">Due in 2 weeks</p>
-                            </div>
-                        </div>
+                <div class="flex gap-3">
+                    <div class="hidden sm:block text-right mr-2">
+                        <p class="text-sm font-bold text-slate-900 dark:text-white" id="userNameHeader">User</p>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">Level 4</p>
                     </div>
-                </div>
-                
-                <!-- Ksarth Recommendations -->
-                <div class="roadmap-card p-6">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-xs">K</span>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900">Ksarth Suggests</h3>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div class="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-                            <h4 class="font-medium text-gray-900 mb-2">💡 Focus Area</h4>
-                            <p class="text-sm text-gray-700">
-                                Based on your progress, I recommend spending extra time on graph algorithms 
-                                as they're heavily tested in interviews.
-                            </p>
-                        </div>
-                        
-                        <div class="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
-                            <h4 class="font-medium text-gray-900 mb-2">🚀 Quick Win</h4>
-                            <p class="text-sm text-gray-700">
-                                Complete 5 more LeetCode problems to reach the next milestone. 
-                                You're doing great!
-                            </p>
-                        </div>
-                        
-                        <div class="p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
-                            <h4 class="font-medium text-gray-900 mb-2">⚠️ Watch Out</h4>
-                            <p class="text-sm text-gray-700">
-                                Don't forget to practice behavioral questions alongside 
-                                technical preparation.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <button class="action-button w-full mt-4 py-2 text-white rounded-lg font-medium">
-                        Chat with Ksarth
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-sun dark:hidden"></i>
+                        <i class="fas fa-moon hidden dark:block"></i>
                     </button>
                 </div>
+            </header>
+
+            <!-- CONTENT SCROLL -->
+            <div class="flex-1 overflow-y-auto p-6 scroll-smooth z-10 relative">
                 
-                <!-- Weekly Goals -->
-                <div class="roadmap-card p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">This Week's Goals</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" checked class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-                            <span class="text-gray-900 line-through">Complete 10 LeetCode problems</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" checked class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-                            <span class="text-gray-900 line-through">Study Binary Search Trees</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-                            <span class="text-gray-900">Practice mock interviews</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-                            <span class="text-gray-900">Review system design concepts</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 pt-4 border-t border-gray-200">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Progress</span>
-                            <span class="text-sm font-medium text-blue-600">2/4 completed</span>
-                        </div>
-                        <div class="progress-container h-2 mt-2">
-                            <div class="progress-bar" style="width: 50%"></div>
-                        </div>
-                    </div>
+                <!-- LOADING SPINNER -->
+                <div id="page-loader" class="absolute inset-0 flex flex-col items-center justify-center z-20 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm">
+                    <div class="loader mb-4"></div>
+                    <p class="text-slate-500 dark:text-slate-400 font-mono text-sm">Fetching your roadmap...</p>
                 </div>
-                
+
+                <!-- ERROR STATE (Hidden by default, shown only if fatal) -->
+                <div id="error-state" class="hidden absolute inset-0 flex flex-col items-center justify-center z-20">
+                    <i class="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Roadmap Not Found</h3>
+                    <p class="text-slate-500 dark:text-slate-400 mb-6 max-w-md text-center">We couldn't find a generated roadmap for you. Please complete the assessment or generate a new one.</p>
+                    <button onclick="window.location.href='/questions'" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-500 transition-all">Go to Assessment</button>
+                </div>
+
+                <!-- CONTENT GRID (Hidden until loaded) -->
+                <div id="content-grid" class="grid lg:grid-cols-3 gap-6 max-w-6xl mx-auto hidden animate-slide-up">
+                    
+                    <!-- Left Column: Timeline -->
+                    <div class="lg:col-span-2 space-y-8">
+                        
+                        <!-- Current Progress Card -->
+                        <div class="glass-panel p-6 rounded-2xl border border-blue-500/30 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl -mr-10 -mt-10"></div>
+                            <div class="flex justify-between items-start mb-6 relative z-10">
+                                <div>
+                                    <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">Current Phase</p>
+                                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white" id="currentPhaseTitle">Loading...</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1" id="currentPhaseDesc">...</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-4xl font-bold text-blue-500">20%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-4">
+                                <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-[20%] shadow-[0_0_10px_#3b82f6]"></div>
+                            </div>
+                            
+                            <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 font-mono">
+                                <span>Step 2 of 5</span>
+                                <span>Ongoing</span>
+                            </div>
+                        </div>
+
+                        <!-- TIMELINE -->
+                        <div class="glass-panel p-8 rounded-2xl">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+                                <i class="fas fa-route text-purple-500"></i> Your Journey
+                            </h3>
+                            
+                            <div class="roadmap-timeline space-y-8 pl-4" id="timeline-container">
+                                <!-- DYNAMIC CONTENT INJECTED HERE -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Sidebar Widgets -->
+                    <div class="lg:col-span-1 space-y-6">
+                        
+                        <!-- Ksarth Suggestion -->
+                        <div class="glass-panel p-6 rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-transparent">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center text-white shadow-lg shadow-purple-500/30"><i class="fas fa-robot"></i></div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Ksarth Suggests</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                                "Consistency is key! Focus on completing the 'Current' step before moving to upcoming topics. I can help break it down."
+                            </p>
+                            <button onclick="window.location.href='/ksarth-chat'" class="text-xs text-purple-500 font-bold hover:text-purple-400 flex items-center gap-1">
+                                Chat with Ksarth <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Weekly Goals -->
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-4">Weekly Goals</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center group-hover:border-blue-500 transition-colors"></div>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-white transition-colors">Review Resource Links</span>
+                                </div>
+                                <div class="flex items-center gap-3 group cursor-pointer">
+                                    <div class="w-5 h-5 rounded border border-slate-400 flex items-center justify-center group-hover:border-blue-500 transition-colors"></div>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-white transition-colors">Complete 1 Project</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-        </div>
+
+        </main>
     </div>
-    
+
     <script>
-        // Load user data
-        function loadUserData() {
-            const userData = localStorage.getItem('pathify_user_profile');
-            if (userData) {
-                const profile = JSON.parse(userData);
-                const userName = profile.name || 'Student';
-                const profession = profile.profession || 'Career';
-                
-                document.getElementById('userNameHeader').textContent = userName;
-                document.getElementById('userProfessionHeader').textContent = `${profession} Path`;
-                
-                // BACKEND INTEGRATION NEEDED: Load user's actual roadmap progress
-                // This would fetch real progress data from the AI system
-                // loadUserRoadmapProgress(userId);
+        const API_URL = `${window.location.protocol}//${window.location.host}`;
+        let authToken = null;
+
+        // --- Sidebar Logic ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const headerToggleBtn = document.getElementById('header-sidebar-toggle');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                headerToggleBtn.classList.add('hidden');
+            } else {
+                sidebar.classList.add('collapsed');
+                headerToggleBtn.classList.remove('hidden');
+                headerToggleBtn.classList.add('flex');
             }
         }
         
-        // Simulate progress updates
-        function updateProgress() {
-            // BACKEND INTEGRATION NEEDED: Update progress in database
-            // This would sync with the actual learning management system
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+                sidebar.style.position = 'fixed';
+                sidebar.style.width = '100%';
+                sidebar.style.zIndex = '50';
+            } else {
+                sidebar.style.display = 'none';
+            }
         }
-        
-        // Animate progress bars on page load
-        function animateProgressBars() {
-            setTimeout(() => {
-                document.querySelectorAll('.progress-bar').forEach(bar => {
-                    const width = bar.style.width;
-                    bar.style.width = '0%';
-                    setTimeout(() => {
-                        bar.style.width = width;
-                    }, 500);
+
+        // --- Theme Sync ---
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // --- FALLBACK DATA ---
+        function getFallbackRoadmap(careerTitle) {
+            return {
+                career_title: careerTitle,
+                steps: [
+                    {
+                        title: "Foundations of " + careerTitle,
+                        description: "Core concepts and essential principles.",
+                        skills: ["Basics", "Key Concepts"],
+                        duration: "4 Weeks",
+                        status: "done"
+                    },
+                    {
+                        title: "Practical Application",
+                        description: "Applying knowledge to real-world scenarios.",
+                        skills: ["Tools", "Frameworks", "Best Practices"],
+                        duration: "6 Weeks",
+                        status: "current"
+                    },
+                    {
+                        title: "Advanced Techniques",
+                        description: "Mastering complex topics and optimizations.",
+                        skills: ["Advanced Patterns", "Optimization"],
+                        duration: "5 Weeks",
+                        status: "upcoming"
+                    },
+                    {
+                        title: "Capstone Project",
+                        description: "Building a comprehensive project for your portfolio.",
+                        skills: ["Project Management", "Deployment"],
+                        duration: "3 Weeks",
+                        status: "upcoming"
+                    },
+                    {
+                        title: "Career Launch",
+                        description: "Interview preparation and job search strategy.",
+                        skills: ["Resume Building", "Interviewing"],
+                        duration: "Ongoing",
+                        status: "upcoming"
+                    }
+                ]
+            };
+        }
+
+        // --- Data Loading Logic ---
+        async function loadUserData() {
+            authToken = localStorage.getItem('userToken');
+            if (!authToken) return window.location.href = '/login';
+
+            try {
+                const response = await fetch(`${API_URL}/api/users/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-            }, 1000);
-        }
-        
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
-            animateProgressBars();
-            
-            // Add entrance animations
-            setTimeout(() => {
-                document.querySelectorAll('.roadmap-card').forEach((card, index) => {
-                    setTimeout(() => {
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(30px)';
-                        card.style.transition = 'all 0.6s ease';
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    document.getElementById('userNameHeader').textContent = user.name;
+                    
+                    // Check for assessment data
+                    if (user.assessment && user.assessment.selected_careers && user.assessment.selected_careers.length > 0) {
+                        const career = user.assessment.selected_careers[0];
+                        document.getElementById('userProfessionHeader').textContent = `${career.title} Path`;
                         
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 100);
-                    }, index * 200);
+                        // ALWAYS FETCH FRESH, BUT USE FALLBACK ON FAIL
+                        fetchRoadmap(career.title);
+                        
+                    } else {
+                        // No career selected
+                        document.getElementById('page-loader').classList.add('hidden');
+                        document.getElementById('error-state').classList.remove('hidden');
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading user:", e);
+            }
+        }
+
+        async function fetchRoadmap(careerTitle) {
+            try {
+                const response = await fetch(`${API_URL}/api/generate-roadmap-json`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}` 
+                    },
+                    body: JSON.stringify({ career_title: careerTitle })
                 });
-            }, 500);
+
+                if (response.ok) {
+                    const roadmap = await response.json();
+                    localStorage.setItem(`roadmap_json_${careerTitle}`, JSON.stringify(roadmap));
+                    renderTimeline(roadmap);
+                } else {
+                    // API FAILED - USE FALLBACK
+                    console.warn("API Failed, using fallback roadmap.");
+                    const fallback = getFallbackRoadmap(careerTitle);
+                    renderTimeline(fallback);
+                }
+            } catch (e) {
+                console.error("Connection error, using fallback.", e);
+                const fallback = getFallbackRoadmap(careerTitle);
+                renderTimeline(fallback);
+            }
+        }
+
+        function renderTimeline(roadmap) {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
             
-            // BACKEND INTEGRATION POINTS:
-            // 1. loadUserRoadmapProgress() - Fetch user's personalized roadmap from AI
-            // 2. updateProgress() - Sync progress updates with learning management system
-            // 3. loadKsarthRecommendations() - Get real-time AI recommendations
-            // 4. loadNextActions() - Fetch personalized next steps
-            // 5. trackTimeSpent() - Monitor learning time and habits
-            // 6. generateProgressReports() - Create detailed progress analytics
-            // 7. syncWithLearningPlatforms() - Integration with external learning sites
-            // 8. updateSkillAssessments() - Track skill development over time
+            // Find current step
+            const currentStep = roadmap.steps.find(s => s.status === 'current') || roadmap.steps[1];
+            if (currentStep) {
+                document.getElementById('currentPhaseTitle').textContent = currentStep.title;
+                document.getElementById('currentPhaseDesc').textContent = currentStep.description;
+            }
+
+            roadmap.steps.forEach((step, index) => {
+                let markerClass = 'marker-future';
+                let cardClass = '';
+                let icon = `<span class="text-sm font-bold">${index + 1}</span>`;
+                let badge = '';
+
+                if (step.status === 'done') {
+                    markerClass = 'marker-done';
+                    cardClass = 'done opacity-80';
+                    icon = `<i class="fas fa-check"></i>`;
+                    badge = `<span class="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded">Done</span>`;
+                } else if (step.status === 'current') {
+                    markerClass = 'marker-current';
+                    cardClass = 'current';
+                    icon = `<i class="fas fa-spinner fa-spin"></i>`;
+                    badge = `<span class="text-xs bg-blue-500/10 text-blue-500 px-2 py-1 rounded border border-blue-500/20">Active</span>`;
+                } else {
+                    cardClass = 'opacity-60';
+                }
+
+                const html = `
+                    <div class="relative pl-8">
+                        <div class="absolute left-[-20px] top-0 roadmap-marker ${markerClass}">
+                            ${icon}
+                        </div>
+                        <div class="roadmap-card ${cardClass} glass-panel p-6 rounded-xl">
+                            <div class="flex justify-between mb-2">
+                                <h4 class="font-bold text-slate-900 dark:text-white">${step.title}</h4>
+                                ${badge}
+                            </div>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">${step.description}</p>
+                            
+                            <div class="flex gap-2 flex-wrap mb-3">
+                                ${step.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            </div>
+                            
+                            <div class="text-xs text-slate-400 font-mono">
+                                ⏱️ ${step.duration}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            document.getElementById('page-loader').classList.add('hidden');
+            document.getElementById('content-grid').classList.remove('hidden');
+        }
+
+        // --- Logout ---
+        function logout() { localStorage.removeItem('userToken'); window.location.href = '/login'; }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            
+            // Particles
+            const particleContainer = document.getElementById('particles');
+            for(let j=0; j<20; j++) {
+                const p = document.createElement('div');
+                p.className = 'absolute rounded-full bg-blue-400 opacity-20';
+                p.style.width = Math.random() * 3 + 'px';
+                p.style.height = p.style.width;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animation = `float ${Math.random() * 10 + 10}s infinite linear`;
+                particleContainer.appendChild(p);
+            }
         });
     </script>
 </body>

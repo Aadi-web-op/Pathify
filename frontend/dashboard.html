@@ -24,9 +24,6 @@
                         sans: ['"Outfit"', 'sans-serif'],
                         mono: ['"Space Grotesk"', 'monospace']
                     },
-                    colors: {
-                        neon: { blue: '#00f3ff', purple: '#bc13fe', pink: '#ff0055' }
-                    },
                     animation: {
                         'blob': 'blob 10s infinite',
                         'float': 'float 6s ease-in-out infinite',
@@ -79,27 +76,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Themes */
-        /* Aurora */
-        body[data-theme="aurora"] { background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%); }
-        body[data-theme="aurora"].dark { background: linear-gradient(to right, #0f0c29, #302b63, #24243e); }
-        
-        /* Neon */
-        body[data-theme="neon"] { background: #050505; color: #fff; }
-        body[data-theme="neon"] .glass-panel {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid #333;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
-        }
-        body[data-theme="neon"] .accent-text { color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); }
-        body[data-theme="neon"] .accent-bg { background: linear-gradient(45deg, #00f3ff, #bc13fe); }
-
-        /* Minimal */
-        body[data-theme="minimal"] { background: #f8fafc; }
-        body[data-theme="minimal"].dark { background: #020617; }
-        body[data-theme="minimal"] .glass-panel { background: transparent; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: none; }
-        body[data-theme="minimal"].dark .glass-panel { border: 1px solid rgba(255,255,255,0.1); }
-
         /* Scroll Reveal */
         .reveal {
             opacity: 0;
@@ -141,9 +117,62 @@
             z-index: 0;
             animation: blob 10s infinite alternate;
         }
+
+        /* Sidebar Transition */
+        #sidebar {
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            width: 20rem; /* w-80 equivalent */
+        }
+        
+        #sidebar.collapsed {
+            width: 0;
+            opacity: 0;
+            padding: 0;
+            overflow: hidden;
+            border: none;
+        }
+        
+        /* Floating Return Button */
+        #sidebar-return {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+        #sidebar-return.hidden {
+            transform: translateX(-200%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Sidebar Item Styling */
+        .sidebar-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+            padding-left: 1.5rem; /* Slight shift right */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            color: white !important;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            border-left-color: transparent;
+        }
+        
+        .sidebar-item.active i {
+            color: white !important;
+        }
+
+        /* Custom Scrollbar for sidebar nav */
+        .nav-scroll::-webkit-scrollbar { width: 4px; }
+        .nav-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 4px; }
+        .nav-scroll:hover::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); }
     </style>
 </head>
-<body class="font-sans antialiased text-slate-800 dark:text-slate-100 transition-colors duration-700 min-h-screen relative selection:bg-blue-500 selection:text-white" data-theme="auto">
+<body class="font-sans antialiased bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-500 min-h-screen relative selection:bg-blue-500 selection:text-white">
     
     <!-- Ambient Background Layer -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -153,63 +182,122 @@
         <div class="blob-bg bg-pink-400 dark:bg-pink-900 w-80 h-80 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animation-delay-4000"></div>
     </div>
 
+    <!-- Floating Return Button (Hidden by default) -->
+    <button id="sidebar-return" onclick="toggleSidebar()" class="fixed top-6 left-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] flex items-center justify-center text-blue-500 hover:scale-110 hidden transition-all group">
+        <i class="fas fa-bars text-xl group-hover:text-blue-400"></i>
+        <div class="absolute inset-0 rounded-full bg-blue-500 opacity-0 group-hover:opacity-10 animate-pulse"></div>
+    </button>
+
     <div class="flex h-screen relative z-10">
 
         <!-- FUTURISTIC SIDEBAR -->
-        <aside class="hidden md:flex flex-col w-20 lg:w-72 glass-panel border-r-0 lg:border-r h-full transition-all duration-300 z-30">
-            <div class="p-6 flex items-center justify-center lg:justify-start gap-4">
-                <div class="relative group cursor-pointer" onclick="playHoverSound()">
-                    <div class="absolute -inset-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
-                    <div class="relative w-10 h-10 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-cyan-500 font-bold text-xl shadow-lg">
-                        <i class="fas fa-atom fa-spin-slow"></i>
+        <aside id="sidebar" class="flex flex-col glass-panel border-r-0 lg:border-r h-full z-40 fixed lg:relative shadow-2xl lg:shadow-none">
+            <!-- Header -->
+            <div class="p-6 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="relative group cursor-pointer" onclick="playHoverSound()">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+                        <div class="relative w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-cyan-500 font-bold text-lg shadow-lg">
+                            <i class="fas fa-atom fa-spin-slow"></i>
+                        </div>
                     </div>
+                    <span class="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 accent-text">Pathify</span>
                 </div>
-                <span class="text-2xl font-bold tracking-tighter hidden lg:block bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 accent-text">Pathify</span>
+                <!-- Toggle Button -->
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition-all hover:rotate-180 p-2">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
             </div>
 
-            <nav class="flex-1 px-3 space-y-3 mt-8">
-                <!-- Nav Item -->
-                <a href="#" class="flex items-center gap-4 px-3 lg:px-5 py-4 bg-gradient-to-r from-blue-500/10 to-transparent text-blue-600 dark:text-cyan-400 rounded-2xl border-l-4 border-blue-500 transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
-                    <i class="fas fa-grid-2 w-6 text-center text-lg"></i>
-                    <span class="font-medium hidden lg:block">Dashboard</span>
+            <!-- Navigation Links -->
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto nav-scroll py-2">
+                <!-- Dashboard (Active) -->
+                <a href="#" class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-home w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">My Dashboard</span>
                 </a>
                 
-                <a href="/ksarth-chat" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
-                    <i class="fas fa-sparkles w-6 text-center text-lg group-hover:text-purple-500 transition-colors"></i>
-                    <span class="font-medium hidden lg:block">AI Companion</span>
+                <!-- Ksarth (AI) -->
+                <a href="/ksarth-chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-robot w-5 text-center text-lg group-hover:text-purple-400"></i>
+                    <span class="font-medium text-sm">Ksarth AI Chat</span>
                 </a>
 
-                <a href="/community" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
-                    <i class="fas fa-globe-americas w-6 text-center text-lg group-hover:text-pink-500 transition-colors"></i>
-                    <span class="font-medium hidden lg:block">Community</span>
+                <!-- Pramukh Mandala (Community) -->
+                <a href="/community" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-users w-5 text-center text-lg group-hover:text-pink-400"></i>
+                    <span class="font-medium text-sm">Pramukh Mandala</span>
+                </a>
+
+                <!-- My Workthrough -->
+                <a href="/workthrough" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-map-marked-alt w-5 text-center text-lg group-hover:text-emerald-400"></i>
+                    <span class="font-medium text-sm">My Workthrough</span>
                 </a>
                 
-                <a href="/gamification" class="flex items-center gap-4 px-3 lg:px-5 py-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/10 rounded-2xl transition-all hover:translate-x-1 group" onmouseenter="playHoverSound()">
-                    <i class="fas fa-medal w-6 text-center text-lg group-hover:text-yellow-500 transition-colors"></i>
-                    <span class="font-medium hidden lg:block">Achievements</span>
+                <!-- Gamification -->
+                <a href="/gamification" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-gamepad w-5 text-center text-lg group-hover:text-yellow-400"></i>
+                    <span class="font-medium text-sm">Gamification</span>
+                </a>
+
+                <!-- Certifications -->
+                <a href="/certifications" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-certificate w-5 text-center text-lg group-hover:text-orange-400"></i>
+                    <span class="font-medium text-sm">Certifications</span>
+                </a>
+
+                <!-- Company Chat -->
+                <a href="/company_chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-building w-5 text-center text-lg group-hover:text-blue-400"></i>
+                    <span class="font-medium text-sm flex-1">Company Chat</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">NEW</span>
+                </a>
+
+                <!-- Spacing -->
+                <div class="h-4"></div>
+
+                <!-- Feedback -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-comment-alt w-5 text-center text-lg group-hover:text-cyan-400"></i>
+                    <span class="font-medium text-sm">Feedback</span>
+                </a>
+
+                <!-- FAQs -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-question-circle w-5 text-center text-lg group-hover:text-teal-400"></i>
+                    <span class="font-medium text-sm">FAQs</span>
+                </a>
+
+                <!-- Settings -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group" onmouseenter="playHoverSound()">
+                    <i class="fas fa-cog w-5 text-center text-lg group-hover:text-slate-200"></i>
+                    <span class="font-medium text-sm">Settings</span>
                 </a>
             </nav>
 
-            <div class="p-6 border-t border-slate-200/20">
-                <div class="flex flex-col gap-4">
-                     <!-- Sound Toggle -->
-                     <button id="soundToggle" class="flex items-center gap-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors" onclick="toggleSound()">
-                        <i class="fas fa-volume-up w-6 text-center"></i>
-                        <span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>
-                    </button>
-
-                    <button onclick="logout()" class="flex items-center gap-4 text-red-500 hover:bg-red-500/10 px-4 py-3 rounded-xl transition-all w-full">
-                        <i class="fas fa-power-off w-6 text-center"></i>
-                        <span class="font-medium hidden lg:block">Log Out</span>
+            <!-- User Profile Footer -->
+            <div class="p-4 border-t border-slate-200/10 shrink-0">
+                <div class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div class="relative">
+                        <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg group-hover:ring-2 ring-blue-500 transition-all">U</div>
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p id="sidebar-username" class="text-sm font-bold text-white truncate">User Name</p>
+                        <p class="text-xs text-slate-400 truncate">Student</p>
+                    </div>
+                    <button onclick="logout()" class="text-slate-500 hover:text-red-400 transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
             </div>
         </aside>
 
-        <!-- MAIN SCROLL AREA -->
-        <main class="flex-1 h-full overflow-y-auto relative scroll-smooth perspective-1000">
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 h-full overflow-y-auto relative scroll-smooth perspective-1000 transition-all duration-300 w-full">
             
-            <!-- Floating Header -->
+            <!-- Header (Adjusted for Sidebar logic) -->
             <header class="sticky top-0 z-40 px-6 py-4 glass-panel border-b border-slate-200/10 transition-all duration-300 mt-4 mx-4 rounded-2xl flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
                     <div id="time-badge" class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-mono text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 flex items-center gap-2">
@@ -220,15 +308,11 @@
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <!-- Theme Switcher -->
-                    <div class="relative group">
-                        <button class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all" onclick="cycleTheme()">
-                            <i class="fas fa-palette text-slate-600 dark:text-cyan-400"></i>
-                        </button>
-                        <div class="absolute top-full right-0 mt-2 py-1 px-2 bg-slate-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                            Change Theme
-                        </div>
-                    </div>
+                    <!-- Theme Toggle -->
+                    <button id="themeToggleBtn" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm" onclick="toggleTheme()">
+                        <i class="fas fa-sun text-orange-500 dark:hidden"></i>
+                        <i class="fas fa-moon text-blue-400 hidden dark:block"></i>
+                    </button>
 
                     <!-- Profile Ring -->
                     <div class="relative cursor-pointer group" onclick="openProfileModal()">
@@ -239,15 +323,13 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-inner" id="nav-initials">U</div>
                         </div>
-                        <!-- Glow effect -->
-                        <div class="absolute inset-0 bg-blue-500 rounded-full blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300"></div>
                     </div>
                 </div>
             </header>
 
             <div class="p-6 max-w-7xl mx-auto space-y-12 pb-32">
 
-                <!-- 1. HERO STATS (Tilt Effect) -->
+                <!-- 1. HERO STATS -->
                 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
                     <!-- XP Card -->
                     <div class="glass-panel p-6 rounded-3xl tilt-card hover:shadow-2xl hover:shadow-blue-500/20 transition-all group relative overflow-hidden" onmouseenter="playHoverSound()">
@@ -345,51 +427,7 @@
                     </div>
                 </section>
 
-                <!-- 3. JOURNEY TIMELINE (Parallax) -->
-                <section class="glass-panel p-8 rounded-3xl reveal">
-                    <h3 class="text-xl font-bold mb-8">Your Trajectory</h3>
-                    <div class="relative">
-                        <!-- Animated Line -->
-                        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-700 -translate-y-1/2 z-0"></div>
-                        <div class="absolute top-1/2 left-0 w-1/3 h-0.5 bg-blue-500 -translate-y-1/2 z-0 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
-
-                        <div class="relative z-10 flex justify-between px-4">
-                            <!-- Step 1 -->
-                            <div class="flex flex-col items-center gap-3 cursor-pointer group" onclick="fireConfetti()">
-                                <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg shadow-lg shadow-blue-500/40 group-hover:scale-125 transition-transform duration-300">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <span class="text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">Start</span>
-                            </div>
-
-                             <!-- Step 2 -->
-                            <div class="flex flex-col items-center gap-3 cursor-pointer group">
-                                <div class="w-12 h-12 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-4 border-blue-500 flex items-center justify-center text-lg shadow-lg group-hover:scale-125 transition-transform duration-300">
-                                    <i class="fas fa-crosshairs animate-spin-slow"></i>
-                                </div>
-                                <span class="text-xs font-bold uppercase tracking-wider text-blue-500">Assessment</span>
-                            </div>
-
-                             <!-- Step 3 (Locked) -->
-                            <div class="flex flex-col items-center gap-3 opacity-40">
-                                <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-lg">
-                                    <i class="fas fa-lock"></i>
-                                </div>
-                                <span class="text-xs font-bold uppercase tracking-wider">Plan</span>
-                            </div>
-
-                             <!-- Step 4 (Locked) -->
-                            <div class="flex flex-col items-center gap-3 opacity-40">
-                                <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-lg">
-                                    <i class="fas fa-flag"></i>
-                                </div>
-                                <span class="text-xs font-bold uppercase tracking-wider">Goal</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 4. CAREERS (Grid with Hover Expand) -->
+                <!-- 3. CAREERS (Grid with Hover Expand) -->
                 <section class="space-y-6 reveal">
                     <div class="flex items-center justify-between">
                          <h3 class="text-2xl font-bold">Top Recommendations</h3>
@@ -444,6 +482,26 @@
         </div>
     </div>
 
+    <!-- Roadmap Modal -->
+    <div id="roadmapModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl transform scale-95 transition-transform duration-300 border border-gray-200 dark:border-gray-700" id="roadmapModalContent">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50 rounded-t-3xl">
+                <div>
+                    <h3 class="text-2xl font-bold flex items-center gap-3 text-gray-900 dark:text-white">
+                        <div class="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg"><i class="fas fa-map-signs"></i></div>
+                        <span id="roadmapTitle">Learning Roadmap</span>
+                    </h3>
+                </div>
+                <button onclick="closeRoadmap()" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-red-50 hover:text-red-500 transition-colors flex items-center justify-center">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div id="roadmapContent" class="flex-1 overflow-y-auto p-10 prose prose-lg dark:prose-invert max-w-none scroll-smooth">
+                <!-- AI Content -->
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- 1. CORE LOGIC ---
         const API_URL = `${window.location.protocol}//${window.location.host}`;
@@ -451,6 +509,44 @@
         let chartInstance = null;
         let audioContext = null;
         let isSoundEnabled = true;
+
+        // --- SIDEBAR LOGIC ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const returnBtn = document.getElementById('sidebar-return');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                // Show Sidebar
+                sidebar.classList.remove('collapsed');
+                returnBtn.classList.add('hidden');
+            } else {
+                // Hide Sidebar
+                sidebar.classList.add('collapsed');
+                returnBtn.classList.remove('hidden');
+            }
+        }
+        
+        // Auto-hide sidebar on mobile
+        function checkMobile() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth < 1024 && !sidebar.classList.contains('collapsed')) {
+                toggleSidebar();
+            }
+        }
+        window.addEventListener('resize', checkMobile);
+        document.addEventListener('DOMContentLoaded', checkMobile);
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            // For mobile, we might want an overlay approach, but for now reuse toggle
+            // Ensure sidebar is visible (remove collapsed) if hidden
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                // Optional: add overlay logic here
+            } else {
+                sidebar.classList.add('collapsed');
+            }
+        }
 
         // --- 2. AUDIO ENGINE (Synthesized sounds) ---
         function initAudio() {
@@ -486,7 +582,7 @@
             isSoundEnabled = !isSoundEnabled;
             const btn = document.getElementById('soundToggle');
             btn.innerHTML = isSoundEnabled 
-                ? '<i class="fas fa-volume-up w-6 text-center"></i><span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>'
+                ? '<i class="fas fa-volume-up w-6 text-center group-hover:text-blue-400"></i><span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>'
                 : '<i class="fas fa-volume-mute w-6 text-center text-red-500"></i><span class="text-sm font-medium hidden lg:block text-red-500">UI Sounds: Off</span>';
             if (isSoundEnabled && !audioContext) initAudio();
         }
@@ -540,31 +636,19 @@
         }
 
         // --- 4. THEME & TIME LOGIC ---
-        const themes = ['auto', 'aurora', 'neon', 'minimal'];
-        let currentThemeIndex = 0;
 
-        function cycleTheme() {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            const theme = themes[currentThemeIndex];
-            setTheme(theme);
-            playClickSound();
-        }
-
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            const hour = new Date().getHours();
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
             
-            // Auto Logic
-            if (theme === 'auto') {
-                document.body.removeAttribute('data-theme'); // Use default classes
-                if (hour >= 18 || hour < 6) document.documentElement.classList.add('dark');
-                else document.documentElement.classList.remove('dark');
-            } else if (theme === 'neon') {
-                document.documentElement.classList.add('dark');
-            } else {
-                 // Aurora/Minimal respect system pref or can be forced
-                 if (hour >= 18) document.documentElement.classList.add('dark');
+            // Re-render chart to update colors
+            if (chartInstance) {
+                chartInstance.destroy();
+                initChart(isDark);
             }
+            
+            playClickSound();
         }
 
         function updateClock() {
@@ -621,9 +705,15 @@
 
         function renderDashboard(user) {
             // Header
-            document.getElementById('greeting-text').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+            const firstName = user.name.split(' ')[0];
+            document.getElementById('greeting-text').textContent = `Welcome back, ${firstName}`;
+            
             const initials = user.name.substring(0,2).toUpperCase();
             document.getElementById('nav-initials').textContent = initials;
+            document.getElementById('sidebar-avatar').textContent = initials;
+            
+            document.getElementById('sidebar-username').textContent = user.name;
+            
             document.getElementById('modal-initials').textContent = initials;
             document.getElementById('modal-name').textContent = user.name;
             document.getElementById('modal-email').textContent = user.email;
@@ -650,7 +740,7 @@
             // Careers
             if (user.assessment && user.assessment.selected_careers && user.assessment.selected_careers.length > 0) {
                 renderCareers(user.assessment.selected_careers);
-                initChart(user.preferences.theme === 'dark');
+                initChart(document.documentElement.classList.contains('dark'));
             } else {
                 document.getElementById('empty-state').classList.remove('hidden');
             }
@@ -670,7 +760,9 @@
                         <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 w-0 transition-all duration-1000 delay-300 rounded-full" style="width: ${Math.round(career.confidence * 100)}%"></div>
                     </div>
                     <p class="text-slate-500 text-sm mb-6 line-clamp-2">${career.description}</p>
-                    <button class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg">View Roadmap</button>
+                    <button onclick="generateRoadmap('${career.title}', this)" class="w-full py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-magic"></i> View Roadmap
+                    </button>
                 </div>
             `).join('');
             
@@ -686,7 +778,7 @@
             const color = isDark ? '#94a3b8' : '#64748b';
             const grid = isDark ? '#334155' : '#e2e8f0';
             
-            new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: ['Logic', 'Creativity', 'Tech', 'Communication', 'Leadership'],
@@ -746,6 +838,39 @@
             content.classList.remove('scale-100');
             content.classList.add('scale-90');
             setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        async function generateRoadmap(careerTitle, btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Building...';
+            btn.disabled = true;
+            try {
+                const response = await fetch(`${API_URL}/api/generate-roadmap`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ career_title: careerTitle })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('roadmapTitle').textContent = `Roadmap: ${careerTitle}`;
+                    document.getElementById('roadmapContent').innerHTML = marked.parse(data.roadmap);
+                    
+                    const modal = document.getElementById('roadmapModal');
+                    const content = document.getElementById('roadmapModalContent');
+                    modal.classList.remove('hidden');
+                    setTimeout(() => {
+                        content.classList.remove('scale-95');
+                    }, 10);
+                }
+            } catch (e) { alert("Failed."); } 
+            finally { btn.innerHTML = original; btn.disabled = false; }
+        }
+
+        function closeRoadmap() {
+            const modal = document.getElementById('roadmapModal');
+            const content = document.getElementById('roadmapModalContent');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
         function logout() { localStorage.removeItem('userToken'); window.location.href = '/login'; }

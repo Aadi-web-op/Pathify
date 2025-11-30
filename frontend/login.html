@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,598 +7,598 @@
     <title>Login & Sign Up - Pathify</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace'],
+                    },
+                    colors: {
+                        neon: {
+                            blue: '#22d3ee',
+                            purple: '#a855f7',
+                            pink: '#f472b6',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 10s ease-in-out infinite',
+                        'float-delayed': 'float 12s ease-in-out 5s infinite',
+                        'pulse-glow': 'pulseGlow 4s infinite',
+                        'shimmer': 'shimmer 3s linear infinite',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-20px) rotate(5deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.4, transform: 'scale(1)' },
+                            '50%': { opacity: 0.6, transform: 'scale(1.05)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: 0, transform: 'translateY(40px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* ... (All your CSS is unchanged) ... */
+        /* --- CORE VARIABLES --- */
         body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            transition: background 0.8s ease-in-out;
+            background-color: #000000; /* Pure Black base */
+            color: #f8fafc;
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        .signup-bg {
-             background: linear-gradient(to bottom right, #eff6ff, #4c35b4);
-        }
-        
-        .login-bg {
-             background: linear-gradient(to bottom right, #fefce8, #fff8ab);
-        }
-
-        .background-shapes {
+        /* --- AURORA BACKGROUND (UPDATED) --- */
+        .aurora-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            z-index: -2;
+            /* Deep Blue Gradient at Top fading to Black */
+            background: radial-gradient(ellipse at 50% 0%, #001055 0%, #00051a 40%, #000000 80%);
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3; /* Adjusted opacity for better blending */
+            animation: float 20s ease-in-out infinite alternate;
             z-index: -1;
         }
+        
+        /* Grid Overlay */
+        .cyber-grid {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
 
-        .background-shapes li {
+        /* --- GLASSMORPHISM CARD --- */
+        .glass-card {
+            background: rgba(10, 15, 30, 0.6); /* Slightly darker tint */
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease-out, box-shadow 0.3s ease;
+        }
+        
+        /* Shimmer Effect on Card */
+        .glass-card::before {
+            content: '';
             position: absolute;
-            display: block;
-            list-style: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(137, 168, 107, 0.6);
-            animation: animateShapes 30s linear infinite;
-            bottom: -150px;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(255, 255, 255, 0.05),
+                transparent
+            );
+            transform: skewX(-25deg);
+            animation: shimmer 6s infinite;
+            pointer-events: none;
         }
 
-        .background-shapes li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
-        .background-shapes li:nth-child(2) { left: 10%; width: 40px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
-        .background-shapes li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
-        .background-shapes li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
-        .background-shapes li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
-        .background-shapes li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
-        .background-shapes li:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
-        .background-shapes li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
-        .background-shapes li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
-        .background-shapes li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 15s; }
+        /* --- 3D FLOATING ELEMENTS --- */
+        .float-shape {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            transition: transform 0.1s ease-out;
+        }
 
-        @keyframes animateShapes {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
-            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        /* --- INPUT FIELDS --- */
+        .neon-input-group {
+            position: relative;
+            transition: all 0.3s ease;
         }
         
-        .form-container {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: fadeIn 0.8s ease-in-out;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .form-container:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .neon-input {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
         }
         
-        .form-wrapper {
-            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        .neon-input:focus {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), inset 0 0 0 1px rgba(59, 130, 246, 0.5);
+            outline: none;
+        }
+        
+        .input-icon {
+            transition: all 0.3s ease;
+        }
+        .neon-input:focus + .input-icon {
+            color: #60a5fa;
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.5));
         }
 
-        .form-hidden {
+        /* --- MAGNETIC BUTTON --- */
+        .btn-magnetic {
+            position: relative;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            overflow: hidden;
+            transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.3s ease;
+        }
+        
+        .btn-magnetic::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
             opacity: 0;
-            transform: translateX(20px);
+            transition: opacity 0.3s;
+        }
+        
+        .btn-magnetic:hover {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        .btn-magnetic:hover::after { opacity: 1; }
+        
+        .btn-magnetic:active {
+            transform: scale(0.98) !important; /* Override JS for click feel */
+        }
+
+        /* --- SOCIAL BUTTONS --- */
+        .social-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- FORM TRANSITIONS --- */
+        .form-container-inner {
+            position: relative;
+            height: 480px;
+            transition: height 0.4s ease;
+        }
+        
+        .form-view {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            backface-visibility: hidden;
+        }
+        
+        .form-active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            pointer-events: all;
+        }
+        
+        .form-exit-left {
+            opacity: 0;
+            transform: translateX(-120px) scale(0.9) rotateY(-10deg);
             pointer-events: none;
         }
         
-        .form-visible {
-            opacity: 1;
-            transform: translateX(0);
-            position: static;
+        .form-exit-right {
+            opacity: 0;
+            transform: translateX(120px) scale(0.9) rotateY(10deg);
+            pointer-events: none;
         }
 
-        .interactive-element {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        .interactive-element:hover {
-            transform: translateY(-2px);
-        }
-        .interactive-element:focus-within {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        /* --- MICRO INTERACTIONS --- */
+        .shake-anim { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        .social-btn {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            border: 1px solid #D1D5DB; /* border-gray-300 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-            background-color: #ffffff;
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 500; /* font-medium */
-            color: #6B7280; /* text-gray-500 */
-            transition: all 150ms ease-in-out;
-        }
-        .social-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            background-color: #F9FAFB; /* hover:bg-gray-50 */
-        }
-        
         .loader {
-            border: 2px solid #f3f3ff;
-            border-top: 2px solid #3498db;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top: 2px solid #fff;
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
+            width: 18px; height: 18px;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 signup-bg">
+<body class="flex items-center justify-center min-h-screen selection:bg-blue-600 selection:text-white">
 
-    <ul class="background-shapes">
-        <li></li><li></li><li></li><li></li><li></li>
-        <li></li><li></li><li></li><li></li><li></li>
-    </ul>
+    <!-- Environment Layers -->
+    <div class="aurora-bg">
+        <!-- Animated Orbs (Adjusted for Blue Theme) -->
+        <div class="orb bg-blue-800/30 w-[600px] h-[600px] top-[-20%] left-[20%]" data-speed="0.02"></div>
+        <div class="orb bg-indigo-900/30 w-[500px] h-[500px] bottom-[-10%] right-[-10%]" style="animation-delay: -5s" data-speed="0.03"></div>
+        <div class="cyber-grid"></div>
+    </div>
 
-    <div class="form-container w-full max-w-md p-8 space-y-8 rounded-2xl shadow-2xl">
+    <!-- 3D Floating Elements -->
+    <div class="float-shape top-[20%] left-[15%] opacity-60 animate-float" data-speed="0.05">
+        <div class="w-16 h-16 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm rotate-12 shadow-2xl shadow-blue-900/40"></div>
+    </div>
+    <div class="float-shape bottom-[25%] right-[20%] opacity-60 animate-float-delayed" data-speed="0.04">
+        <div class="w-20 h-20 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl shadow-indigo-900/40"></div>
+    </div>
+
+    <!-- Main Login Card -->
+    <div class="relative w-full max-w-[420px] p-6 z-10 perspective-container">
         
-        <div class="relative overflow-hidden min-h-[560px]">
+        <!-- Card Glow Halo (Refined: Deep Blue) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/40 to-black/0 rounded-[2rem] blur-[60px] opacity-60 animate-pulse-glow"></div>
 
-            <!-- Sign Up Form -->
-            <div id="signup-form" class="form-wrapper form-visible">
-                <div class="text-center">
-                    <h1 class="text-3xl font-bold text-gray-800">Create Account</h1>
-                    <p class="mt-2 text-sm text-gray-600">Join us and start your journey today.</p>
+        <div class="glass-card rounded-[2rem] p-8 md:p-10 relative overflow-hidden animate-slide-up" id="main-card">
+            
+            <!-- Top Decor (Subtle Blue Light) -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-600 to-transparent opacity-60"></div>
+            
+            <!-- Header -->
+            <div class="text-center mb-8 relative z-10">
+                <div class="relative inline-block group cursor-pointer">
+                    <div class="absolute inset-0 bg-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                    <div class="w-14 h-14 bg-gradient-to-br from-slate-900 to-black border border-white/10 rounded-2xl flex items-center justify-center shadow-xl relative z-10 transition-transform duration-500 group-hover:rotate-6">
+                        <i class="fas fa-compass text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 text-2xl"></i>
+                    </div>
                 </div>
+                <h1 class="text-3xl font-bold text-white mt-4 tracking-tight">Pathify</h1>
+                <p class="text-slate-400 text-sm mt-1 font-medium tracking-wide">AI-POWERED CAREER OS</p>
+            </div>
 
-                <form class="mt-8 space-y-6" id="signup-form-element" onsubmit="return false;">
-                    <!-- ... (email/password form unchanged) ... -->
-                    <div class="space-y-4 rounded-md">
-                        <div class="interactive-element rounded-lg">
-                            <label for="signup-name" class="sr-only">Full Name</label>
-                            <input id="signup-name" name="name" type="text" required class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition duration-150 ease-in-out bg-white/50" placeholder="Full Name">
-                        </div>
-                        <div class="interactive-element rounded-lg">
-                            <label for="signup-email" class="sr-only">Email address</label>
-                            <input id="signup-email" name="email" type="email" autocomplete="email" required class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition duration-150 ease-in-out bg-white/50" placeholder="Email address">
-                        </div>
-                        <div class="interactive-element rounded-lg">
-                            <label for="signup-password" class="sr-only">Password</label>
-                            <input id="signup-password" name="password" type="password" autocomplete="new-password" required class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition duration-150 ease-in-out bg-white/50" placeholder="Password (8+ characters)">
-                        </div>
-                    </div>
-                    <div>
-                         <button type="button" id="signup-submit-btn" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                            <span class="btn-text">Sign Up</span>
-                            <span class="loader hidden"></span>
-                         </button>
-                    </div>
-                </form>
+            <!-- Forms Container -->
+            <div class="form-container-inner relative">
                 
-                <p id="signup-error-message" class="text-center text-red-600 font-medium mt-4 hidden"></p>
-
-                <div class="mt-6">
-                    <div class="relative">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-white/10 text-gray-500 backdrop-blur-sm">Or continue with</span>
-                        </div>
-                    </div>
-                    <div class="mt-6 grid grid-cols-3 gap-3">
-                        
-                        <!-- Google Button -->
-                        <div>
-                            <a href="#" id="google-signup-btn" class="social-btn">
-                                <span class="sr-only">Sign up with Google</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                                </svg>
-                            </a>
-                        </div>
-                        
-                        <!-- [FIXED] GitHub Button -->
-                        <div>
-                            <a href="/api/auth/github/login" class="social-btn">
-                                <span class="sr-only">Sign up with GitHub</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
-                                </svg>
-                            </a>
-                        </div>
-                        
-                        <!-- [FIXED] LinkedIn Button -->
-                        <div>
-                           <a href="/api/auth/linkedin/login" class="social-btn">
-                                <span class="sr-only">Sign up with LinkedIn</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                 <p class="mt-6 text-center text-sm text-gray-600">
-                    Already have an account?
-                    <a href="#" id="show-login" class="font-medium text-blue-600 hover:text-blue-500 transition duration-150 ease-in-out">
-                        Log In
-                    </a>
-                </p>
-            </div>
-
-            <!-- Login Form -->
-            <div id="login-form" class="form-wrapper form-hidden w-full">
-                <div class="text-center">
-                    <h1 class="text-3xl font-bold text-gray-800">Welcome Back!</h1>
-                    <p class="mt-2 text-sm text-gray-600">Sign in to continue to your account.</p>
-                </div>
-                 <form class="mt-8 space-y-6" id="login-form-element" onsubmit="return false;">
-                    <div class="space-y-4 rounded-md">
-                        <div class="interactive-element rounded-lg">
-                            <label for="login-email" class="sr-only">Email address</label>
-                            <input id="login-email" name="email" type="email" autocomplete="email" required class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition duration-150 ease-in-out bg-white/50" placeholder="Email address">
-                        </div>
-                        <div class="interactive-element rounded-lg">
-                            <label for="login-password" class="sr-only">Password</label>
-                            <input id="login-password" name="password" type="password" autocomplete="current-password" required class="relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm transition duration-150 ease-in-out bg-white/50" placeholder="Password">
-                        </div>
-                    </div>
-                     <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded bg-white/30">
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
-                        </div>
-                        <div class="text-sm">
-                            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">Forgot your password?</a>
-                        </div>
+                <!-- LOGIN FORM -->
+                <div id="login-form" class="form-view form-active">
+                    <div class="text-center mb-8">
+                        <h2 class="text-xl font-semibold text-white">Welcome Back</h2>
+                        <p class="text-xs text-slate-400 mt-1">Enter credentials to access neural interface</p>
                     </div>
 
-                    <div>
-                        <button type="button" id="login-submit-btn" class="group submit-btn interactive-element relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                           <span class="btn-text">Sign In</span>
-                           <span class="loader hidden"></span>
+                    <form class="space-y-5" id="login-form-element" onsubmit="return false;">
+                        <div class="neon-input-group">
+                            <input id="login-email" type="email" required class="neon-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm focus:outline-none placeholder-slate-500" placeholder="Email Address">
+                            <i class="far fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 input-icon"></i>
+                        </div>
+                        
+                        <div class="neon-input-group">
+                            <input id="login-password" type="password" required class="neon-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm focus:outline-none placeholder-slate-500" placeholder="Password">
+                            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 input-icon"></i>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs">
+                            <label class="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-white transition-colors">
+                                <input type="checkbox" class="rounded bg-slate-900 border-slate-700 text-blue-600 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5">
+                                Remember
+                            </label>
+                            <a href="#" class="text-blue-400 hover:text-blue-300 transition-colors">Recovery?</a>
+                        </div>
+
+                        <button type="button" id="login-submit-btn" class="btn-magnetic w-full py-3.5 rounded-xl font-bold text-white text-sm shadow-lg flex justify-center items-center gap-2 mt-2 group">
+                            <span class="btn-text relative z-10">Login</span>
+                            <i class="fas fa-arrow-right text-xs opacity-70 group-hover:translate-x-1 transition-transform relative z-10"></i>
+                            <span class="loader hidden relative z-10"></span>
                         </button>
-                    </div>
-                </form>
+                    </form>
 
-                <p id="login-error-message" class="text-center text-red-600 font-medium mt-4 hidden"></p>
-
-                <div class="mt-6">
-                     <div class="relative">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-300"></div>
-                        </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-white/10 text-gray-500 backdrop-blur-sm">Or sign in with</span>
-                        </div>
-                    </div>
-                     <div class="mt-6 grid grid-cols-3 gap-3">
-                         
-                        <!-- Google Button -->
-                         <div>
-                            <a href="#" id="google-login-btn" class="social-btn">
-                                <span class="sr-only">Sign in with Google</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                                </svg>
+                    <div class="mt-8 text-center">
+                        <p class="text-xs text-slate-500 mb-4 uppercase tracking-widest">Or authenticate with</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button id="google-login-btn" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-google"></i>
+                            </button>
+                            <a href="/api/auth/github/login" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="/api/auth/linkedin/login" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
+                        <p class="mt-8 text-sm text-slate-400">
+                            New User? <a href="#" id="show-signup" class="text-blue-400 hover:text-blue-300 font-semibold transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-blue-400 hover:after:w-full after:transition-all">Create Identity</a>
+                        </p>
+                    </div>
+                </div>
 
-                        <!-- [FIXED] GitHub Button -->
-                        <div>
-                            <a href="/api/auth/github/login" class="social-btn">
-                                <span class="sr-only">Sign in with GitHub</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.165 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
-                                </svg>
-                            </a>
+                <!-- SIGN UP FORM -->
+                <div id="signup-form" class="form-view form-exit-right">
+                    <div class="text-center mb-8">
+                        <h2 class="text-xl font-semibold text-white">New Identity</h2>
+                        <p class="text-xs text-slate-400 mt-1">Begin your evolution today</p>
+                    </div>
+
+                    <form class="space-y-5" id="signup-form-element" onsubmit="return false;">
+                        <div class="neon-input-group">
+                            <input id="signup-name" type="text" required class="neon-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm focus:outline-none placeholder-slate-500" placeholder="Full Name">
+                            <i class="far fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 input-icon"></i>
+                        </div>
+
+                        <div class="neon-input-group">
+                            <input id="signup-email" type="email" required class="neon-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm focus:outline-none placeholder-slate-500" placeholder="Email Address">
+                            <i class="far fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 input-icon"></i>
                         </div>
                         
-                        <!-- [FIXED] LinkedIn Button -->
-                        <div>
-                           <a href="/api/auth/linkedin/login" class="social-btn">
-                                <span class="sr-only">Sign in with LinkedIn</span>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                </svg>
+                        <div class="neon-input-group">
+                            <input id="signup-password" type="password" required class="neon-input w-full pl-11 pr-4 py-3.5 rounded-xl text-sm focus:outline-none placeholder-slate-500" placeholder="Password (8+ chars)">
+                            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500 input-icon"></i>
+                        </div>
+
+                        <button type="button" id="signup-submit-btn" class="btn-magnetic w-full py-3.5 rounded-xl font-bold text-white text-sm shadow-lg flex justify-center items-center gap-2 mt-2 group">
+                            <span class="btn-text relative z-10">Create Account</span>
+                            <i class="fas fa-chevron-right text-xs opacity-70 group-hover:translate-x-1 transition-transform relative z-10"></i>
+                            <span class="loader hidden relative z-10"></span>
+                        </button>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-xs text-slate-500 mb-4 uppercase tracking-widest">Or authenticate with</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button id="google-signup-btn" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-google"></i>
+                            </button>
+                            <a href="/api/auth/github/login" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="/api/auth/linkedin/login" class="social-btn flex items-center justify-center py-2.5 rounded-xl text-white">
+                                <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
-                     </div>
+                        <p class="mt-8 text-sm text-slate-400">
+                            Existing User? <a href="#" id="show-login" class="text-blue-400 hover:text-blue-300 font-semibold transition-colors relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-blue-400 hover:after:w-full after:transition-all">Login Here</a>
+                        </p>
+                    </div>
                 </div>
-                 <p class="mt-6 text-center text-sm text-gray-600">
-                    Don't have an account?
-                    <a href="#" id="show-signup" class="font-medium text-blue-600 hover:text-blue-500 transition duration-150 ease-in-out">
-                        Sign Up
-                    </a>
-                </p>
+
             </div>
+
+            <!-- Error Toast -->
+            <div id="error-message" class="hidden absolute bottom-4 left-4 right-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium text-center animate-slide-up backdrop-blur-md">
+                <i class="fas fa-exclamation-triangle mr-2"></i> <span id="error-text">Error message</span>
+            </div>
+
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-8 text-[10px] text-slate-500 font-mono uppercase tracking-widest opacity-60">
+            Secure Neural Link v2.0 • Pathify Inc.
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Base URL for your API ---
-        const API_URL = `${window.location.protocol}//${window.location.host}`;
-
-        // --- Get Error Message Elements ---
-        const signupErrorEl = document.getElementById('signup-error-message');
-        const loginErrorEl = document.getElementById('login-error-message');
-
-        // --- Form switching logic ---
-        // ... (unchanged) ...
-        const signupForm = document.getElementById('signup-form');
-        const loginForm = document.getElementById('login-form');
-        const showLoginBtn = document.getElementById('show-login');
-        const showSignupBtn = document.getElementById('show-signup');
-
-        showLoginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.body.classList.remove('signup-bg');
-            document.body.classList.add('login-bg');
-            signupForm.classList.remove('form-visible');
-            signupForm.classList.add('form-hidden');
-            setTimeout(() => {
-                loginForm.classList.remove('form-hidden');
-                loginForm.classList.add('form-visible');
-            }, 100);
-        });
-
-        showSignupBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.body.classList.remove('login-bg');
-            document.body.classList.add('signup-bg');
-            loginForm.classList.remove('form-visible');
-            loginForm.classList.add('form-hidden');
-            setTimeout(() => {
-                signupForm.classList.remove('form-hidden');
-                signupForm.classList.add('form-visible');
-            }, 100);
-        });
-
-        // --- Email/Password Sign Up Logic ---
-        // ... (unchanged) ...
-        const signupButton = document.getElementById('signup-submit-btn');
-        signupButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            signupErrorEl.textContent = '';
-            signupErrorEl.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_URL = `${window.location.protocol}//${window.location.host}`;
+            const errorBox = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const mainCard = document.getElementById('main-card');
             
-            const btnText = signupButton.querySelector('.btn-text');
-            const loader = signupButton.querySelector('.loader');
-            btnText.classList.add('hidden');
-            loader.classList.remove('hidden');
-            signupButton.disabled = true;
-
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-
-            const userData = { name: name, email: email, password: password };
-
-            try {
-                const response = await fetch(`${API_URL}/api/register/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
-                });
-
-                if (response.status === 201) {
-                    const data = await response.json();
-                    localStorage.setItem('userToken', data.access_token);
-                    window.location.href = '/questions'; 
-                } else {
-                    const errorData = await response.json();
-                    signupErrorEl.textContent = `Error: ${errorData.detail || 'Unknown error'}`;
-                    signupErrorEl.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                signupErrorEl.textContent = 'Oops! Something went wrong. Is the server running?';
-                signupErrorEl.classList.remove('hidden');
-            } finally {
-                btnText.classList.remove('hidden');
-                loader.classList.add('hidden');
-                signupButton.disabled = false;
-            }
-        });
-
-        // --- Email/Password Login Logic ---
-        // ... (unchanged) ...
-        const loginButton = document.getElementById('login-submit-btn');
-        loginButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            loginErrorEl.textContent = '';
-            loginErrorEl.classList.add('hidden');
-
-            const btnText = loginButton.querySelector('.btn-text');
-            const loader = loginButton.querySelector('.loader');
-            btnText.classList.add('hidden');
-            loader.classList.remove('hidden');
-            loginButton.disabled = true;
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+            // --- Form Switching Logic ---
+            const signupForm = document.getElementById('signup-form');
+            const loginForm = document.getElementById('login-form');
             
-            const formData = new FormData();
-            formData.append('username', email);
-            formData.append('password', password);
+            document.getElementById('show-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                clearError();
+                signupForm.classList.remove('form-active');
+                signupForm.classList.add('form-exit-right');
+                setTimeout(() => {
+                    loginForm.classList.remove('form-exit-left');
+                    loginForm.classList.add('form-active');
+                }, 50);
+            });
 
-            try {
-                const response = await fetch(`${API_URL}/api/login/`, {
-                    method: 'POST',
-                    body: formData
+            document.getElementById('show-signup').addEventListener('click', (e) => {
+                e.preventDefault();
+                clearError();
+                loginForm.classList.remove('form-active');
+                loginForm.classList.add('form-exit-left');
+                setTimeout(() => {
+                    signupForm.classList.remove('form-exit-right');
+                    signupForm.classList.add('form-active');
+                }, 50);
+            });
+
+            // --- Mouse Parallax Effect ---
+            document.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth - e.pageX * 2) / 100;
+                const y = (window.innerHeight - e.pageY * 2) / 100;
+                
+                // Move Background Orbs
+                document.querySelectorAll('.orb').forEach(orb => {
+                    const speed = orb.getAttribute('data-speed') || 0.02;
+                    orb.style.transform = `translate(${x * 20 * speed}px, ${y * 20 * speed}px)`;
                 });
 
-                if (response.status === 200) {
-                    const data = await response.json();
-                    localStorage.setItem('userToken', data.access_token);
-                    window.location.href = '/dashboard';
+                // Tilt Main Card
+                mainCard.style.transform = `perspective(1000px) rotateX(${y * 0.05}deg) rotateY(${x * -0.05}deg)`;
+                
+                // Move Floating Shapes
+                document.querySelectorAll('.float-shape').forEach(shape => {
+                    const speed = shape.getAttribute('data-speed') || 0.05;
+                    shape.style.transform = `translate(${x * 50 * speed}px, ${y * 50 * speed}px)`;
+                });
+            });
+
+            // --- Magnetic Buttons ---
+            document.querySelectorAll('.btn-magnetic').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0px, 0px)';
+                });
+            });
+
+            // --- Helper Functions ---
+            function showError(msg) {
+                errorText.textContent = msg;
+                errorBox.classList.remove('hidden');
+                // Micro-shake
+                mainCard.classList.add('shake-anim');
+                setTimeout(() => mainCard.classList.remove('shake-anim'), 400);
+            }
+
+            function clearError() { errorBox.classList.add('hidden'); }
+
+            function toggleLoading(btnId, isLoading) {
+                const btn = document.getElementById(btnId);
+                const text = btn.querySelector('.btn-text');
+                const loader = btn.querySelector('.loader');
+                const icon = btn.querySelector('i');
+                
+                if (isLoading) {
+                    text.classList.add('hidden');
+                    if(icon) icon.classList.add('hidden');
+                    loader.classList.remove('hidden');
+                    btn.disabled = true;
+                    btn.style.cursor = 'wait';
                 } else {
-                    const errorData = await response.json();
-                    loginErrorEl.textContent = `Oops! ${errorData.detail || 'Incorrect email or password'}`;
-                    loginErrorEl.classList.remove('hidden');
+                    text.classList.remove('hidden');
+                    if(icon) icon.classList.remove('hidden');
+                    loader.classList.add('hidden');
+                    btn.disabled = false;
+                    btn.style.cursor = 'pointer';
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                loginErrorEl.textContent = 'Yikes! Could not connect. Check your internet.';
-                loginErrorEl.classList.remove('hidden');
-            } finally {
-                btnText.classList.remove('hidden');
-                loader.classList.add('hidden');
-                loginButton.disabled = false;
-            }
-        });
-
-        // --- [FIXED] Google Sign-In Logic (Token Client Flow) ---
-
-        let GOOGLE_CLIENT_ID = null;
-        let googleTokenClient = null;
-
-        // 1. Fetch our Client ID from the backend
-        fetch(`${API_URL}/api/auth/google-client-id`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Could not fetch client ID.");
-                }
-                return response.json();
-            })
-            .then(data => {
-                GOOGLE_CLIENT_ID = data.client_id;
-                initializeGoogleTokenClient();
-            })
-            .catch(err => {
-                console.error("Could not fetch Google Client ID. Google Sign-In will not work.", err);
-                showGoogleError("Could not connect to Google Sign-In.");
-            });
-
-        // 2. Initialize the Google "Token Client"
-        function initializeGoogleTokenClient() {
-            if (!GOOGLE_CLIENT_ID) return;
-
-            // This creates a client that can request an *Access Token*
-            googleTokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: GOOGLE_CLIENT_ID,
-                scope: 'https://www.googleapis.com/auth/userinfo.email \
-                        https://www.googleapis.com/auth/userinfo.profile',
-                callback: handleGoogleTokenResponse, // Function to call on success
-            });
-
-            // 3. Attach click listeners to our new manual buttons
-            document.getElementById('google-signup-btn').addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent <a> tag from navigating
-                googleTokenClient.requestAccessToken(); // <-- This shows the pop-up
-            });
-
-            document.getElementById('google-login-btn').addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent <a> tag from navigating
-                googleTokenClient.requestAccessToken(); // <-- This shows the pop-up
-            });
-        }
-
-        // 4. Handle the token response from Google
-        // This is the callback for the Token Client
-        async function handleGoogleTokenResponse(tokenResponse) {
-            // Check for errors in the response
-            if (tokenResponse.error) {
-                console.error("Google Token Client Error:", tokenResponse.error);
-                showGoogleError("Google Sign-In failed. Please try again.");
-                return;
             }
 
-            const accessToken = tokenResponse.access_token;
-            showGlobalLoading(true); // Show loading spinner
+            // --- Login Handler ---
+            document.getElementById('login-submit-btn').addEventListener('click', async () => {
+                clearError();
+                toggleLoading('login-submit-btn', true);
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const formData = new FormData();
+                formData.append('username', email);
+                formData.append('password', password);
 
-            try {
-                // Send this ACCESS token to our backend
-                const backendResponse = await fetch(`${API_URL}/api/auth/google`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: accessToken }) // 'token' is the access token
-                });
+                try {
+                    const res = await fetch(`${API_URL}/api/login/`, { method: 'POST', body: formData });
+                    if (res.ok) {
+                        const data = await res.json();
+                        localStorage.setItem('userToken', data.access_token);
+                        window.location.href = '/dashboard';
+                    } else {
+                        const err = await res.json();
+                        showError(err.detail || 'Access Denied');
+                    }
+                } catch (e) { showError('Network Neural Link Severed'); } 
+                finally { toggleLoading('login-submit-btn', false); }
+            });
 
-                if (backendResponse.status === 200) {
-                    const data = await backendResponse.json();
-                    localStorage.setItem('userToken', data.access_token);
-                    
-                    // Redirect based on whether the user is new
-                    if (data.is_new_user) {
+            // --- Signup Handler ---
+            document.getElementById('signup-submit-btn').addEventListener('click', async () => {
+                clearError();
+                toggleLoading('signup-submit-btn', true);
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+
+                try {
+                    const res = await fetch(`${API_URL}/api/register/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, password })
+                    });
+                    if (res.status === 201) {
+                        const data = await res.json();
+                        localStorage.setItem('userToken', data.access_token);
                         window.location.href = '/questions';
                     } else {
-                        window.location.href = '/dashboard';
+                        const err = await res.json();
+                        showError(err.detail || 'Registration Failed');
                     }
-                } else {
-                    const errorData = await backendResponse.json();
-                    showGoogleError(errorData.detail || "Google login failed.");
-                    showGlobalLoading(false);
-                }
-            } catch (err) {
-                console.error("Error during Google auth:", err);
-                showGoogleError("Could not connect to server for Google login.");
-                showGlobalLoading(false);
-            }
-        }
-        
-        // Helper function to show loading state on all submit buttons
-        function showGlobalLoading(isLoading) {
-            const buttons = document.querySelectorAll('.submit-btn');
-            buttons.forEach(button => {
-                const btnText = button.querySelector('.btn-text');
-                const loader = button.querySelector('.loader');
-                if (isLoading) {
-                    btnText.classList.add('hidden');
-                    loader.classList.remove('hidden');
-                    button.disabled = true;
-                } else {
-                    btnText.classList.remove('hidden');
-                    loader.classList.add('hidden');
-                    button.disabled = false;
-                }
+                } catch (e) { showError('Network Neural Link Severed'); }
+                finally { toggleLoading('signup-submit-btn', false); }
             });
-        }
-        
-        // Helper function to show errors on both forms
-        function showGoogleError(message) {
-            signupErrorEl.textContent = message;
-            signupErrorEl.classList.remove('hidden');
-            loginErrorEl.textContent = message;
-            loginErrorEl.classList.remove('hidden');
-        }
 
-        // [NEW] Check for OAuth errors in URL on page load
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-        if (error) {
-            if (error === 'github-login-failed') {
-                showGoogleError('GitHub login failed. Please try again.');
-            } else if (error === 'linkedin-login-failed') {
-                showGoogleError('LinkedIn login failed. Please try again.');
-            }
-        }
-    });
+            // --- Google Auth ---
+            let GOOGLE_CLIENT_ID = null;
+            fetch(`${API_URL}/api/auth/google-client-id`)
+                .then(r => r.json()).then(d => {
+                    GOOGLE_CLIENT_ID = d.client_id;
+                    const client = google.accounts.oauth2.initTokenClient({
+                        client_id: GOOGLE_CLIENT_ID,
+                        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+                        callback: async (resp) => {
+                            if (resp.error) return showError("Google Identity Protocol Failed");
+                            try {
+                                const backendRes = await fetch(`${API_URL}/api/auth/google`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ token: resp.access_token })
+                                });
+                                const data = await backendRes.json();
+                                if (backendRes.ok) {
+                                    localStorage.setItem('userToken', data.access_token);
+                                    window.location.href = data.is_new_user ? '/questions' : '/dashboard';
+                                } else {
+                                    showError(data.detail);
+                                }
+                            } catch (e) { showError("Server Sync Failed"); }
+                        }
+                    });
+                    document.getElementById('google-login-btn').onclick = () => client.requestAccessToken();
+                    document.getElementById('google-signup-btn').onclick = () => client.requestAccessToken();
+                }).catch(() => console.error("Auth Init Failed"));
+        });
     </script>
 </body>
 </html>
