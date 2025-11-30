@@ -1,373 +1,436 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathify - The Future of Career Growth</title>
     <link rel="icon" href="images/logo.png">
-    <title>Pathify - AI-Powered Career Platform</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
+                        violet: { 500: '#8b5cf6', 600: '#7c3aed' },
+                        accent: { 400: '#22d3ee', 500: '#06b6d4' }
+                    },
                     animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 3s ease-in-out infinite',
-                        'fade-in': 'fadeIn 0.8s ease-out forwards',
-                        'slide-up': 'slideUp 0.8s ease-out forwards',
-                        'float-slow': 'floatSlow 20s ease-in-out infinite',
-                        'wave-drift': 'waveDrift 30s ease-in-out infinite',
+                        'float': 'float 8s ease-in-out infinite',
+                        'float-delayed': 'float 8s ease-in-out 4s infinite',
+                        'pulse-glow': 'pulseGlow 3s infinite',
+                        'blob': 'blob 20s infinite',
+                        'scroll': 'scroll 30s linear infinite',
+                        'spin-slow': 'spin 15s linear infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'grow-bar': 'growBar 2s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
+                        pulseGlow: { '0%, 100%': { boxShadow: '0 0 15px rgba(56, 189, 248, 0.2)' }, '50%': { boxShadow: '0 0 30px rgba(56, 189, 248, 0.6)' } },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        scroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        growBar: {
+                            '0%': { width: '0%' },
+                            '100%': { width: 'var(--target-width)' }
+                        }
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        /* Global Styles */
+        body { background-color: #0f172a; color: #e2e8f0; overflow-x: hidden; }
+        
+        /* Glassmorphism */
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Gradients & Glows */
+        .text-gradient {
+            background: linear-gradient(135deg, #38bdf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+
+        .hero-blob {
+            position: absolute;
+            filter: blur(90px);
+            opacity: 0.4;
+            z-index: 0;
+            animation: blob 20s infinite alternate;
+        }
+
+        /* 3D & Interactive Elements */
+        .perspective-container { perspective: 1200px; }
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: rotateX(5deg) rotateY(-5deg);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tilt-card:hover { 
+            transform: rotateX(0) rotateY(0) scale(1.02);
+            box-shadow: 0 20px 50px rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Button Glow */
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-glow::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.6s, opacity 0.6s;
+        }
+        .btn-glow:hover::after {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        /* Magnetic Effect Utility Class (JS needed for true magnetic, using CSS approximation) */
+        .magnetic:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        /* Demo Animations */
+        .demo-pulse {
+            animation: pulse-scale 2s infinite;
+        }
+        @keyframes pulse-scale {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .typing-demo {
+            width: 12ch;
+            animation: typing 2s steps(12), blink .5s step-end infinite alternate;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid;
+        }
+        @keyframes typing { from { width: 0 } }
+        @keyframes blink { 50% { border-color: transparent } }
+    </style>
 </head>
-<body class="antialiased overflow-x-hidden">
-    <!-- Decorative floating blobs -->
-    <div class="floating-blob blob-1"></div>
-    <div class="floating-blob blob-2"></div>
+<body class="antialiased">
+
+    <!-- Cinematic Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <canvas id="starfield" class="absolute inset-0 opacity-60"></canvas>
+        <div class="hero-blob bg-blue-600 w-[500px] h-[500px] top-[-100px] left-[-100px] mix-blend-screen animate-blob"></div>
+        <div class="hero-blob bg-purple-600 w-[600px] h-[600px] bottom-[-200px] right-[-200px] mix-blend-screen animate-blob animation-delay-2000"></div>
+        <div class="hero-blob bg-cyan-500 w-[400px] h-[400px] top-[40%] left-[30%] mix-blend-screen animate-blob animation-delay-4000 opacity-20"></div>
+        
+        <!-- Grid Overlay -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMCAwSDQwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
+    </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl">
-                        <a href="images/logo.png">
-                            <img src="images/logo.png" alt="Pathify Logo" class="h-8 w-8 rounded-full logo-img">
-                        </a>
-                    </span>
-                    <span class="text-xl font-bold text-gray-900">Pathify</span>
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-blue-500 blur-lg opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white font-bold text-xl border border-white/10">
+                            <i class="fas fa-compass fa-spin-hover"></i>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-display font-bold text-white tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-blue-200 transition-all">Pathify</span>
                 </div>
                 
-                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-gray-700 hover:text-blue-600 transition-colors">Features</a>
-                    <a href="#how" class="text-gray-700 hover:text-blue-600 transition-colors">How</a>
-                    <a href="#stories" class="text-gray-700 hover:text-blue-600 transition-colors">Stories</a>
-                    <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Get Started</button>
+                    <a href="#features" class="text-slate-300 hover:text-white font-medium transition-colors relative group">
+                        Features
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#how-it-works" class="text-slate-300 hover:text-white font-medium transition-colors relative group">
+                        Process
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-400 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#testimonials" class="text-slate-300 hover:text-white font-medium transition-colors relative group">
+                        Stories
+                        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-pink-400 transition-all group-hover:w-full"></span>
+                    </a>
                 </div>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Mobile Navigation -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <a href="#features" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors">Features</a>
-                <a href="#how" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors">How</a>
-                <a href="#stories" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors">Stories</a>
-                <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+
+                <div class="flex items-center gap-4">
+                    <a href="login.html" class="hidden md:block text-slate-300 hover:text-white font-semibold transition-colors">Sign In</a>
+                    <a href="login.html" class="btn-glow px-6 py-2.5 bg-white text-slate-900 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                        Get Started
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
-        <!-- Move canvas below the hero text for 3D model to appear lower -->
-        <div class="relative z-20 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-            <h1 class="hero-title text-4xl sm:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-indigo-400 mb-6 tracking-tight animate-fade-in" style="text-shadow:none;">
-                Perfect Career Match<br>
-                <span class="text-gradient bg-gradient-to-r from-yellow-400 via-pink-300 to-blue-300 bg-clip-text text-transparent">in Minutes</span>
-                <span class="text-gray-800 font-bold">— Not Months —</span>
-                <span class="text-gradient bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">with AI</span>
-            </h1>
-            <p class="hero-subtitle text-xl sm:text-2xl text-gray-900 mb-8 max-w-2xl mx-auto font-medium animate-fade-in" style="text-shadow:none;">
-                <span class="bg-white/10 px-4 py-2 rounded-xl shadow-inner text-blue-700 font-semibold">
-                    AI-powered platform that <span class="text-yellow-600 font-bold">analyzes your skills, preferences, and market trends</span> to find your ideal career path <span class="text-green-600 font-bold">instantly</span>.
-                </span>
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8 animate-fade-in">
-                <button id="start-assessment-btn" class="bg-gradient-to-r from-blue-600 via-blue-500 to-teal-400 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:from-blue-700 hover:to-teal-500 transition-all transform hover:scale-105 border-2 border-white/30 btn-no-lift">
-                    Start Assessment
-                </button>
-                <button id="watch-demo-btn" class="bg-white/90 text-blue-700 border-2 border-blue-400 px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:bg-blue-50 transition-all transform hover:scale-105 btn-no-lift">
-                    Watch Demo
-                </button>
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center max-w-5xl mx-auto mb-20">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-blue-300 font-mono text-xs mb-8 animate-fade-in hover:bg-white/10 transition-colors cursor-default backdrop-blur-md">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    AI-POWERED CAREER INTELLIGENCE V2.0
+                </div>
+                
+                <h1 class="text-6xl md:text-8xl font-display font-extrabold text-white tracking-tight mb-8 leading-tight reveal active drop-shadow-2xl">
+                    Stop Guessing. <br>
+                    Start <span class="text-gradient">Ascending.</span>
+                </h1>
+                
+                <p class="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed reveal active" style="transition-delay: 100ms;">
+                    The first career OS that builds itself. Unlock your true potential with personalized AI roadmaps, real-time market data, and precision skill matching.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center reveal active" style="transition-delay: 200ms;">
+                    <a href="questions.html" class="btn-glow group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white rounded-2xl font-bold text-lg transition-all hover:-translate-y-1 flex items-center justify-center gap-3 overflow-hidden">
+                        <div class="absolute inset-0 bg-white/20 group-hover:translate-x-full transition-transform duration-500 skew-x-12 -translate-x-full"></div>
+                        <span>Start Assessment</span> 
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <button class="px-8 py-4 bg-white/5 text-white border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/10 hover:border-white/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-3 backdrop-blur-sm">
+                        <i class="fas fa-play-circle text-blue-400"></i> Live Demo
+                    </button>
+                </div>
             </div>
-        </div>
-        <!-- Move canvas here so it appears below the text -->
-        <canvas id="heroCanvas" class="absolute left-0 right-0 bottom-0 w-full h-2/3 z-10" style="top:auto;"></canvas>
-        
-        <!-- Floating Laptop Mock -->
-        <div class="absolute right-10 top-1/2 transform -translate-y-1/2 z-10 hidden lg:block">
-            <div class="floating-laptop w-80 h-52 bg-gray-800 rounded-lg shadow-2xl animate-float relative overflow-hidden transition-all duration-300">
-                <div class="absolute inset-2 bg-blue-500 rounded opacity-20 animate-pulse"></div>
-                <div class="absolute inset-4 bg-gradient-to-r from-blue-400 to-purple-500 rounded opacity-60"></div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center reveal">
-                    <div class="text-4xl font-bold text-blue-600 mb-2 counter-with-neon" data-count="93">0</div>
-                    <div class="text-lg text-gray-600">Success Rate</div>
-                </div>
-                <div class="text-center reveal">
-                    <div class="text-4xl font-bold text-blue-600 mb-2 counter-with-neon" data-count="5">0</div>
-                    <div class="text-lg text-gray-600">Minutes Average</div>
-                </div>
-                <div class="text-center reveal">
-                    <div class="text-4xl font-bold text-blue-600 mb-2 counter-with-neon" data-count="10000">0</div>
-                    <div class="text-lg text-gray-600">Users Helped</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Problem Section -->
-    <section id="features" class="py-16 bg-gray-50 section-with-texture">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">The Career Search Problem</h2>
-                <p class="text-xl text-gray-600">Traditional career guidance is broken</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-lg reveal spotlight-card">
-                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">💸</span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Expensive</h3>
-                    <p class="text-gray-600">Career coaching costs thousands of dollars</p>
-                </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg reveal spotlight-card">
-                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🐌</span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Slow</h3>
-                    <p class="text-gray-600">Months of analysis for basic insights</p>
-                </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg reveal spotlight-card">
-                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">📋</span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Generic</h3>
-                    <p class="text-gray-600">One-size-fits-all recommendations</p>
-                </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-lg reveal spotlight-card">
-                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">🔒</span>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Limited Reach</h3>
-                    <p class="text-gray-600">Only available to a privileged few</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Solution Section -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Our Solution</h2>
-                <p class="text-xl text-gray-600">AI-powered career guidance that's fast, affordable, and personalized</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
-                <div class="text-center reveal spotlight-card">
-                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">⚡</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Instant</h3>
-                    <p class="text-gray-600">Get career insights in minutes, not months</p>
-                </div>
-                
-                <div class="text-center reveal spotlight-card">
-                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">🎯</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Precise</h3>
-                    <p class="text-gray-600">Personalized recommendations based on your unique profile</p>
-                </div>
-                
-                <div class="text-center reveal spotlight-card">
-                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span class="text-3xl">📊</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Current</h3>
-                    <p class="text-gray-600">Real-time market data and trending opportunities</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section id="how" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-                <p class="text-xl text-gray-600">Four simple steps to your perfect career match</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="text-center reveal">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 step-icon-ring">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Assessment</h3>
-                    <p class="text-gray-600">Complete our comprehensive skills and preference assessment</p>
-                </div>
-                
-                <div class="text-center reveal">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 step-icon-ring">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">AI Analysis</h3>
-                    <p class="text-gray-600">Our AI analyzes your profile against market opportunities</p>
-                </div>
-                
-                <div class="text-center reveal">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 step-icon-ring">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Matches</h3>
-                    <p class="text-gray-600">Receive personalized career matches with fit scores</p>
-                </div>
-                
-                <div class="text-center reveal">
-                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 step-icon-ring">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Roadmap</h3>
-                    <p class="text-gray-600">Get a detailed roadmap to achieve your career goals</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Differentiators -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">What Makes Us Different</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl reveal pulse-on-view">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Real-Time Data</h3>
-                    <p class="text-gray-600">Our AI continuously analyzes job market trends, salary data, and skill demands to provide up-to-date recommendations.</p>
-                </div>
-                
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl reveal pulse-on-view">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Continuous Learning</h3>
-                    <p class="text-gray-600">Our platform learns from every interaction, constantly improving recommendations and success rates.</p>
-                </div>
-                
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl reveal pulse-on-view">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Holistic Roadmaps</h3>
-                    <p class="text-gray-600">We don't just suggest careers—we provide complete roadmaps including skills to develop and steps to take.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Market Stats Bar -->
-    <section class="py-8 bg-gray-900 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-center gap-8 text-center">
-                <div class="reveal">
-                    <span class="text-2xl font-bold text-blue-400">$6.2B</span>
-                    <span class="text-gray-300 ml-2">Market Size</span>
-                </div>
-                <div class="hidden md:block w-px h-8 bg-gray-600"></div>
-                <div class="reveal">
-                    <span class="text-2xl font-bold text-green-400">5.1%</span>
-                    <span class="text-gray-300 ml-2">CAGR</span>
-                </div>
-                <div class="hidden md:block w-px h-8 bg-gray-600"></div>
-                <div class="reveal">
-                    <span class="text-2xl font-bold text-yellow-400">71%</span>
-                    <span class="text-gray-300 ml-2">Need Better Guidance</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Success Stories -->
-    <section id="stories" class="py-16 bg-gradient-to-r from-blue-50 to-purple-50 relative overflow-hidden">
-        <div class="absolute inset-0 bg-white/50"></div>
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
-                <p class="text-xl text-gray-600">Real people, real results</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl reveal pulse-on-view">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-white font-semibold">S</div>
-                        <div class="ml-4">
-                            <h4 class="font-semibold text-gray-900">Sarah Chen</h4>
-                            <p class="text-gray-600">Marketing Manager → UX Designer</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700">"Pathify helped me transition from marketing to UX design in just 6 months. The roadmap was spot-on and the career match was perfect!"</p>
-                </div>
-                
-                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl reveal pulse-on-view">
-                    <div class="flex items-center mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">V</div>
-                        <div class="ml-4">
-                            <h4 class="font-semibold text-gray-900">Vikas Patel</h4>
-                            <p class="text-gray-600">Software Engineer → Data Scientist</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-700">"The AI analysis was incredibly accurate. It identified data science as a perfect fit based on my skills and interests. Now I'm loving my new career!"</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Showcase -->
-    <section class="py-16 bg-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Intelligent Dashboard</h2>
-                <p class="text-xl text-gray-600">Get comprehensive insights into your career journey</p>
-            </div>
-            
-            <div class="max-w-4xl mx-auto reveal">
-                <div class="bg-gradient-to-br from-gray-900 to-blue-900 rounded-2xl p-8 shadow-2xl">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                            <h3 class="text-white font-semibold mb-4">Career Match Score</h3>
-                            <div class="flex items-center">
-                                <div class="text-4xl font-bold text-green-400">94%</div>
-                                <div class="ml-4 text-white/70">Perfect Fit</div>
+            <!-- INTERACTIVE DEMO MOCKUP (3D Tilt) -->
+            <div class="perspective-container max-w-6xl mx-auto mt-8 reveal active" style="transition-delay: 300ms;">
+                <div class="tilt-card glass-card rounded-3xl p-1 shadow-2xl relative bg-gradient-to-br from-white/10 to-white/5 border-t border-white/20 group/demo">
+                    <!-- Screen Glow Behind -->
+                    <div class="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10"></div>
+                    
+                    <div class="rounded-[22px] overflow-hidden bg-[#0f172a] relative border border-white/5">
+                        <!-- UI Header -->
+                        <div class="h-12 bg-slate-900/80 backdrop-blur border-b border-white/5 flex items-center justify-between px-4">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors"></div>
+                            </div>
+                            <div class="flex items-center gap-2 bg-black/20 px-4 py-1.5 rounded-full border border-white/5 w-1/3">
+                                <i class="fas fa-lock text-xs text-green-400"></i>
+                                <span class="text-xs text-slate-400 truncate">pathify.ai/dashboard/user</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="far fa-bell text-slate-400 hover:text-white cursor-pointer"></i>
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 p-0.5">
+                                    <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center text-xs font-bold text-white">U</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                            <h3 class="text-white font-semibold mb-4">Skills Analysis</h3>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-white/70">
-                                    <span>Python</span>
-                                    <span>Expert</span>
+
+                        <!-- UI Content -->
+                        <div class="grid grid-cols-12 h-[550px] bg-slate-900/50">
+                            <!-- Sidebar -->
+                            <div class="col-span-2 border-r border-white/5 p-4 hidden md:flex flex-col gap-2 bg-slate-900/50">
+                                <div class="h-10 w-full bg-blue-600/20 border border-blue-500/30 rounded-xl flex items-center gap-3 px-3 text-blue-400 cursor-pointer hover:bg-blue-600/30 transition-all">
+                                    <i class="fas fa-th-large"></i> <span class="text-sm font-medium">Dashboard</span>
                                 </div>
-                                <div class="flex justify-between text-white/70">
-                                    <span>Data Analysis</span>
-                                    <span>Advanced</span>
+                                <div class="h-10 w-full hover:bg-white/5 rounded-xl flex items-center gap-3 px-3 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                                    <i class="fas fa-map"></i> <span class="text-sm font-medium">Roadmap</span>
+                                </div>
+                                <div class="h-10 w-full hover:bg-white/5 rounded-xl flex items-center gap-3 px-3 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                                    <i class="fas fa-briefcase"></i> <span class="text-sm font-medium">Careers</span>
+                                </div>
+                                <div class="mt-auto h-32 w-full rounded-xl bg-gradient-to-b from-blue-500/10 to-transparent border border-blue-500/20 p-4 relative overflow-hidden">
+                                    <div class="absolute top-0 left-0 w-full h-1 bg-blue-500 animate-pulse"></div>
+                                    <p class="text-xs text-blue-300 font-bold mb-1">Pro Plan</p>
+                                    <p class="text-[10px] text-slate-400">Unlock all features</p>
+                                    <button class="mt-3 w-full py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-500">Upgrade</button>
+                                </div>
+                            </div>
+
+                            <!-- Main Area -->
+                            <div class="col-span-12 md:col-span-10 p-6 overflow-y-auto scrollbar-hide">
+                                <div class="grid grid-cols-3 gap-6 mb-6">
+                                    <!-- Interactive Stats -->
+                                    <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 hover:border-blue-500/50 transition-all group/stat hover:bg-slate-800/60">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div class="text-slate-400 text-xs uppercase tracking-widest">Match Score</div>
+                                            <i class="fas fa-bullseye text-blue-500 bg-blue-500/10 p-1.5 rounded-lg"></i>
+                                        </div>
+                                        <div class="text-3xl font-bold text-white flex items-end gap-2">
+                                            <span class="typing-demo border-r-0">98%</span> 
+                                            <span class="text-xs text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded mb-1 group-hover/stat:translate-y-[-2px] transition-transform">Top 1%</span>
+                                        </div>
+                                        <div class="w-full bg-slate-700/50 h-1.5 mt-3 rounded-full overflow-hidden">
+                                            <div class="bg-gradient-to-r from-blue-500 to-green-400 h-full rounded-full animate-[growBar_1.5s_ease-out_forwards]" style="--target-width: 98%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 hover:border-purple-500/50 transition-all group/stat hover:bg-slate-800/60">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div class="text-slate-400 text-xs uppercase tracking-widest">XP Gained</div>
+                                            <i class="fas fa-bolt text-purple-500 bg-purple-500/10 p-1.5 rounded-lg"></i>
+                                        </div>
+                                        <div class="text-3xl font-bold text-white">2,450</div>
+                                        <div class="flex items-center gap-1 mt-2 text-xs text-slate-400">
+                                            <span class="text-purple-400">+120</span> since yesterday
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-slate-800/40 p-5 rounded-2xl border border-white/5 hover:border-orange-500/50 transition-all group/stat hover:bg-slate-800/60">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div class="text-slate-400 text-xs uppercase tracking-widest">Streak</div>
+                                            <i class="fas fa-fire text-orange-500 bg-orange-500/10 p-1.5 rounded-lg demo-pulse"></i>
+                                        </div>
+                                        <div class="text-3xl font-bold text-white">12 Days</div>
+                                        <div class="flex gap-1 mt-3">
+                                            <div class="w-full h-1 rounded-full bg-orange-500"></div>
+                                            <div class="w-full h-1 rounded-full bg-orange-500"></div>
+                                            <div class="w-full h-1 rounded-full bg-orange-500"></div>
+                                            <div class="w-full h-1 rounded-full bg-slate-700"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-6 h-64">
+                                    <!-- Interactive Graph -->
+                                    <div class="col-span-2 bg-slate-800/40 rounded-2xl border border-white/5 p-6 relative overflow-hidden group/graph">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover/graph:opacity-100 transition-opacity"></div>
+                                        <div class="flex justify-between items-center mb-6 relative z-10">
+                                            <h4 class="text-sm font-semibold text-white">Market Demand vs. Your Skills</h4>
+                                            <div class="flex gap-2">
+                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span><span class="text-[10px] text-slate-400">You</span>
+                                                <span class="w-2 h-2 rounded-full bg-slate-600 ml-2"></span><span class="text-[10px] text-slate-400">Market</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-end justify-between h-40 gap-3 relative z-10 px-2">
+                                            <!-- Bar 1 -->
+                                            <div class="w-full flex flex-col justify-end h-full gap-1 group/bar cursor-pointer">
+                                                <div class="w-full bg-slate-700/50 h-[30%] rounded-sm transition-all"></div>
+                                                <div class="w-full bg-blue-500/60 h-[40%] rounded-sm group-hover/bar:bg-blue-400 group-hover/bar:h-[45%] transition-all relative">
+                                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity border border-white/10 whitespace-nowrap">Logic</div>
+                                                </div>
+                                            </div>
+                                            <!-- Bar 2 -->
+                                            <div class="w-full flex flex-col justify-end h-full gap-1 group/bar cursor-pointer">
+                                                <div class="w-full bg-slate-700/50 h-[60%] rounded-sm transition-all"></div>
+                                                <div class="w-full bg-blue-500/60 h-[55%] rounded-sm group-hover/bar:bg-blue-400 group-hover/bar:h-[60%] transition-all relative">
+                                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity border border-white/10">Code</div>
+                                                </div>
+                                            </div>
+                                            <!-- Bar 3 -->
+                                            <div class="w-full flex flex-col justify-end h-full gap-1 group/bar cursor-pointer">
+                                                <div class="w-full bg-slate-700/50 h-[40%] rounded-sm transition-all"></div>
+                                                <div class="w-full bg-blue-500/60 h-[70%] rounded-sm group-hover/bar:bg-blue-400 group-hover/bar:h-[75%] transition-all relative">
+                                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity border border-white/10">Design</div>
+                                                </div>
+                                            </div>
+                                            <!-- Bar 4 -->
+                                            <div class="w-full flex flex-col justify-end h-full gap-1 group/bar cursor-pointer">
+                                                <div class="w-full bg-slate-700/50 h-[80%] rounded-sm transition-all"></div>
+                                                <div class="w-full bg-blue-500/80 h-[65%] rounded-sm group-hover/bar:bg-blue-400 group-hover/bar:h-[70%] transition-all shadow-[0_0_15px_#3b82f6] relative">
+                                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity border border-white/10">Data</div>
+                                                </div>
+                                            </div>
+                                            <!-- Bar 5 -->
+                                            <div class="w-full flex flex-col justify-end h-full gap-1 group/bar cursor-pointer">
+                                                <div class="w-full bg-slate-700/50 h-[50%] rounded-sm transition-all"></div>
+                                                <div class="w-full bg-blue-500/40 h-[40%] rounded-sm group-hover/bar:bg-blue-400 group-hover/bar:h-[45%] transition-all relative">
+                                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity border border-white/10">Mgmt</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Active Module -->
+                                    <div class="col-span-1 flex flex-col gap-3">
+                                        <h4 class="text-sm font-semibold text-white mb-1">Next Steps</h4>
+                                        <div class="p-3 bg-gradient-to-r from-blue-500/20 to-transparent rounded-xl border border-blue-500/30 flex items-center gap-3 hover:bg-blue-500/30 transition-colors cursor-pointer group/item">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs shadow-lg group-hover/item:scale-110 transition-transform">
+                                                <i class="fas fa-play"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-xs font-bold text-white truncate">Python Basics</div>
+                                                <div class="text-[10px] text-blue-300">15 mins left</div>
+                                            </div>
+                                        </div>
+                                        <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center gap-3 hover:bg-white/10 transition-colors cursor-pointer group/item opacity-60 hover:opacity-100">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-slate-400 text-xs">
+                                                <i class="fas fa-lock"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-xs font-bold text-slate-300 truncate">Data Structs</div>
+                                                <div class="text-[10px] text-slate-500">Locked</div>
+                                            </div>
+                                        </div>
+                                        <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex items-center gap-3 hover:bg-white/10 transition-colors cursor-pointer group/item opacity-60 hover:opacity-100">
+                                            <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-slate-400 text-xs">
+                                                <i class="fas fa-lock"></i>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="text-xs font-bold text-slate-300 truncate">Algorithms</div>
+                                                <div class="text-[10px] text-slate-500">Locked</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -377,59 +440,344 @@
         </div>
     </section>
 
-    <!-- Final CTA -->
-    <section id="contact" class="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="max-w-3xl mx-auto reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-6">Ready to Find Your Perfect Career?</h2>
-                <p class="text-xl mb-8 opacity-90">Join thousands of professionals who've discovered their ideal career path with AI-powered precision.</p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button class="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 animate-pulse-slow">
-                        Start Assessment
-                    </button>
-                    <button class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-all transform hover:scale-105">
-                        Partner With Us
-                    </button>
+    <!-- SOCIAL PROOF SLIDER -->
+    <section class="py-10 border-y border-white/5 bg-slate-900/50 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-center text-sm font-semibold text-slate-500 uppercase tracking-[0.3em] mb-8">Trusted by future leaders at</p>
+            <div class="relative overflow-hidden group">
+                <div class="flex gap-16 animate-scroll whitespace-nowrap opacity-50 group-hover:opacity-80 transition-opacity">
+                    <i class="fab fa-google text-4xl"></i>
+                    <i class="fab fa-microsoft text-4xl"></i>
+                    <i class="fab fa-spotify text-4xl"></i>
+                    <i class="fab fa-amazon text-4xl"></i>
+                    <i class="fab fa-airbnb text-4xl"></i>
+                    <i class="fab fa-meta text-4xl"></i>
+                    <i class="fab fa-uber text-4xl"></i>
+                    <!-- Duplicate for seamless scroll -->
+                    <i class="fab fa-google text-4xl"></i>
+                    <i class="fab fa-microsoft text-4xl"></i>
+                    <i class="fab fa-spotify text-4xl"></i>
+                    <i class="fab fa-amazon text-4xl"></i>
                 </div>
+                <!-- Gradient Fade Edges -->
+                <div class="absolute top-0 left-0 h-full w-20 bg-gradient-to-r from-[#0f172a] to-transparent"></div>
+                <div class="absolute top-0 right-0 h-full w-20 bg-gradient-to-l from-[#0f172a] to-transparent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES GRID (Holographic Cards) -->
+    <section id="features" class="py-32 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-24 reveal">
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">
+                    Intelligence that <span class="text-gradient">Evolves</span>
+                </h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">Pathify uses predictive AI to analyze your unique profile against millions of data points, creating a living career strategy.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Large Feature -->
+                <div class="md:col-span-2 glass-card rounded-3xl p-8 relative overflow-hidden group hover:border-blue-500/30 transition-colors reveal">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] transition-all group-hover:bg-blue-500/20 group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 text-2xl mb-6 border border-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Neural Skill Analysis</h3>
+                        <p class="text-slate-400 mb-8 max-w-md leading-relaxed">We don't just look at your resume. Our neural engine maps your latent abilities, soft skills, and cognitive patterns to identify high-value opportunities you missed.</p>
+                        
+                        <!-- Animated Graphic -->
+                        <div class="h-32 flex items-end gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <div class="w-8 bg-blue-500/30 h-1/3 rounded-t animate-pulse"></div>
+                            <div class="w-8 bg-blue-500/50 h-2/3 rounded-t animate-pulse animation-delay-2000"></div>
+                            <div class="w-8 bg-blue-500/80 h-1/2 rounded-t animate-pulse"></div>
+                            <div class="w-8 bg-blue-400 h-full rounded-t shadow-[0_0_15px_#60a5fa] animate-pulse animation-delay-4000"></div>
+                            <div class="w-8 bg-blue-600/40 h-3/4 rounded-t animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vertical Feature -->
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group hover:border-purple-500/30 transition-colors reveal" style="transition-delay: 100ms;">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 text-2xl mb-6 border border-purple-500/20 group-hover:rotate-12 transition-transform">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Adaptive Roadmaps</h3>
+                        <p class="text-slate-400 mb-8 text-sm">Your path adjusts in real-time as you learn. Skip what you know, focus on what matters.</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group-hover:translate-x-2 transition-transform">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="text-slate-300 text-sm">Gap Analysis</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group-hover:translate-x-2 transition-transform" style="transition-delay: 50ms;">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="text-slate-300 text-sm">Course Matching</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group-hover:translate-x-2 transition-transform" style="transition-delay: 100ms;">
+                                <i class="fas fa-check-circle text-green-400"></i>
+                                <span class="text-slate-300 text-sm">Project Ideas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Features -->
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group hover:border-pink-500/30 transition-colors reveal">
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-500/20 rounded-full blur-[50px]"></div>
+                    <i class="fas fa-gamepad text-4xl text-pink-500 mb-4 group-hover:scale-110 transition-transform block"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Gamified Progression</h3>
+                    <p class="text-slate-400 text-sm">Earn XP, streaks, and badges. Make career growth addictive.</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group hover:border-cyan-500/30 transition-colors reveal" style="transition-delay: 100ms;">
+                    <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-[50px]"></div>
+                    <i class="fas fa-network-wired text-4xl text-cyan-500 mb-4 group-hover:scale-110 transition-transform block"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Market Sync</h3>
+                    <p class="text-slate-400 text-sm">Live salary data and demand forecasting for your region.</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group hover:border-yellow-500/30 transition-colors reveal" style="transition-delay: 200ms;">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-yellow-500/10 rounded-full blur-[50px]"></div>
+                    <div class="relative z-10 text-center">
+                        <i class="fas fa-users text-4xl text-yellow-500 mb-4 group-hover:scale-110 transition-transform block"></i>
+                        <h3 class="text-xl font-bold text-white mb-2">Community Core</h3>
+                        <p class="text-slate-400 text-sm">Connect with mentors and peers on the same path.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE (Neon) -->
+    <section id="how-it-works" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl font-display font-bold text-white">Your Journey Algorithm</h2>
+            </div>
+            
+            <div class="relative">
+                <!-- Glowing Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-transparent hidden md:block shadow-[0_0_10px_#3b82f6]"></div>
+                
+                <div class="space-y-24">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between reveal group">
+                        <div class="md:w-5/12 text-center md:text-right order-2 md:order-1 pr-8">
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Initialize Profile</h3>
+                            <p class="text-slate-400">Sign up and sync your LinkedIn or upload a CV. Our AI builds your base profile instantly.</p>
+                        </div>
+                        <div class="w-16 h-16 bg-slate-900 border-2 border-blue-500 rounded-full flex items-center justify-center text-blue-400 font-bold z-10 shadow-[0_0_20px_rgba(59,130,246,0.5)] order-1 md:order-2 group-hover:scale-125 transition-transform duration-300">
+                            <i class="fas fa-user-astronaut text-xl"></i>
+                        </div>
+                        <div class="md:w-5/12 order-3"></div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between reveal group">
+                        <div class="md:w-5/12 order-2 md:order-1"></div>
+                        <div class="w-16 h-16 bg-slate-900 border-2 border-purple-500 rounded-full flex items-center justify-center text-purple-400 font-bold z-10 shadow-[0_0_20px_rgba(168,85,247,0.5)] order-1 md:order-2 group-hover:scale-125 transition-transform duration-300">
+                            <i class="fas fa-wand-magic-sparkles text-xl"></i>
+                        </div>
+                        <div class="md:w-5/12 text-center md:text-left order-3 pl-8">
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Deep Scan Assessment</h3>
+                            <p class="text-slate-400">Take our gamified assessment to uncover hidden talents and personality traits.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between reveal group">
+                        <div class="md:w-5/12 text-center md:text-right order-2 md:order-1 pr-8">
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-pink-400 transition-colors">Launch Career</h3>
+                            <p class="text-slate-400">Receive your 98% match probability and start executing your custom roadmap.</p>
+                        </div>
+                        <div class="w-16 h-16 bg-slate-900 border-2 border-pink-500 rounded-full flex items-center justify-center text-pink-400 font-bold z-10 shadow-[0_0_20px_rgba(236,72,153,0.5)] order-1 md:order-2 group-hover:scale-125 transition-transform duration-300">
+                            <i class="fas fa-rocket text-xl"></i>
+                        </div>
+                        <div class="md:w-5/12 order-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS (Cards) -->
+    <section id="testimonials" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-4xl font-display font-bold text-center text-white mb-16 reveal">User Stories</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-card p-8 rounded-3xl hover:bg-white/5 transition-colors reveal group">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-blue-500 rounded-full blur opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                            <img src="https://i.pravatar.cc/150?img=32" class="w-12 h-12 rounded-full relative z-10 border border-white/20">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Sarah J.</h4>
+                            <p class="text-xs text-blue-400 uppercase tracking-wide">Marketing → UX</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 italic leading-relaxed">"The AI saw connections I missed. It translated my marketing psychology skills into UX research terms. Salary doubled in 8 months."</p>
+                </div>
+                
+                 <!-- Card 2 -->
+                 <div class="glass-card p-8 rounded-3xl hover:bg-white/5 transition-colors reveal group" style="transition-delay: 100ms;">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-purple-500 rounded-full blur opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                            <img src="https://i.pravatar.cc/150?img=11" class="w-12 h-12 rounded-full relative z-10 border border-white/20">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">David C.</h4>
+                            <p class="text-xs text-purple-400 uppercase tracking-wide">Student → Data</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 italic leading-relaxed">"I was drowning in tutorials. Pathify gave me a linear, strict roadmap. I knew exactly what to learn every single Monday morning."</p>
+                </div>
+
+                 <!-- Card 3 -->
+                 <div class="glass-card p-8 rounded-3xl hover:bg-white/5 transition-colors reveal group" style="transition-delay: 200ms;">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-pink-500 rounded-full blur opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                            <img src="https://i.pravatar.cc/150?img=5" class="w-12 h-12 rounded-full relative z-10 border border-white/20">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">Elena R.</h4>
+                            <p class="text-xs text-pink-400 uppercase tracking-wide">Teacher → Dev</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 italic leading-relaxed">"The assessment nailed my logic skills. I didn't think I was 'technical' enough until the data proved me wrong."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA (Aurora) -->
+    <section class="py-24 px-4 relative z-10">
+        <div class="max-w-5xl mx-auto relative rounded-[3rem] overflow-hidden shadow-2xl reveal">
+            <!-- Animated Gradient Background -->
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 via-purple-900 to-slate-900 animate-shimmer background-size-200"></div>
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-30"></div>
+            
+            <!-- Glow Effects -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-blue-500/20 blur-[100px]"></div>
+
+            <div class="relative z-10 p-12 md:p-24 text-center">
+                <h2 class="text-4xl md:text-6xl font-display font-bold text-white mb-8 drop-shadow-lg">Ready to define your future?</h2>
+                <p class="text-blue-100 text-xl mb-12 max-w-2xl mx-auto">Join 50,000+ others who have decoded their career path. The future is waiting.</p>
+                
+                <a href="login.html" class="btn-glow inline-flex items-center justify-center px-12 py-5 bg-white text-blue-900 rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-xl">
+                    Get Started Free
+                </a>
+                
+                <p class="mt-6 text-slate-400 text-sm">No credit card required • Cancel anytime</p>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 bg-gray-900 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex items-center justify-center space-x-2 mb-4">
-                <span class="text-2xl">
-                    <a href="images/logo.png">
-                        <img src="images/logo.png" alt="Pathify Logo" class="h-8 w-8 rounded-full logo-img">
-                    </a>
-                </span>
-                <span class="text-xl font-bold">Pathify</span>
+    <footer class="border-t border-white/5 bg-slate-900/50 pt-16 pb-8 relative z-10 backdrop-blur-lg">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white font-bold shadow-lg">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <span class="font-display font-bold text-white text-xl tracking-tight">Pathify</span>
             </div>
-            <p class="text-gray-400">© 2025 Pathify. All rights reserved. Empowering careers through AI.</p>
+            <div class="text-slate-500 text-sm">
+                &copy; 2025 Pathify Inc. Powered by Advanced AI.
+            </div>
+            <div class="flex gap-6 text-slate-400">
+                <a href="#" class="hover:text-blue-400 transition-colors hover:scale-110 transform"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="hover:text-purple-400 transition-colors hover:scale-110 transform"><i class="fab fa-github text-xl"></i></a>
+                <a href="#" class="hover:text-pink-400 transition-colors hover:scale-110 transform"><i class="fab fa-linkedin text-xl"></i></a>
+            </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-    <script src="app.js"></script>
+    <!-- Scripts -->
     <script>
-        // Redirect to login/signup page when Start Assessment or Watch Demo is clicked
-        document.addEventListener('DOMContentLoaded', function() {
-            const startBtn = document.getElementById('start-assessment-btn');
-            const demoBtn = document.getElementById('watch-demo-btn');
-            if (startBtn) {
-                startBtn.addEventListener('click', function() {
-                    window.location.href = "login.html";
-                });
+        // 1. Particle Background (Starfield)
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5;
+                this.speed = Math.random() * 0.2;
+                this.brightness = Math.random();
             }
-            if (demoBtn) {
-                demoBtn.addEventListener('click', function() {
-                    window.location.href = "login.html";
-                });
+            update() {
+                this.y -= this.speed;
+                if (this.y < 0) this.y = canvas.height;
+                this.brightness += (Math.random() - 0.5) * 0.05;
+                if (this.brightness > 1) this.brightness = 1;
+                if (this.brightness < 0) this.brightness = 0;
             }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.brightness})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 150; i++) stars.push(new Star());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => { star.update(); star.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 2. Scroll Reveal Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3. Navbar Blur on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(15, 23, 42, 0.85)';
+                nav.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+            } else {
+                nav.style.background = 'rgba(15, 23, 42, 0.5)';
+                nav.style.borderBottom = '1px solid transparent';
+            }
+        });
+
+        // 4. Interactive Mouse Effect (Optional subtle spotlight)
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            // Use CSS variable for gradient positioning if we added it
+            document.documentElement.style.setProperty('--mouse-x', x);
+            document.documentElement.style.setProperty('--mouse-y', y);
         });
     </script>
 </body>
 </html>
-<!-- hello changes -->

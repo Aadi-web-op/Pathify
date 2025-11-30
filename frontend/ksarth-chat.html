@@ -3,513 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ksarth AI Chat - Career Assistant</title>
-
-    <!-- Tailwind CSS -->
+    <title>Ksarth AI - Neural Link</title>
+    
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace'],
+                    },
+                    colors: {
+                        neon: { blue: '#22d3ee', purple: '#a855f7', pink: '#f472b6' }
+                    },
+                    animation: {
+                        'float': 'float 10s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s infinite',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pop-in': 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'shimmer': 'shimmer 3s linear infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.5, transform: 'scale(1)' },
+                            '50%': { opacity: 1, transform: 'scale(1.05)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: 0, transform: 'scale(0.9) translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'scale(1) translateY(0)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global Theme Sync -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
 
     <style>
+        /* --- CORE VISUALS --- */
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            overflow-x: hidden;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        
+        .dark body {
+            background-color: #030712;
+            color: #f8fafc;
         }
 
-        /* Header Styles - Matching Dashboard */
-        .chat-header {
-            background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* AI Robot Character */
-        .ai-robot {
+        /* --- BACKGROUND ATMOSPHERE --- */
+        .universe-bg {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 80px;
-            height: 100px;
-            z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -3;
+            background: radial-gradient(circle at 50% -20%, #eff6ff 0%, #dbeafe 40%, #f1f5f9 100%);
+            transition: background 0.5s ease;
+        }
+        .dark .universe-bg {
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #0f172a 40%, #020617 100%);
+        }
+
+        /* Animated Nebula Blobs */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+        
+        /* Holographic Grid */
+        .holo-grid {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            transform: perspective(1000px) rotateX(10deg) scale(1.1);
             pointer-events: none;
         }
 
-        .robot-head {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 50%;
-            position: relative;
-            margin: 0 auto;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-            animation: robotGlow 2s ease-in-out infinite alternate;
+        /* --- SIDEBAR STYLES (Enhanced Glassmorphism) --- */
+        #sidebar {
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            width: 20rem; 
+        }
+        #sidebar.collapsed {
+            width: 0; opacity: 0; padding: 0; overflow: hidden; border: none;
+        }
+        
+        /* Sidebar specific glass panel to ensure visibility */
+        .sidebar-glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 5px 0 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        .dark .sidebar-glass {
+            background: rgba(15, 23, 42, 0.75);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 5px 0 30px -5px rgba(0, 0, 0, 0.3);
         }
 
-        .robot-eyes {
+        .sidebar-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+            padding-left: 1.5rem;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            color: white !important;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            border-left-color: transparent;
+        }
+        .dark .sidebar-item.active {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+        }
+        .sidebar-item.active i { color: white !important; }
+
+        /* Floating Return Button - Integrated into Header now, but keeping class for transition if needed */
+        .sidebar-toggle-btn {
+            transition: all 0.3s ease;
+        }
+
+        /* --- GLASS CHAT CONTAINER --- */
+        .glass-chat {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-chat {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- ANIMATED AVATAR --- */
+        .avatar-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 80px;
+            height: 100px;
+            z-index: 50;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .avatar-container:hover { transform: scale(1.1) translateY(-5px); }
+        .avatar-container:active { transform: scale(0.95); }
+
+        .bot-head {
+            width: 44px; height: 40px;
+            background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+            border-radius: 12px;
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            gap: 6px;
+            top: 0; left: 18px;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: botFloat 4s ease-in-out infinite;
         }
-
-        .robot-eye {
-            width: 8px;
-            height: 8px;
-            background: #ffffff;
-            border-radius: 50%;
-            position: relative;
-            animation: robotBlink 3s ease-in-out infinite;
-        }
-
-        .robot-eye::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            background: #1e293b;
-            border-radius: 50%;
+        .bot-face {
+            width: 32px; height: 24px;
+            background: #0f172a;
+            border-radius: 8px;
             position: absolute;
-            top: 2px;
-            left: 2px;
+            top: 8px; left: 6px;
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            overflow: hidden;
         }
-
-        .robot-body {
-            width: 35px;
-            height: 50px;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            border-radius: 10px;
-            margin: 10px auto 0;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        .bot-eye {
+            width: 6px; height: 10px;
+            background: #22d3ee;
+            border-radius: 4px;
+            animation: botBlink 4s infinite;
+            box-shadow: 0 0 8px #22d3ee;
         }
-
-        @keyframes robotGlow {
-            0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-            100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        
+        /* Avatar States */
+        .avatar-container.listening .bot-eye {
+            background: #f472b6; box-shadow: 0 0 10px #f472b6; height: 4px; animation: none;
         }
-
-        @keyframes robotBlink {
-            0%, 90%, 100% { opacity: 1; }
-            95% { opacity: 0.3; }
+        .avatar-container.listening .bot-head {
+            box-shadow: 0 0 30px rgba(244, 114, 182, 0.4);
         }
+        .avatar-container.thinking .bot-face {
+            animation: pulseThink 1s infinite alternate;
+        }
+        @keyframes pulseThink { from{box-shadow: inset 0 0 5px #fbbf24;} to{box-shadow: inset 0 0 15px #fbbf24;} }
+        @keyframes botFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        @keyframes botBlink { 0%,48%,52%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.1)} }
 
-        /* Chat Container */
-        .chat-container {
-            max-width: 800px;
-            margin: 0 auto;
-            height: calc(100vh - 80px);
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+        /* --- MESSAGES --- */
+        .msg-bubble {
+            position: relative;
+            padding: 14px 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 85%;
+            opacity: 0;
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-
-        /* Chat Messages */
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            scroll-behavior: smooth;
+        .msg-ai {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: #334155;
+            border-bottom-left-radius: 4px;
         }
-
-        .message {
-            margin-bottom: 20px;
-            animation: messageSlide 0.3s ease-out;
+        .dark .msg-ai {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
         }
-
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.user {
-            text-align: right;
-        }
-
-        .message.ai {
-            text-align: left;
-        }
-
-        .message-bubble {
-            display: inline-block;
-            max-width: 70%;
-            padding: 15px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        .msg-user {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
             color: white;
-            border-bottom-right-radius: 8px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.3);
+            margin-left: auto;
         }
 
-        .message.ai .message-bubble {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248, 250, 252, 0.9));
-            color: #1e293b;
-            border-bottom-left-radius: 8px;
-            border: 1px solid rgba(59, 130, 246, 0.1);
+        /* --- INPUT AREA --- */
+        .input-glow-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.8);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
         }
-
-        .message-info {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 5px;
+        .dark .input-glow-container {
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* Chat Input */
-        .chat-input-container {
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248, 250, 252, 0.9));
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 0 0 20px 20px;
-        }
-
-        .chat-input {
+        .custom-input {
             width: 100%;
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 25px;
-            padding: 12px 50px 12px 20px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .chat-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
-        }
-
-        .send-button {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .send-button:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .send-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 0 20px 20px;
-        }
-
-        .quick-action-btn {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 12px;
-            color: #3b82f6;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 999px;
+            padding: 1rem 3.5rem 1rem 1.5rem;
+            color: #1e293b;
             transition: all 0.3s ease;
         }
-
-        .quick-action-btn:hover {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        .dark .custom-input {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
+        }
+        .custom-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+
+        /* --- CHIPS --- */
+        .chip {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: slideUp 0.5s ease forwards;
+        }
+        .dark .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+        .chip:hover {
+            border-color: #3b82f6;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
         }
 
-        /* Typing Indicator */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-        }
+        /* Scrollbar for sidebar nav */
+        .nav-scroll::-webkit-scrollbar { width: 4px; }
+        .nav-scroll::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 4px; }
+        .nav-scroll:hover::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); }
 
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            background: #3b82f6;
-            border-radius: 50%;
-            animation: typingAnimation 1.4s ease-in-out infinite both;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        .typing-dot:nth-child(3) { animation-delay: 0s; }
-
-        @keyframes typingAnimation {
-            0%, 80%, 100% {
-                transform: scale(0);
-                opacity: 0.5;
-            }
-            40% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Scrollbar Styling */
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 10px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        /* Mobile */
+        @media (max-width: 640px) {
+            .glass-chat { border-radius: 0; height: 100vh; border: none; }
+            .avatar-container { transform: scale(0.8); right: 1rem; bottom: 1rem; }
+            #sidebar { display: none; }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-    <!-- AI Robot Character -->
-    <div class="ai-robot">
-        <div class="robot-head">
-            <div class="robot-eyes">
-                <div class="robot-eye"></div>
-                <div class="robot-eye"></div>
+    <!-- ATMOSPHERE -->
+    <div class="universe-bg"></div>
+    <div class="holo-grid"></div>
+    <div class="nebula bg-blue-600/20 w-[600px] h-[600px] top-[-20%] left-[-10%]" data-speed="0.02"></div>
+    <div class="nebula bg-purple-600/20 w-[500px] h-[500px] bottom-[-10%] right-[-10%]" data-speed="0.03"></div>
+    
+    <div id="particles" class="fixed inset-0 pointer-events-none z-[-1]"></div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="flex h-screen relative z-10 overflow-hidden">
+
+        <!-- DASHBOARD SIDEBAR -->
+        <aside id="sidebar" class="hidden md:flex flex-col sidebar-glass border-r-0 lg:border-r h-full z-40 relative">
+            <!-- Header -->
+            <div class="p-6 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+                        <div class="relative w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-cyan-500 font-bold text-lg shadow-lg">
+                            <i class="fas fa-atom fa-spin-slow"></i>
+                        </div>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">Pathify</span>
+                </div>
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-blue-500 transition-all hover:rotate-180 p-2">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
             </div>
-        </div>
-        <div class="robot-body"></div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto nav-scroll py-2">
+                <!-- Dashboard -->
+                <a href="/dashboard" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-home w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">Dashboard</span>
+                </a>
+                
+                <!-- Ksarth (Active) -->
+                <a href="#" class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all group shadow-lg">
+                    <i class="fas fa-robot w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">Ksarth AI Chat</span>
+                </a>
+
+                <!-- Pramukh Mandala -->
+                <a href="/community" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-users w-5 text-center text-lg group-hover:text-pink-400"></i>
+                    <span class="font-medium text-sm">Pramukh Mandala</span>
+                </a>
+
+                <!-- Workthrough -->
+                <a href="/workthrough" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-map-marked-alt w-5 text-center text-lg group-hover:text-emerald-400"></i>
+                    <span class="font-medium text-sm">My Workthrough</span>
+                </a>
+                
+                <!-- Gamification -->
+                <a href="/gamification" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-gamepad w-5 text-center text-lg group-hover:text-yellow-400"></i>
+                    <span class="font-medium text-sm">Gamification</span>
+                </a>
+
+                <!-- Certifications -->
+                <a href="/certifications" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-certificate w-5 text-center text-lg group-hover:text-orange-400"></i>
+                    <span class="font-medium text-sm">Certifications</span>
+                </a>
+
+                <!-- Company Chat -->
+                <a href="/company_chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-building w-5 text-center text-lg group-hover:text-blue-400"></i>
+                    <span class="font-medium text-sm flex-1">Company Chat</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">NEW</span>
+                </a>
+
+                <div class="h-4"></div>
+
+                <!-- Feedback -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-comment-alt w-5 text-center text-lg group-hover:text-cyan-400"></i>
+                    <span class="font-medium text-sm">Feedback</span>
+                </a>
+
+                <!-- FAQs -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-question-circle w-5 text-center text-lg group-hover:text-teal-400"></i>
+                    <span class="font-medium text-sm">FAQs</span>
+                </a>
+
+                <!-- Settings -->
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-cog w-5 text-center text-lg group-hover:text-slate-200"></i>
+                    <span class="font-medium text-sm">Settings</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200/10 shrink-0">
+                <div class="flex flex-col gap-4">
+                     <!-- Sound Toggle -->
+                     <button id="soundToggle" class="flex items-center gap-4 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors group" onclick="toggleSound()">
+                        <i class="fas fa-volume-up w-6 text-center group-hover:text-blue-400"></i>
+                        <span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>
+                    </button>
+
+                    <button onclick="logout()" class="flex items-center gap-4 text-red-500 hover:bg-red-500/10 px-4 py-3 rounded-xl transition-all w-full group hover:border hover:border-red-500/30">
+                        <i class="fas fa-power-off w-6 text-center group-hover:rotate-90 transition-transform"></i>
+                        <span class="font-medium hidden lg:block">Log Out</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CHAT CONTENT -->
+        <main class="flex-1 flex flex-col h-full relative transition-all duration-300">
+            
+            <header class="flex items-center justify-between px-6 py-4 glass-chat border-b border-white/5 shrink-0 z-20">
+                <div class="flex items-center gap-4">
+                    <!-- Toggle Sidebar Button (Integrated) -->
+                    <button id="header-sidebar-toggle" onclick="toggleSidebar()" class="hidden w-10 h-10 rounded-full bg-white dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Mobile Toggle -->
+                    <button class="md:hidden text-slate-400" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
+                    
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
+                            Ksarth AI
+                            <span class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 dark:text-blue-300 text-[10px] font-mono border border-blue-500/20">PRO</span>
+                        </h1>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">Neural Engine Active</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-sun dark:hidden"></i>
+                        <i class="fas fa-moon hidden dark:block"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth z-10">
+                <div class="flex flex-col items-start space-y-1 animate-pop-in">
+                    <div class="msg-bubble msg-ai">
+                        Hello! I am Ksarth, your advanced career architect. <br><br>
+                        I can analyze market trends, review your skills, simulate interviews, or rewrite your resume. What is your primary focus today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="z-20">
+                <div class="px-6 pb-2 flex gap-3 overflow-x-auto no-scrollbar mask-fade">
+                    <button class="chip" onclick="quickSend('Analyze my skills')" style="animation-delay: 0.1s">⚡ Skill Analysis</button>
+                    <button class="chip" onclick="quickSend('Mock Interview')" style="animation-delay: 0.2s">🎙️ Mock Interview</button>
+                    <button class="chip" onclick="quickSend('Generate Roadmap')" style="animation-delay: 0.3s">🗺️ Create Roadmap</button>
+                    <button class="chip" onclick="quickSend('Salary Trends 2025')" style="animation-delay: 0.4s">💰 Salary Trends</button>
+                </div>
+
+                <div class="input-glow-container">
+                    <div class="relative max-w-4xl mx-auto">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 flex gap-2">
+                            <button class="text-slate-400 hover:text-blue-500 transition-colors p-1" title="Upload Resume"><i class="fas fa-paperclip"></i></button>
+                        </div>
+                        <input type="text" id="userInput" class="custom-input pl-12" placeholder="Ask anything..." autocomplete="off">
+                        <button class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mt-2">
+                        <p class="text-[10px] text-slate-400">Ksarth can make mistakes. Verify important career info.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <!-- Header -->
-    <nav class="chat-header sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-4">
-                    <button onclick="window.location.href='dashboard.html'" class="text-white/70 hover:text-white transition-all duration-200 hover:scale-110">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                            <span class="text-white font-bold text-lg">K</span>
-                        </div>
-                        <div>
-                            <h1 class="text-xl font-bold text-white">Ksarth AI</h1>
-                            <p class="text-sm text-white/70">Your Career Assistant</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                        <span class="text-sm text-white/70">Online</span>
-                    </div>
-                </div>
-            </div>
+    <!-- 3D AVATAR -->
+    <div class="avatar-container" id="aiAvatar">
+        <div class="bot-head">
+            <div class="bot-face"><div class="bot-eye"></div><div class="bot-eye"></div></div>
         </div>
-    </nav>
-
-    <!-- Main Chat Container -->
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div class="chat-container">
-
-            <!-- Chat Messages -->
-            <div class="chat-messages" id="chatMessages">
-                <!-- Welcome Message -->
-                <div class="message ai">
-                    <div class="message-bubble">
-                        Welcome! I'm Ksarth, your AI career guide. How can I help you today? 🚀
-                        <br><br>
-                        Feel free to ask me anything about your professional development!
-                    </div>
-                    <div class="message-info">Just now</div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <button class="quick-action-btn" onclick="sendQuickMessage('Career Path')">🎯 Career Path</button>
-                <button class="quick-action-btn" onclick="sendQuickMessage('Skills Focus')">📚 Skills Focus</button>
-                <button class="quick-action-btn" onclick="sendQuickMessage('Job Market')">📈 Job Market</button>
-                <button class="quick-action-btn" onclick="sendQuickMessage('Interview Prep')">💼 Interview Prep</button>
-            </div>
-
-            <!-- Chat Input -->
-            <div class="chat-input-container">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        id="chatInput" 
-                        class="chat-input" 
-                        placeholder="Ask me anything about your career..."
-                        onkeypress="handleEnterKey(event)"
-                    >
-                    <button class="send-button" onclick="sendMessage()" id="sendBtn">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <div class="bot-body"></div>
+        <div class="bot-ring"></div>
     </div>
 
     <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-
-        // Sample responses for demonstration
-        const responses = [
-            "That's a great question! Based on your profile and current market trends, here's what I recommend...",
-            "I can help you with that! Let me analyze your skills and suggest a personalized roadmap.",
-            "Based on industry insights, here are some key areas you should focus on for your career growth...",
-            "Great choice! This is definitely a growing field. Let me share some specific strategies...",
-            "I've reviewed your progress and here are some actionable next steps for you..."
-        ];
-
-        function addMessage(content, isUser = false) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
-
-            const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            messageDiv.innerHTML = `
-                <div class="message-bubble">${content}</div>
-                <div class="message-info">${timeString}</div>
-            `;
-
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('userInput');
+        const aiAvatar = document.getElementById('aiAvatar');
+        let isSoundEnabled = true;
+        let audioContext = null;
+        
+        // --- Sidebar Logic ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const headerToggleBtn = document.getElementById('header-sidebar-toggle');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                headerToggleBtn.classList.add('hidden');
+            } else {
+                sidebar.classList.add('collapsed');
+                headerToggleBtn.classList.remove('hidden');
+                headerToggleBtn.classList.add('flex');
+            }
         }
-
-        function showTypingIndicator() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = `
-                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <span class="text-white font-bold text-xs">K</span>
-                </div>
-                <div class="text-sm text-gray-600">Ksarth is typing</div>
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                </div>
-            `;
-
-            chatMessages.appendChild(typingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function removeTypingIndicator() {
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
+        
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+                sidebar.style.position = 'fixed';
+                sidebar.style.width = '100%';
+                sidebar.style.zIndex = '50';
+            } else {
+                sidebar.style.display = 'none';
             }
         }
 
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
+        // --- Avatar Interactions ---
+        userInput.addEventListener('focus', () => aiAvatar.classList.add('listening'));
+        userInput.addEventListener('blur', () => aiAvatar.classList.remove('listening'));
+        userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-            // Add user message
-            addMessage(message, true);
-            chatInput.value = '';
-
-            // Show typing indicator
-            showTypingIndicator();
-
-            // Simulate AI response after delay
-            setTimeout(() => {
-                removeTypingIndicator();
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                addMessage(randomResponse, false);
-            }, 1500 + Math.random() * 1000);
+        function quickSend(text) {
+            userInput.value = text;
+            sendMessage();
         }
 
-        function sendQuickMessage(topic) {
-            addMessage(`Tell me about ${topic}`, true);
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
 
-            showTypingIndicator();
+            appendMessage(text, 'user');
+            userInput.value = '';
+            aiAvatar.classList.remove('listening');
+            aiAvatar.classList.add('thinking'); // Show pulsing state
 
-            setTimeout(() => {
-                removeTypingIndicator();
-                let response = "";
-                switch(topic) {
-                    case 'Career Path':
-                        response = "Great! Let me help you explore career paths. Based on your profile, I can see you're interested in technology. Here are some trending paths that align with your skills: Software Development, Data Science, AI/ML Engineering, and Cybersecurity. Which area interests you most?";
-                        break;
-                    case 'Skills Focus':
-                        response = "Perfect! Skills development is key to career growth. Based on current market demands, I recommend focusing on: Programming Languages (Python, JavaScript), Data Analysis, Cloud Computing (AWS, Azure), and Soft Skills (Communication, Leadership). What's your current skill level in these areas?";
-                        break;
-                    case 'Job Market':
-                        response = "The job market is quite dynamic right now! Here's what I'm seeing: High demand for tech professionals, remote work opportunities increasing by 40%, AI/ML roles growing fastest, and companies prioritizing candidates with diverse skill sets. Would you like specific insights for your field?";
-                        break;
-                    case 'Interview Prep':
-                        response = "Excellent! Interview preparation is crucial. Here's my recommended approach: 1) Research the company thoroughly, 2) Practice STAR method for behavioral questions, 3) Prepare technical examples, 4) Mock interviews, and 5) Prepare thoughtful questions. What type of role are you preparing for?";
-                        break;
-                    default:
-                        response = responses[Math.floor(Math.random() * responses.length)];
-                }
-                addMessage(response, false);
-            }, 2000);
-        }
+            const typingId = showTyping();
 
-        function handleEnterKey(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
+            try {
+                const API_URL = window.location.origin; 
+                const token = localStorage.getItem('userToken');
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ message: text })
+                });
+
+                const data = await response.json();
+                document.getElementById(typingId).remove();
+                aiAvatar.classList.remove('thinking');
+                
+                if (response.ok) appendMessage(data.reply, 'ai');
+                else appendMessage("Neural link unstable. Please retry.", 'ai');
+
+            } catch (e) {
+                document.getElementById(typingId)?.remove();
+                aiAvatar.classList.remove('thinking');
+                appendMessage("Connection error.", 'ai');
             }
         }
 
-        // Focus on input when page loads
-        window.addEventListener('load', () => {
-            chatInput.focus();
+        function appendMessage(text, type) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex flex-col ${type === 'user' ? 'items-end' : 'items-start'} space-y-1 animate-pop-in`;
+            const label = type === 'user' ? 'You' : 'Ksarth';
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            wrapper.innerHTML = `
+                <div class="flex items-center gap-2 mb-1 px-1">
+                    <span class="text-[10px] font-bold ${type==='user'?'text-indigo-400':'text-blue-400'} uppercase tracking-wider">${label}</span>
+                    <span class="text-[10px] text-slate-500">${time}</span>
+                </div>
+                <div class="msg-bubble msg-${type}">${text.replace(/\n/g, '<br>')}</div>
+            `;
+            chatContainer.appendChild(wrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            const id = 'typing-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.id = id;
+            wrapper.className = 'flex flex-col items-start space-y-1 animate-pop-in';
+            wrapper.innerHTML = `
+                <div class="flex items-center gap-2 mb-1 px-1">
+                    <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Ksarth</span>
+                    <span class="text-[10px] text-slate-500">Thinking...</span>
+                </div>
+                <div class="msg-bubble msg-ai typing-wave"><span></span><span></span><span></span></div>
+            `;
+            chatContainer.appendChild(wrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return id;
+        }
+        
+        // --- Sound Logic ---
+        function initAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioContext = new AudioContext();
+            } catch (e) { console.log('Web Audio API not supported'); }
+        }
+
+        function playTone(freq = 600, type = 'sine', duration = 0.1) {
+            if (!audioContext || !isSoundEnabled) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+            gain.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start();
+            osc.stop(audioContext.currentTime + duration);
+        }
+
+        function playHoverSound() { playTone(400, 'sine', 0.1); }
+
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            const btn = document.getElementById('soundToggle');
+            btn.innerHTML = isSoundEnabled 
+                ? '<i class="fas fa-volume-up w-6 text-center group-hover:text-blue-400"></i><span class="text-sm font-medium hidden lg:block">UI Sounds: On</span>'
+                : '<i class="fas fa-volume-mute w-6 text-center text-red-500"></i><span class="text-sm font-medium hidden lg:block text-red-500">UI Sounds: Off</span>';
+            if (isSoundEnabled && !audioContext) initAudio();
+        }
+
+        // --- Theme Sync ---
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const placeholders = ["Analyze my resume skills...", "Mock interview for PM role...", "Salary trends in 2025..."];
+            let i = 0;
+            setInterval(() => {
+                userInput.placeholder = placeholders[i];
+                i = (i + 1) % placeholders.length;
+            }, 3000);
+
+            // Create BG particles
+            const particleContainer = document.getElementById('particles');
+            for(let j=0; j<20; j++) {
+                const p = document.createElement('div');
+                p.className = 'absolute rounded-full bg-blue-400 opacity-20';
+                p.style.width = Math.random() * 3 + 'px';
+                p.style.height = p.style.width;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animation = `float ${Math.random() * 10 + 10}s infinite linear`;
+                particleContainer.appendChild(p);
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+            document.querySelectorAll('.nebula').forEach(el => {
+                const speed = el.getAttribute('data-speed');
+                el.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+            });
+        });
+        
+        function logout() { localStorage.removeItem('userToken'); window.location.href = '/login'; }
     </script>
 </body>
 </html>

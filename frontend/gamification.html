@@ -5,591 +5,673 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamification - Pathify</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Link to main stylesheet -->
-    <link rel="stylesheet" href="style.css">
-    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Outfit"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace']
+                    },
+                    colors: {
+                        neon: { yellow: '#facc15', orange: '#f97316', purple: '#a855f7' }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s infinite',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'shine': 'shine 3s linear infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.6, filter: 'brightness(100%)' },
+                            '50%': { opacity: 1, filter: 'brightness(130%)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                        shine: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global Theme Sync -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
     <style>
+        /* --- CORE VISUALS --- */
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            overflow-x: hidden;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
-        
-        /* Coming Soon Animation Container */
-        .coming-soon-container {
-            perspective: 1000px;
+        .dark body { background-color: #030712; color: #f8fafc; }
+
+        /* --- BACKGROUND --- */
+        .universe-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -3;
+            background: radial-gradient(circle at 50% -20%, #fefce8 0%, #fff7ed 40%, #f8fafc 100%);
+            transition: background 0.5s ease;
         }
-        
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.5s ease;
-            transform-style: preserve-3d;
+        .dark .universe-bg {
+            background: radial-gradient(circle at 50% -20%, #451a03 0%, #1e1b4b 40%, #020617 100%);
         }
-        
-        .feature-card:hover {
-            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Animated Icons */
-        .animated-icon {
-            animation: float 3s ease-in-out infinite;
-            font-size: 4rem;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .animated-icon:nth-child(2) { animation-delay: 0.5s; }
-        .animated-icon:nth-child(3) { animation-delay: 1s; }
-        .animated-icon:nth-child(4) { animation-delay: 1.5s; }
-        
-        /* Progress Ring */
-        .progress-ring {
-            transform: rotate(-90deg);
-            width: 120px;
-            height: 120px;
-        }
-        
-        .progress-ring-circle {
-            stroke-dasharray: 283;
-            stroke-dashoffset: 283;
-            animation: progressFill 3s ease-in-out infinite;
-        }
-        
-        /* Achievement Badges */
-        .achievement-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+
+        /* Animated Orbs */
+        .orb {
+            position: absolute;
             border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
-            position: relative;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s ease-in-out infinite alternate;
+            z-index: -2;
         }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(234, 179, 8, 0.2); }
+        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: rgba(168, 85, 247, 0.2); }
+
+        /* --- GLASS PANELS --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- SIDEBAR STYLES (Matched) --- */
+        #sidebar {
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            width: 18rem; 
+        }
+        #sidebar.collapsed { width: 0; opacity: 0; padding: 0; overflow: hidden; border: none; }
         
-        .achievement-badge::before {
+        .sidebar-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+            padding-left: 1.5rem;
+        }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            border-left-color: transparent;
+        }
+        .dark .sidebar-item.active { background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%); }
+        .sidebar-item.active i { color: white !important; }
+
+        /* Floating Return Button */
+        #sidebar-return { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; }
+        #sidebar-return.hidden { transform: translateX(-200%); opacity: 0; pointer-events: none; }
+
+        /* --- GAMIFICATION SPECIFIC --- */
+        
+        /* Achievement Card */
+        .achievement-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .achievement-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(234, 179, 8, 0.2);
+        }
+        .achievement-card.locked { filter: grayscale(1) opacity(0.6); }
+        .achievement-card.locked:hover { transform: none; box-shadow: none; }
+
+        /* XP Bar */
+        .xp-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            height: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
+            background-size: 200% 100%;
+            animation: shine 3s linear infinite;
+            border-radius: 999px;
+            transition: width 1s ease-out;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        /* Quest Item */
+        .quest-item {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .quest-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #fbbf24;
+            padding-left: 1rem;
+        }
+        .quest-checkbox {
+            appearance: none;
+            width: 20px; height: 20px;
+            border: 2px solid #64748b;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .quest-checkbox:checked {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+        .quest-checkbox:checked::after {
+            content: '✔';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Reward Card */
+        .reward-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .reward-card::before {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            background: linear-gradient(45deg, #fbbf24, #f59e0b, #fbbf24);
-            border-radius: 50%;
-            z-index: -1;
-            animation: rotate 3s linear infinite;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s;
         }
-        
-        /* Particle Effects */
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #fbbf24;
-            border-radius: 50%;
-            animation: floatParticles 4s linear infinite;
-        }
-        
-        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-        .particle:nth-child(3) { left: 30%; animation-delay: 1s; }
-        .particle:nth-child(4) { left: 40%; animation-delay: 1.5s; }
-        .particle:nth-child(5) { left: 50%; animation-delay: 2s; }
-        .particle:nth-child(6) { left: 60%; animation-delay: 2.5s; }
-        .particle:nth-child(7) { left: 70%; animation-delay: 3s; }
-        .particle:nth-child(8) { left: 80%; animation-delay: 3.5s; }
-        
-        /* Glowing Text */
-        .glow-text {
-            background: linear-gradient(45deg, #fbbf24, #f59e0b, #fbbf24);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 3s ease-in-out infinite;
-        }
-        
-        /* Loading Spinner */
-        .loading-spinner {
-            border: 4px solid rgba(251, 191, 36, 0.2);
-            border-left: 4px solid #fbbf24;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-        }
-        
-        /* Countdown Timer */
-        .countdown-digit {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin: 0.25rem;
-            min-width: 4rem;
-            text-align: center;
-            animation: digitFlip 1s ease-in-out infinite;
-        }
-        
-        /* Feature Preview Cards */
-        .preview-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.4s ease;
-        }
-        
-        .preview-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(251, 191, 36, 0.3);
-            transform: translateY(-5px);
-        }
-        
-        /* Floating Orbs */
-        .floating-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            animation: floatOrb 20s ease-in-out infinite;
-        }
-        
-        .orb-1 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%);
-            top: 10%;
-            right: 10%;
-        }
-        
-        .orb-2 {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 10s;
-        }
-        
-        .orb-3 {
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
-            top: 50%;
-            right: 30%;
-            animation-delay: 5s;
-        }
-        
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes progressFill {
-            0% { stroke-dashoffset: 283; }
-            50% { stroke-dashoffset: 141; }
-            100% { stroke-dashoffset: 283; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes floatParticles {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes digitFlip {
-            0%, 100% { transform: rotateY(0deg); }
-            50% { transform: rotateY(180deg); }
-        }
-        
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-        
-        /* Typing Animation */
-        .typing-text {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 4s steps(40, end) infinite;
-        }
-        
-        @keyframes typing {
-            0%, 50% { width: 0; }
-            100% { width: 100%; }
+        .reward-card:hover::before { transform: scale(1); }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            #sidebar { display: none; }
+            .glass-panel { border-radius: 0; border: none; }
         }
     </style>
 </head>
-<body class="min-h-screen text-white relative">
-    
-    <!-- Floating Background Orbs -->
-    <div class="floating-orb orb-1"></div>
-    <div class="floating-orb orb-2"></div>
-    <div class="floating-orb orb-3"></div>
-    
-    <!-- Floating Particles -->
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    
-    <!-- Header -->
-    <nav class="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-4">
-                    <button onclick="window.history.back()" class="text-white/70 hover:text-white transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <div>
-                        <h1 class="text-2xl font-bold text-white">Gamification Hub</h1>
-                        <p class="text-white/70">Achievements & Rewards System</p>
+<body>
+
+    <!-- ATMOSPHERE -->
+    <div class="universe-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div id="particles" class="fixed inset-0 pointer-events-none z-[-1]"></div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="flex h-screen relative z-10 overflow-hidden">
+
+        <!-- RETURN BUTTON -->
+        <button id="sidebar-return" onclick="toggleSidebar()" class="fixed top-6 left-6 z-50 w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-[0_0_20px_rgba(59,130,246,0.3)] flex items-center justify-center text-blue-500 hover:scale-110 hidden transition-all group">
+            <i class="fas fa-bars text-xl group-hover:text-blue-400"></i>
+        </button>
+
+        <!-- SIDEBAR (Unified) -->
+        <aside id="sidebar" class="hidden md:flex flex-col glass-panel border-r-0 lg:border-r h-full z-40 relative shadow-2xl lg:shadow-none">
+            <div class="p-6 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
+                        <div class="relative w-8 h-8 bg-white dark:bg-slate-900 rounded-lg flex items-center justify-center text-cyan-500 font-bold text-lg shadow-lg">
+                            <i class="fas fa-atom fa-spin-slow"></i>
+                        </div>
                     </div>
+                    <span class="text-xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">Pathify</span>
                 </div>
-                
-                <div class="flex items-center space-x-4">
-                    <div class="loading-spinner"></div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="max-w-6xl mx-auto p-6">
-        
-        <!-- Hero Section -->
-        <div class="text-center mb-16 coming-soon-container">
-            <div class="mb-8">
-                <div class="flex justify-center items-center space-x-4 mb-6">
-                    <div class="animated-icon">🏆</div>
-                    <div class="animated-icon">⭐</div>
-                    <div class="animated-icon">🎯</div>
-                    <div class="animated-icon">🎮</div>
-                </div>
-                <h2 class="text-5xl md:text-7xl font-bold glow-text mb-4">
-                    Coming Soon!
-                </h2>
-                <p class="text-xl md:text-2xl text-white/80 mb-6 typing-text">
-                    Get ready for an epic gamified learning experience...
-                </p>
-            </div>
-            
-            <!-- Progress Ring -->
-            <div class="flex justify-center mb-8">
-                <div class="progress-ring">
-                    <svg class="progress-ring" width="120" height="120">
-                        <circle class="progress-ring-circle" 
-                                stroke="#fbbf24" 
-                                stroke-width="8" 
-                                fill="transparent" 
-                                r="45" 
-                                cx="60" 
-                                cy="60"/>
-                    </svg>
-                </div>
-            </div>
-            
-            <!-- Countdown Timer -->
-            <div class="flex justify-center items-center space-x-2 mb-12">
-                <div class="text-center">
-                    <div class="countdown-digit">
-                        <span class="text-2xl font-bold text-white">15</span>
-                    </div>
-                    <p class="text-sm text-white/60 mt-2">Days</p>
-                </div>
-                <div class="text-2xl text-white/60">:</div>
-                <div class="text-center">
-                    <div class="countdown-digit">
-                        <span class="text-2xl font-bold text-white">07</span>
-                    </div>
-                    <p class="text-sm text-white/60 mt-2">Hours</p>
-                </div>
-                <div class="text-2xl text-white/60">:</div>
-                <div class="text-center">
-                    <div class="countdown-digit">
-                        <span class="text-2xl font-bold text-white">23</span>
-                    </div>
-                    <p class="text-sm text-white/60 mt-2">Minutes</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Feature Preview Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">🏆</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">Achievement System</h3>
-                <p class="text-white/70 mb-4">
-                    Unlock badges and trophies as you progress through your career journey. 
-                    Show off your accomplishments!
-                </p>
-                <div class="flex space-x-2">
-                    <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-sm">🥇</div>
-                    <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-sm">🥈</div>
-                    <div class="w-8 h-8 bg-yellow-700 rounded-full flex items-center justify-center text-sm">🥉</div>
-                </div>
-            </div>
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">⭐</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">XP & Levels</h3>
-                <p class="text-white/70 mb-4">
-                    Gain experience points for completing tasks and level up your profile. 
-                    Compete with friends!
-                </p>
-                <div class="bg-white/10 rounded-full p-2">
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full" style="width: 75%"></div>
-                </div>
-                <p class="text-sm text-white/60 mt-2">Level 12 - 750/1000 XP</p>
-            </div>
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">🎯</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">Daily Challenges</h3>
-                <p class="text-white/70 mb-4">
-                    Complete daily and weekly challenges to earn bonus rewards. 
-                    Keep your streak alive!
-                </p>
-                <div class="flex items-center space-x-2">
-                    <span class="text-orange-400">🔥</span>
-                    <span class="text-white font-semibold">7 Day Streak!</span>
-                </div>
-            </div>
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">🎮</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">Mini Games</h3>
-                <p class="text-white/70 mb-4">
-                    Learn through fun interactive games and quizzes. 
-                    Make education entertaining!
-                </p>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="w-full h-8 bg-blue-500/30 rounded"></div>
-                    <div class="w-full h-8 bg-green-500/30 rounded"></div>
-                    <div class="w-full h-8 bg-purple-500/30 rounded"></div>
-                </div>
-            </div>
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">🏅</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">Leaderboards</h3>
-                <p class="text-white/70 mb-4">
-                    Compete with students worldwide and climb the rankings. 
-                    See where you stand!
-                </p>
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <span class="text-white/80">You</span>
-                        <span class="text-yellow-400">#47</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-white/60">Global</span>
-                        <span class="text-white/60">#2,847</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="feature-card p-8 rounded-2xl">
-                <div class="achievement-badge mx-auto mb-6">
-                    <span class="text-2xl">💰</span>
-                </div>
-                <h3 class="text-xl font-semibold text-white mb-4">Reward Store</h3>
-                <p class="text-white/70 mb-4">
-                    Spend earned coins on exclusive items, courses, and real-world rewards. 
-                    Shop smart!
-                </p>
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl">🪙</span>
-                    <span class="text-white font-semibold">1,247 Coins</span>
-                </div>
-            </div>
-            
-        </div>
-        
-        <!-- Coming Soon Features */
-        <div class="preview-card rounded-2xl p-8 mb-8">
-            <h3 class="text-2xl font-semibold text-white mb-6 text-center">What's Coming Next</h3>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-4">🎪 Interactive Features</h4>
-                    <ul class="space-y-2 text-white/70">
-                        <li>• Virtual study rooms with friends</li>
-                        <li>• AI-powered learning companions</li>
-                        <li>• Career simulation games</li>
-                        <li>• Skill-based tournaments</li>
-                        <li>• Progress sharing & celebrations</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h4 class="text-lg font-semibold text-white mb-4">🎁 Rewards & Prizes</h4>
-                    <ul class="space-y-2 text-white/70">
-                        <li>• Course discounts & free access</li>
-                        <li>• Exclusive mentorship sessions</li>
-                        <li>• Tech gadgets & swag</li>
-                        <li>• Internship opportunities</li>
-                        <li>• Conference tickets</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Beta Access -->
-        <div class="text-center">
-            <div class="preview-card rounded-2xl p-8 inline-block">
-                <h3 class="text-xl font-semibold text-white mb-4">🚀 Want Early Access?</h3>
-                <p class="text-white/70 mb-6">
-                    Join our beta program and be among the first to experience 
-                    the future of gamified learning!
-                </p>
-                
-                <div class="flex justify-center items-center space-x-4 mb-6">
-                    <div class="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span class="text-white/80">Building something amazing...</span>
-                    <div class="w-4 h-4 bg-purple-500 rounded-full animate-pulse" style="animation-delay: 0.5s"></div>
-                </div>
-                
-                <button class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-yellow-400 hover:to-orange-400 transition-all duration-300 transform hover:scale-105">
-                    Notify Me When Ready! 🔔
+                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-blue-500 transition-all hover:rotate-180 p-2">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
-        </div>
-    </div>
-    
-    <script>
-        // Countdown Timer
-        function updateCountdown() {
-            // Simulate countdown (in production, this would count to actual launch date)
-            const days = Math.floor(Math.random() * 2) + 14;
-            const hours = Math.floor(Math.random() * 24);
-            const minutes = Math.floor(Math.random() * 60);
-            
-            document.querySelector('.countdown-digit span:first-child').textContent = days.toString().padStart(2, '0');
-            document.querySelectorAll('.countdown-digit span')[1].textContent = hours.toString().padStart(2, '0');
-            document.querySelectorAll('.countdown-digit span')[2].textContent = minutes.toString().padStart(2, '0');
-        }
-        
-        // Update countdown every minute
-        setInterval(updateCountdown, 60000);
-        
-        // Animate cards on scroll
-        function animateOnScroll() {
-            const cards = document.querySelectorAll('.feature-card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(50px) rotateY(45deg)';
-                    card.style.transition = 'all 0.8s ease';
-                    
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0) rotateY(0deg)';
-                    }, 200);
-                }, index * 200);
-            });
-        }
-        
-        // Initialize animations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Start countdown
-            updateCountdown();
-            
-            // Animate cards
-            setTimeout(animateOnScroll, 1000);
-            
-            // Add interactive hover effects
-            document.querySelectorAll('.feature-card').forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'rotateY(10deg) rotateX(5deg) scale(1.05)';
-                });
+
+            <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto nav-scroll py-2">
+                <a href="/dashboard" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-home w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">My Dashboard</span>
+                </a>
                 
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
-                });
+                <a href="/ksarth-chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-robot w-5 text-center text-lg group-hover:text-purple-400"></i>
+                    <span class="font-medium text-sm">Ksarth AI Chat</span>
+                </a>
+
+                <a href="/community" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-users w-5 text-center text-lg group-hover:text-pink-400"></i>
+                    <span class="font-medium text-sm">Pramukh Mandala</span>
+                </a>
+
+                <a href="/workthrough" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-map-marked-alt w-5 text-center text-lg group-hover:text-emerald-400"></i>
+                    <span class="font-medium text-sm">My Workthrough</span>
+                </a>
+                
+                <!-- ACTIVE -->
+                <a href="#" class="sidebar-item active flex items-center gap-3 px-4 py-3 rounded-xl transition-all group shadow-lg">
+                    <i class="fas fa-gamepad w-5 text-center text-lg"></i>
+                    <span class="font-medium text-sm">Gamification</span>
+                </a>
+
+                <a href="/certifications" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-certificate w-5 text-center text-lg group-hover:text-orange-400"></i>
+                    <span class="font-medium text-sm">Certifications</span>
+                </a>
+
+                <a href="/company_chat" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-building w-5 text-center text-lg group-hover:text-blue-400"></i>
+                    <span class="font-medium text-sm flex-1">Company Chat</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-500/20 text-green-400 border border-green-500/30">NEW</span>
+                </a>
+
+                <div class="h-4"></div>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-comment-alt w-5 text-center text-lg group-hover:text-cyan-400"></i>
+                    <span class="font-medium text-sm">Feedback</span>
+                </a>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-question-circle w-5 text-center text-lg group-hover:text-teal-400"></i>
+                    <span class="font-medium text-sm">FAQs</span>
+                </a>
+
+                <a href="#" class="sidebar-item flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all group">
+                    <i class="fas fa-cog w-5 text-center text-lg group-hover:text-slate-200"></i>
+                    <span class="font-medium text-sm">Settings</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-slate-200/10 shrink-0">
+                <button onclick="logout()" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-500/10 rounded-xl transition-all w-full group">
+                    <i class="fas fa-sign-out-alt w-5 text-center group-hover:rotate-90 transition-transform"></i>
+                    <span class="font-medium text-sm">Log Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 flex flex-col h-full relative transition-all duration-300 overflow-hidden">
+            
+            <!-- HEADER -->
+            <header class="flex items-center justify-between px-6 py-4 glass-panel border-b border-white/5 shrink-0 z-20">
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden text-slate-400" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
+                    <button id="header-sidebar-toggle" onclick="toggleSidebar()" class="hidden w-10 h-10 rounded-full bg-white dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-wide">Gamification</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono">Level Up Your Career</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="hidden sm:flex items-center gap-3 bg-white/10 dark:bg-white/5 px-3 py-1 rounded-lg border border-white/10">
+                        <span class="text-yellow-500 text-lg">🪙</span>
+                        <span class="font-bold text-slate-800 dark:text-white" id="coin-count">1,250</span>
+                    </div>
+                    <button id="themeToggle" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors">
+                        <i class="fas fa-sun dark:hidden"></i>
+                        <i class="fas fa-moon hidden dark:block"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE CONTENT -->
+            <div class="flex-1 overflow-y-auto p-6 scroll-smooth z-10">
+                <div class="max-w-6xl mx-auto space-y-8">
+
+                    <!-- Hero Stats -->
+                    <div class="glass-panel p-8 rounded-3xl relative overflow-hidden animate-slide-up">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-500/20 rounded-full blur-[80px] -mr-10 -mt-10"></div>
+                        
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                            <!-- Level Circle -->
+                            <div class="relative w-32 h-32 flex items-center justify-center">
+                                <svg class="w-full h-full transform -rotate-90 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]">
+                                    <circle cx="64" cy="64" r="60" stroke="currentColor" stroke-width="8" fill="transparent" class="text-slate-200 dark:text-white/10" />
+                                    <circle id="level-circle" cx="64" cy="64" r="60" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="377" stroke-dashoffset="100" stroke-linecap="round" class="text-yellow-400 transition-all duration-1000" />
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-3xl font-bold text-slate-900 dark:text-white" id="current-level">12</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-yellow-500">Level</span>
+                                </div>
+                            </div>
+
+                            <!-- XP Progress -->
+                            <div class="flex-1 w-full">
+                                <div class="flex justify-between items-end mb-2">
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Master Strategist</h2>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">Next Reward: <span class="text-yellow-500 font-bold">Premium Badge</span></p>
+                                    </div>
+                                    <span class="text-sm font-mono text-slate-500"><span class="text-slate-900 dark:text-white font-bold" id="current-xp">750</span> / 1000 XP</span>
+                                </div>
+                                <div class="xp-bar-container w-full">
+                                    <div class="xp-bar-fill" id="xp-bar" style="width: 75%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Streak -->
+                            <div class="flex flex-col items-center bg-orange-500/10 border border-orange-500/30 p-4 rounded-2xl min-w-[120px]">
+                                <i class="fas fa-fire text-3xl text-orange-500 mb-2 animate-pulse"></i>
+                                <span class="text-2xl font-bold text-slate-900 dark:text-white" id="streak-days">7</span>
+                                <span class="text-xs text-orange-500 uppercase font-bold">Day Streak</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        <!-- LEFT COL: Quests & Games -->
+                        <div class="lg:col-span-2 space-y-8 animate-slide-up" style="animation-delay: 0.1s;">
+                            
+                            <!-- Daily Quests -->
+                            <div class="glass-panel p-6 rounded-2xl">
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                                    <i class="fas fa-scroll text-purple-500"></i> Daily Quests
+                                </h3>
+                                <div class="space-y-3" id="quest-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Mini Games -->
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <i class="fas fa-gamepad text-green-500"></i> Arcade
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    <div class="glass-panel p-4 rounded-xl hover:border-blue-500/50 transition-all cursor-pointer group text-center">
+                                        <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform text-2xl">🧠</div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Logic Lab</h4>
+                                        <p class="text-xs text-slate-500 mt-1">Test your IQ</p>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl hover:border-purple-500/50 transition-all cursor-pointer group text-center">
+                                        <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform text-2xl">⚡</div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Speed Code</h4>
+                                        <p class="text-xs text-slate-500 mt-1">Type fast!</p>
+                                    </div>
+                                    <div class="glass-panel p-4 rounded-xl hover:border-green-500/50 transition-all cursor-pointer group text-center">
+                                        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform text-2xl">💼</div>
+                                        <h4 class="font-bold text-slate-900 dark:text-white text-sm">Career Sim</h4>
+                                        <p class="text-xs text-slate-500 mt-1">Roleplay CEO</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT COL: Leaderboard & Store -->
+                        <div class="lg:col-span-1 space-y-8 animate-slide-up" style="animation-delay: 0.2s;">
+                            
+                            <!-- Leaderboard -->
+                            <div class="glass-panel p-6 rounded-2xl">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white"><i class="fas fa-trophy text-yellow-500 mr-2"></i> Top 5</h3>
+                                    <span class="text-xs bg-slate-200 dark:bg-white/10 px-2 py-1 rounded">Global</span>
+                                </div>
+                                <div class="space-y-3" id="leaderboard-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Achievements Preview -->
+                            <div class="glass-panel p-6 rounded-2xl">
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Latest Badges</h3>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div class="achievement-card aspect-square bg-white/5 rounded-xl flex items-center justify-center text-3xl border border-white/10" title="Early Bird">🌅</div>
+                                    <div class="achievement-card aspect-square bg-white/5 rounded-xl flex items-center justify-center text-3xl border border-white/10" title="Code Master">💻</div>
+                                    <div class="achievement-card locked aspect-square bg-black/20 rounded-xl flex items-center justify-center text-2xl border border-white/5" title="Locked"><i class="fas fa-lock text-slate-600"></i></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Reward Store -->
+                    <div class="glass-panel p-8 rounded-3xl animate-slide-up" style="animation-delay: 0.3s;">
+                        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-store text-pink-500"></i> Point Shop
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                            <div class="reward-card bg-slate-100 dark:bg-white/5 p-4 rounded-xl border border-transparent hover:border-yellow-500/50 transition-all group text-center">
+                                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎨</div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Profile Theme</h4>
+                                <p class="text-xs text-slate-500 mb-4">Dark Neon Style</p>
+                                <button class="w-full py-2 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg text-sm font-bold hover:bg-yellow-500 hover:text-white transition-colors" onclick="buyItem(500)">500 🪙</button>
+                            </div>
+                            <div class="reward-card bg-slate-100 dark:bg-white/5 p-4 rounded-xl border border-transparent hover:border-yellow-500/50 transition-all group text-center">
+                                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎫</div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">1-on-1 Mentoring</h4>
+                                <p class="text-xs text-slate-500 mb-4">30 min session</p>
+                                <button class="w-full py-2 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg text-sm font-bold hover:bg-yellow-500 hover:text-white transition-colors" onclick="buyItem(2000)">2000 🪙</button>
+                            </div>
+                            <div class="reward-card bg-slate-100 dark:bg-white/5 p-4 rounded-xl border border-transparent hover:border-yellow-500/50 transition-all group text-center">
+                                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🚀</div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Resume Boost</h4>
+                                <p class="text-xs text-slate-500 mb-4">AI Analysis</p>
+                                <button class="w-full py-2 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg text-sm font-bold hover:bg-yellow-500 hover:text-white transition-colors" onclick="buyItem(800)">800 🪙</button>
+                            </div>
+                            <div class="reward-card bg-slate-100 dark:bg-white/5 p-4 rounded-xl border border-transparent hover:border-yellow-500/50 transition-all group text-center">
+                                <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">📦</div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Mystery Box</h4>
+                                <p class="text-xs text-slate-500 mb-4">Random Reward</p>
+                                <button class="w-full py-2 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-lg text-sm font-bold hover:bg-yellow-500 hover:text-white transition-colors" onclick="buyItem(300)">300 🪙</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const API_URL = `${window.location.protocol}//${window.location.host}`;
+        let authToken = null;
+
+        // --- Sidebar Logic ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const headerToggleBtn = document.getElementById('header-sidebar-toggle');
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                headerToggleBtn.classList.add('hidden');
+            } else {
+                sidebar.classList.add('collapsed');
+                headerToggleBtn.classList.remove('hidden');
+                headerToggleBtn.classList.add('flex');
+            }
+        }
+        
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+                sidebar.style.display = 'flex';
+                sidebar.style.position = 'fixed';
+                sidebar.style.width = '100%';
+                sidebar.style.zIndex = '50';
+            } else {
+                sidebar.style.display = 'none';
+            }
+        }
+
+        // --- Theme Sync ---
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // --- GAMIFICATION LOGIC ---
+        
+        // Mock Data (Fallback)
+        const mockQuests = [
+            { title: "Complete 3 Lessons", xp: 100, done: false },
+            { title: "Log in for 3 days", xp: 50, done: true },
+            { title: "Score 100% on Quiz", xp: 200, done: false }
+        ];
+
+        const mockLeaderboard = [
+            { name: "Priya S.", score: 2450, rank: 1, avatar: "P" },
+            { name: "Arjun R.", score: 2300, rank: 2, avatar: "A" },
+            { name: "You", score: 1250, rank: 12, avatar: "U", isMe: true },
+            { name: "Rahul V.", score: 1100, rank: 13, avatar: "R" }
+        ];
+
+        async function initData() {
+            authToken = localStorage.getItem('userToken');
+            if (!authToken) return window.location.href = '/login';
+
+            // 1. Fetch User Stats
+            try {
+                const res = await fetch(`${API_URL}/api/users/me`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+                if(res.ok) {
+                    const user = await res.json();
+                    updateStats(user.progress);
+                }
+            } catch(e) { console.error(e); }
+
+            // 2. Render Quests
+            renderQuests(mockQuests);
+            
+            // 3. Render Leaderboard
+            renderLeaderboard(mockLeaderboard);
+        }
+
+        function updateStats(progress) {
+            document.getElementById('current-level').textContent = progress.level;
+            document.getElementById('current-xp').textContent = progress.xp;
+            document.getElementById('streak-days').textContent = progress.streak_days;
+            
+            // Calc Level Progress (Example: 1000 XP per level)
+            const xpForNext = (progress.level) * 1000;
+            const currentLevelXp = progress.xp % 1000;
+            const pct = (currentLevelXp / 1000) * 100;
+            
+            document.getElementById('xp-bar').style.width = `${pct}%`;
+            
+            // Circular Progress
+            const circle = document.getElementById('level-circle');
+            const offset = 377 - (pct / 100 * 377);
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function renderQuests(quests) {
+            const container = document.getElementById('quest-list');
+            container.innerHTML = quests.map((q, i) => `
+                <div class="quest-item flex items-center justify-between p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-transparent hover:border-yellow-500/30 cursor-pointer" onclick="toggleQuest(${i})">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" class="quest-checkbox" ${q.done ? 'checked disabled' : ''}>
+                        <span class="text-sm text-slate-700 dark:text-slate-300 ${q.done ? 'line-through opacity-50' : ''}">${q.title}</span>
+                    </div>
+                    <span class="text-xs font-bold text-yellow-500">+${q.xp} XP</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleQuest(index) {
+            if(mockQuests[index].done) return;
+            mockQuests[index].done = true;
+            renderQuests(mockQuests);
+            
+            // Trigger Celebration
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#fbbf24', '#f59e0b']
             });
             
-            // Particle interaction
-            document.addEventListener('mousemove', (e) => {
-                const particles = document.querySelectorAll('.particle');
-                particles.forEach(particle => {
-                    const speed = Math.random() * 0.5 + 0.1;
-                    const x = (e.clientX * speed) / 50;
-                    const y = (e.clientY * speed) / 50;
-                    particle.style.transform = `translate(${x}px, ${y}px)`;
-                });
-            });
+            // TODO: Call backend to update XP
+            alert(`Quest Complete! +${mockQuests[index].xp} XP`);
+        }
+
+        function renderLeaderboard(users) {
+            const container = document.getElementById('leaderboard-list');
+            container.innerHTML = users.map(u => `
+                <div class="flex items-center justify-between p-3 rounded-xl ${u.isMe ? 'bg-blue-500/10 border border-blue-500/50' : 'hover:bg-white/5'}">
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono font-bold text-slate-400 w-6">#${u.rank}</span>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-xs text-white font-bold border border-white/10">${u.avatar}</div>
+                        <span class="text-sm font-medium text-slate-900 dark:text-white">${u.name}</span>
+                    </div>
+                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">${u.score} XP</span>
+                </div>
+            `).join('');
+        }
+
+        function buyItem(cost) {
+            const currentCoins = parseInt(document.getElementById('coin-count').textContent.replace(',',''));
+            if(currentCoins >= cost) {
+                if(confirm(`Buy this for ${cost} coins?`)) {
+                    document.getElementById('coin-count').textContent = (currentCoins - cost).toLocaleString();
+                    alert("Purchase Successful!");
+                }
+            } else {
+                alert("Not enough coins!");
+            }
+        }
+
+        // --- Logout ---
+        function logout() { localStorage.removeItem('userToken'); window.location.href = '/login'; }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
             
-            // BACKEND INTEGRATION POINTS:
-            // 1. User progress tracking for XP and levels
-            // 2. Achievement system with real unlocks
-            // 3. Daily challenge generation and completion tracking  
-            // 4. Leaderboard system with real user rankings
-            // 5. Reward store with actual items and redemption
-            // 6. Mini-game integration and score tracking
-            // 7. Social features for friend competitions
-            // 8. Beta signup and notification system
+            // Particles
+            const particleContainer = document.getElementById('particles');
+            for(let j=0; j<20; j++) {
+                const p = document.createElement('div');
+                p.className = 'absolute rounded-full bg-blue-400 opacity-20';
+                p.style.width = Math.random() * 3 + 'px';
+                p.style.height = p.style.width;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animation = `float ${Math.random() * 10 + 10}s infinite linear`;
+                particleContainer.appendChild(p);
+            }
         });
     </script>
 </body>

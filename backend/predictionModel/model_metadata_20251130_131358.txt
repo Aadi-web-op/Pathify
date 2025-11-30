@@ -1,0 +1,17 @@
+================================================================================
+CAREER PREDICTION MODEL - METADATA
+================================================================================
+
+Model: Gradient Boosting
+Version: v80
+Test Accuracy: 80.50%
+F1-Score: 0.8069
+Training Time: 0.93 minutes
+
+Best Parameters:
+  • class_weight: balanced
+  • criterion: gini
+  • max_depth: 20
+  • max_features: None
+  • min_samples_leaf: 1
+  • min_samples_split: 50
