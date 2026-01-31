@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+passlib[bcrypt]
+python-jose[cryptography]
+pydantic-settings
+beanie
+motor
+google-auth
+requests
