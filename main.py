@@ -20,7 +20,7 @@ import random
 
 # --- PATH SETUP ---
 BASE_DIR = Path(__file__).resolve().parent
-FRONTEND_DIR = BASE_DIR.parent / "frontend"
+FRONTEND_DIR = BASE_DIR / "frontend"
 MODEL_DIR = BASE_DIR / "prediction_model"
 
 # --- 1. CONFIGURATION ---
