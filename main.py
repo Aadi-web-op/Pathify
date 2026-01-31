@@ -496,8 +496,15 @@ async def register(user: UserCreate):
 @app.post("/api/login/", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await get_user_by_email(form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    if not user:
         raise HTTPException(401, "Incorrect credentials")
+
+    if user.hashed_password == "SOCIAL_LOGIN":
+        raise HTTPException(400, "Use social login for this account")
+
+    if not verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(401, "Incorrect credentials")
+
     return {"access_token": create_access_token({"email": user.email}), "token_type": "bearer"}
 
 # --- SOCIAL AUTH ---
