@@ -5,5 +5,7 @@ python-jose[cryptography]
 pydantic-settings
 beanie
 motor
-google-auth
 requests
+httpx
+python-multipart
+email-validator
