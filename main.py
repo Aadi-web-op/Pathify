@@ -891,7 +891,6 @@ async def serve_html(page: str):
 async def serve_css():
     if (FRONTEND_DIR / "style.css").exists(): return FileResponse(FRONTEND_DIR / "style.css")
     raise HTTPException(404)
-    
 @app.get("/app.js")
 async def serve_js():
     if (FRONTEND_DIR / "app.js").exists(): return FileResponse(FRONTEND_DIR / "app.js")
