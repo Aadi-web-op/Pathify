@@ -47,6 +47,8 @@ class Settings(BaseSettings):
 
     ksarth_messages_per_hour: int = 30
     login_attempts_per_minute: int = 10
+    # Per network, not per person: a school lab can put a whole class behind one IP.
+    signups_per_hour_per_network: int = 30
 
     @field_validator("web_origin")
     @classmethod

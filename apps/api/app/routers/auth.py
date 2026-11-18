@@ -32,7 +32,11 @@ async def providers(settings: SettingsDep) -> ProvidersOut:
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def register(body: RegisterIn, request: Request, response: Response, settings: SettingsDep) -> UserOut:
-    limiter.check(Limit("register", 5, 3600), client_ip(request), "Too many sign-ups from this network.")
+    limiter.check(
+        Limit("register", settings.signups_per_hour_per_network, 3600),
+        client_ip(request),
+        "Too many sign-ups from this network.",
+    )
     email = body.email.lower()
     if await User.find_one(User.email == email):
         raise HTTPException(status.HTTP_409_CONFLICT, "An account with this email already exists. Sign in instead.")

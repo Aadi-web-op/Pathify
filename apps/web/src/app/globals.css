@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/*
+  Route Map design system.
+  Paper-light base, ink text, Indian highway-sign green as the single accent.
+  Saffron and blue are route colours: they only ever mark career routes.
+*/
+
+:root {
+  --paper: #f3f5f1;
+  --surface: #ffffff;
+  --surface-sunk: #e9ede7;
+  --ink: #16201b;
+  --muted: #56625c;
+  --rule: #d6dcd5;
+  --rule-strong: #b9c2ba;
+  --sign: #0d6b4e;
+  --sign-hover: #0a5940;
+  --sign-ink: #ffffff;
+  --sign-tint: #e1efe8;
+  --route-saffron: #c46a12;
+  --route-blue: #2d58c8;
+  --danger: #a8261d;
+  --danger-tint: #fbe9e7;
+  --warn: #8a5a00;
+  --warn-tint: #fcf1d9;
+  --focus: #c46a12;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111613;
+    --surface: #182019;
+    --surface-sunk: #212923;
+    --ink: #e4e9e4;
+    --muted: #9ba79f;
+    --rule: #2b3430;
+    --rule-strong: #3d4842;
+    --sign: #2fa57b;
+    --sign-hover: #3cb98c;
+    --sign-ink: #08130e;
+    --sign-tint: #17332a;
+    --route-saffron: #f0a04b;
+    --route-blue: #84a2f5;
+    --danger: #f28a80;
+    --danger-tint: #3a1e1b;
+    --warn: #e8b54a;
+    --warn-tint: #33290f;
+    --focus: #f0a04b;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #111613;
+  --surface: #182019;
+  --surface-sunk: #212923;
+  --ink: #e4e9e4;
+  --muted: #9ba79f;
+  --rule: #2b3430;
+  --rule-strong: #3d4842;
+  --sign: #2fa57b;
+  --sign-hover: #3cb98c;
+  --sign-ink: #08130e;
+  --sign-tint: #17332a;
+  --route-saffron: #f0a04b;
+  --route-blue: #84a2f5;
+  --danger: #f28a80;
+  --danger-tint: #3a1e1b;
+  --warn: #e8b54a;
+  --warn-tint: #33290f;
+  --focus: #f0a04b;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunk: var(--surface-sunk);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-sign: var(--sign);
+  --color-sign-hover: var(--sign-hover);
+  --color-sign-ink: var(--sign-ink);
+  --color-sign-tint: var(--sign-tint);
+  --color-saffron: var(--route-saffron);
+  --color-route-blue: var(--route-blue);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-tint);
+
+  --font-display: "Overpass", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Source Sans 3", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --radius-sign: 10px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    line-height: 1.15;
+  }
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--sign-tint);
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sign);
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility gutter {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Routes draw themselves once when a map first appears. Paths set pathLength="1". */
+@keyframes route-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.route-draw {
+  stroke-dasharray: 1;
+  animation: route-draw 1.4s cubic-bezier(0.5, 0, 0.2, 1) both;
+  animation-delay: var(--route-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-draw {
+    animation: none;
+  }
+}
+
+/* Ksarth replies: Markdown rendered without raw HTML. */
+.prose-ksarth {
+  display: grid;
+  gap: 0.7em;
+  overflow-wrap: anywhere;
+}
+.prose-ksarth :where(h1, h2, h3, h4) {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 0.3em;
+}
+.prose-ksarth :where(ul, ol) {
+  display: grid;
+  gap: 0.35em;
+  padding-left: 1.3em;
+}
+.prose-ksarth ul {
+  list-style: disc;
+}
+.prose-ksarth ol {
+  list-style: decimal;
+}
+.prose-ksarth li::marker {
+  color: var(--sign);
+}
+.prose-ksarth strong {
+  font-weight: 700;
+}
+.prose-ksarth a {
+  color: var(--sign);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-ksarth code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface-sunk);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.prose-ksarth pre {
+  overflow-x: auto;
+  background: var(--surface-sunk);
+  padding: 0.8em 1em;
+  border-radius: 8px;
+}
+.prose-ksarth blockquote {
+  border-left: 3px solid var(--rule-strong);
+  padding-left: 0.9em;
+  color: var(--muted);
+}
+.prose-ksarth table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.prose-ksarth :where(th, td) {
+  border: 1px solid var(--rule);
+  padding: 0.35em 0.6em;
+  text-align: left;
+}

@@ -4,7 +4,7 @@ from pwdlib.hashers.bcrypt import BcryptHasher
 
 from app.models import AuthSession, User
 from app.routers import auth as auth_router
-from app.security.cookies import ACCESS_COOKIE, REFRESH_COOKIE
+from app.security.cookies import ACCESS_COOKIE, REFRESH_COOKIE, SESSION_HINT_COOKIE
 from tests.conftest import make_settings, register
 
 
@@ -25,6 +25,8 @@ async def test_register_sets_httponly_cookies_and_returns_user(client):
     refresh = next(c for c in cookies if c.startswith(REFRESH_COOKIE))
     assert "HttpOnly" in access and "SameSite=lax" in access and "Path=/" in access
     assert "HttpOnly" in refresh and "Path=/api/auth" in refresh
+    hint = next(c for c in cookies if c.startswith(SESSION_HINT_COOKIE))
+    assert hint.startswith(f"{SESSION_HINT_COOKIE}=1;") and "HttpOnly" not in hint
 
     me = await client.get("/api/users/me")
     assert me.status_code == 200
@@ -135,6 +137,7 @@ async def test_logout_revokes_and_clears(signed_in):
     refresh_token = signed_in.cookies.get(REFRESH_COOKIE)
     response = await signed_in.post("/api/auth/logout")
     assert response.status_code == 204
+    assert signed_in.cookies.get(SESSION_HINT_COOKIE) is None
     assert (await signed_in.get("/api/users/me")).status_code == 401
     signed_in.cookies.set(REFRESH_COOKIE, refresh_token, path="/api/auth")
     assert (await signed_in.post("/api/auth/refresh")).status_code == 401

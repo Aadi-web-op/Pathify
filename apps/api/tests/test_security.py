@@ -96,3 +96,15 @@ async def test_github_callback_signs_in_new_user_and_sends_them_to_onboarding(cl
 async def test_github_start_without_config_returns_to_signin(client):
     response = await client.get("/api/auth/github/start")
     assert response.headers["location"] == f"{WEB_ORIGIN}/signin?error=github"
+
+
+@pytest.mark.parametrize("settings", [make_settings(signups_per_hour_per_network=2)])
+async def test_signups_are_limited_per_network(client):
+    for n in range(2):
+        body = {"name": "A", "email": f"s{n}@example.com", "password": "fine password 1"}
+        assert (await client.post("/api/auth/register", json=body)).status_code == 201
+        client.cookies.clear()
+    body = {"name": "A", "email": "s9@example.com", "password": "fine password 1"}
+    response = await client.post("/api/auth/register", json=body)
+    assert response.status_code == 429
+    assert "network" in response.json()["detail"]
