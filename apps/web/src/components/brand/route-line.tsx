@@ -46,7 +46,7 @@ export function RouteLine({ stations, current = 0, className, label }: Props) {
             >
               {state === "here" && <span className="size-2.5 rounded-full bg-sign" />}
             </span>
-            <span className="grid min-w-0 gap-0.5">
+            <span className="grid min-w-0 content-start gap-0.5">
               <span className={clsx("font-display text-[0.95rem] font-bold leading-tight", state === "ahead" && "text-muted")}>
                 {station.label}
                 {state === "here" && <span className="ml-2 align-middle text-xs font-bold uppercase tracking-wider text-sign">You</span>}

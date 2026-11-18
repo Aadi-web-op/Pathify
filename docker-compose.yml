@@ -1,0 +1,50 @@
+# Runs the whole stack locally: MongoDB, the API and the web app.
+#   cp .env.example .env    # then set SECRET_KEY (and GEMINI_API_KEY for real Ksarth replies)
+#   docker compose up --build
+# Open http://localhost:3000. The API is only reachable through the web app's /api proxy.
+
+services:
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  api:
+    build: ./apps/api
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017
+      - WEB_ORIGIN=${WEB_ORIGIN:-http://localhost:3000}
+      # Passed through from your shell when set; otherwise .env applies.
+      - SECRET_KEY
+      - GEMINI_API_KEY
+      - SIGNUPS_PER_HOUR_PER_NETWORK
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        API_INTERNAL_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
