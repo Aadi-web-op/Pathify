@@ -1,5 +1,6 @@
 import asyncio
 import json
+import re
 from collections.abc import AsyncIterator
 
 from app.services.llm.base import ChatMessage, Completion, StreamChunk, Usage
@@ -17,10 +18,16 @@ class StubProvider:
     model = "offline-stub"
     offline = True
 
-    def _reply(self, messages: list[ChatMessage]) -> str:
+    def _reply(self, messages: list[ChatMessage], system: str = "") -> str:
         last = next((m.content for m in reversed(messages) if m.role == "user"), "")
         preview = last if len(last) <= 120 else last[:117] + "..."
-        return f"{OFFLINE_NOTE}\n\nYou asked: “{preview}”"
+        reply = f"{OFFLINE_NOTE}\n\nYou asked: “{preview}”"
+        # Even offline, point to the career guides that retrieval found for this question.
+        notes = re.findall(r"^\[(\d+)\] ([^:\n]+):", system, flags=re.MULTILINE)
+        if notes:
+            listed = ", ".join(f"{title} [{n}]" for n, title in notes)
+            reply += f"\n\nThese career guides look related: {listed}."
+        return reply
 
     async def complete(
         self,
@@ -31,13 +38,13 @@ class StubProvider:
         temperature: float = 0.7,
         json_schema: dict | None = None,
     ) -> Completion:
-        text = json.dumps({"offline": True}) if json_schema is not None else self._reply(messages)
+        text = json.dumps({"offline": True}) if json_schema is not None else self._reply(messages, system)
         return Completion(text=text, model=self.model, usage=Usage(0, 0, 0))
 
     async def stream(
         self, *, system: str, messages: list[ChatMessage], max_output_tokens: int = 1024, temperature: float = 0.7
     ) -> AsyncIterator[StreamChunk]:
-        for word in self._reply(messages).split(" "):
+        for word in self._reply(messages, system).split(" "):
             yield StreamChunk(text=word + " ")
             await asyncio.sleep(0)
         yield StreamChunk(done=True, usage=Usage(0, 0, 0))

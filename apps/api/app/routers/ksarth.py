@@ -3,33 +3,36 @@ import logging
 from collections.abc import AsyncIterator
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Request, Response, status
+from fastapi import APIRouter, Query, Response, status
 from fastapi.responses import StreamingResponse
 
 from app.catalog import catalog
 from app.models import KsarthMessage
 from app.models.assessment import latest_result
-from app.schemas.ksarth import KsarthMessageIn, KsarthMessageOut, KsarthStatus
+from app.models.ksarth import Source
+from app.schemas.ksarth import KsarthMessageIn, KsarthMessageOut, KsarthStatus, SourceOut
 from app.security.deps import CurrentUser, SettingsDep
 from app.services.ksarth import recent_history, system_prompt
-from app.services.llm import ChatMessage, LLMError, LLMProvider, Usage
+from app.services.llm import ChatMessage, LLMError, Usage
+from app.services.llm.dependency import LLMDep
 from app.services.matching import career_index
 from app.services.rate_limit import Limit, limiter
+from app.services.retrieval import career_search, clean_citations
 
 log = logging.getLogger("pathify.ksarth")
 router = APIRouter(prefix="/api/ksarth", tags=["ksarth"])
 
-
-def get_llm(request: Request) -> LLMProvider:
-    return request.app.state.llm
-
-
-LLMDep = Annotated[LLMProvider, Depends(get_llm)]
+MAX_NOTES = 3
+MIN_NOTES = 2
 
 
 def _out(message: KsarthMessage) -> KsarthMessageOut:
     return KsarthMessageOut(
-        id=str(message.id), role=message.role, content=message.content, created_at=message.created_at
+        id=str(message.id),
+        role=message.role,
+        content=message.content,
+        created_at=message.created_at,
+        sources=[SourceOut(n=s.n, slug=s.slug, title=s.title) for s in message.sources],
     )
 
 
@@ -82,11 +85,19 @@ async def send_message(
     question = KsarthMessage(user_id=user.id, role="user", content=body.content)
     await question.insert()
     result = await latest_result(user.id)
-    top_careers = []
+    match_slugs: list[str] = []
     if result:
-        slugs = career_index().top({d: float(v) for d, v in result.scores.items()}, 3)
-        top_careers = [catalog().get(slug).title for slug in slugs]
-    prompt = system_prompt(user, result, top_careers)
+        match_slugs = career_index().top({d: float(v) for d, v in result.scores.items()}, 3)
+    top_careers = [catalog().get(slug).title for slug in match_slugs]
+    notes = [hit.career for hit in career_search().search(body.content, k=MAX_NOTES)]
+    # A question that names no career ("which exams fit me?") is usually about the student's own matches.
+    for slug in match_slugs:
+        if len(notes) >= MIN_NOTES:
+            break
+        career = catalog().get(slug)
+        if career not in notes:
+            notes.append(career)
+    prompt = system_prompt(user, result, top_careers, notes)
 
     async def events() -> AsyncIterator[str]:
         yield _event("question", {"message": _out(question).model_dump(mode="json")})
@@ -105,11 +116,12 @@ async def send_message(
             yield _event("error", {"detail": str(exc), "retryable": exc.retryable})
             return
 
-        text = "".join(text_parts).strip()
+        text, cited = clean_citations("".join(text_parts), len(notes))
         if not text:
             await question.delete()
             yield _event("error", {"detail": "Ksarth didn't produce an answer. Try asking again.", "retryable": True})
             return
+        sources = [Source(n=n, slug=notes[n - 1].slug, title=notes[n - 1].title) for n in cited]
         answer = KsarthMessage(
             user_id=user.id,
             role="assistant",
@@ -118,6 +130,7 @@ async def send_message(
             model=llm.model,
             input_tokens=usage.input_tokens,
             output_tokens=usage.output_tokens,
+            sources=sources,
             latency_ms=usage.latency_ms,
         )
         await answer.insert()

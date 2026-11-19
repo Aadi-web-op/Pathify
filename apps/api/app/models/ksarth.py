@@ -2,10 +2,16 @@ from datetime import datetime
 from typing import Literal
 
 from beanie import Document, PydanticObjectId
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pymongo import ASCENDING, DESCENDING, IndexModel
 
 from app.models.user import utcnow
+
+
+class Source(BaseModel):
+    n: int
+    slug: str
+    title: str
 
 
 class KsarthMessage(Document):
@@ -18,6 +24,7 @@ class KsarthMessage(Document):
     input_tokens: int | None = None
     output_tokens: int | None = None
     latency_ms: int | None = None
+    sources: list[Source] = Field(default_factory=list)
 
     class Settings:
         name = "ksarth_messages"

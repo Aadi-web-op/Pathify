@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.catalog import Dimension, Step
 from app.schemas.assessment import ResultOut
@@ -26,6 +26,14 @@ class RouteOptionOut(BaseModel):
     years: float
 
 
+class TryoutLink(BaseModel):
+    slug: str
+    title: str
+    minutes: int
+    enjoyment: int | None = Field(default=None, description="The student's own 1-5 rating, if they've tried it")
+    see_myself: str | None = None
+
+
 class MatchOut(BaseModel):
     slug: str
     title: str
@@ -37,9 +45,10 @@ class MatchOut(BaseModel):
     watch_outs: list[ReasonOut]
     routes: list[RouteOptionOut]
     open_to_you: bool
+    tryout: TryoutLink | None = None
 
     @classmethod
-    def from_match(cls, m: Match) -> "MatchOut":
+    def from_match(cls, m: Match, tryout: TryoutLink | None = None) -> "MatchOut":
         return cls(
             slug=m.career.slug,
             title=m.career.title,
@@ -54,6 +63,7 @@ class MatchOut(BaseModel):
                 for r in m.routes
             ],
             open_to_you=m.open_route is not None,
+            tryout=tryout,
         )
 
 

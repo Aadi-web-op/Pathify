@@ -1,0 +1,419 @@
+{
+  "version": "2026-11",
+  "about": "Short, simplified versions of real tasks from each job. Scenarios, people and numbers are made up for practice.",
+  "tryouts": [
+    {
+      "slug": "data-analyst-sales-drop",
+      "career": "data-analyst",
+      "title": "Why did sales drop in March?",
+      "minutes": 10,
+      "role": "You're a junior data analyst at a chain of four stationery shops in Maharashtra.",
+      "brief": "Your manager has noticed that March sales were about 10% lower than January and wants to know why before tomorrow's meeting.",
+      "materials": [
+        {
+          "kind": "table",
+          "title": "Monthly sales, in ₹ thousand",
+          "columns": ["Store", "January", "February", "March"],
+          "rows": [
+            ["Pune", "420", "410", "415"],
+            ["Nagpur", "310", "320", "180"],
+            ["Nashik", "260", "255", "262"],
+            ["Aurangabad", "190", "—", "205"],
+            ["Total", "1,180", "985", "1,062"]
+          ],
+          "note": "A dash means no figure was recorded."
+        },
+        {
+          "kind": "text",
+          "title": "Message from your manager",
+          "body": "Sales are down 10% in March compared with January. Is it all the stores? I need a short answer I can share with the owners."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "store",
+          "kind": "choice",
+          "prompt": "Which store explains most of the March drop?",
+          "options": [
+            { "id": "pune", "text": "Pune" },
+            { "id": "nagpur", "text": "Nagpur" },
+            { "id": "nashik", "text": "Nashik" },
+            { "id": "aurangabad", "text": "Aurangabad" }
+          ],
+          "answer": "nagpur",
+          "explanation": "Nagpur fell from 310 in January to 180 in March, a drop of 130. The whole chain dropped by 118, so Nagpur alone explains all of it. The other stores were steady."
+        },
+        {
+          "id": "caveat",
+          "kind": "choice",
+          "prompt": "What in the table could mislead someone reading the totals?",
+          "options": [
+            { "id": "rounding", "text": "The figures are rounded to the nearest thousand" },
+            { "id": "missing", "text": "Aurangabad's February figure is missing, so February's total looks lower than it really was" },
+            { "id": "pune", "text": "Pune is much bigger than the other stores" },
+            { "id": "months", "text": "February has fewer days than March" }
+          ],
+          "answer": "missing",
+          "explanation": "February's total of 985 leaves out Aurangabad entirely. Anyone comparing February with other months would see a fake dip. A good analyst points this out before someone draws the wrong conclusion."
+        },
+        {
+          "id": "nagpur-change",
+          "kind": "number",
+          "prompt": "By how much did Nagpur's sales fall from February to March, in ₹ thousand?",
+          "answer": 140,
+          "tolerance": 0,
+          "unit": "₹ thousand",
+          "explanation": "320 − 180 = 140."
+        },
+        {
+          "id": "message",
+          "kind": "written",
+          "prompt": "Write a short message (2–4 sentences) to your manager explaining what happened and what you'd check next.",
+          "max_words": 120,
+          "criteria": [
+            { "id": "cause", "text": "Names Nagpur as the main cause and gives the size of its drop" },
+            { "id": "caveat", "text": "Mentions that Aurangabad's February figure is missing" },
+            { "id": "next", "text": "Suggests a sensible next check, such as asking the Nagpur store what changed (closure, stock, staff or billing problems)" },
+            { "id": "clear", "text": "Is short, clear and easy for a manager to share" }
+          ],
+          "model_answer": "The March drop is almost entirely Nagpur: it fell from 310 to 180 (₹ thousand), while the other three stores were steady. I'd ask the Nagpur store whether anything changed in March, such as a closure, stock running out, or a problem with billing. One note: Aurangabad's February sales weren't recorded, so February's total understates that month."
+        }
+      ],
+      "debrief": {
+        "real_work": "Analysts spend much of their time exactly like this: finding which part of the data explains a change, spotting gaps before they mislead anyone, and writing it up in a few clear lines.",
+        "enjoy_if": "You liked hunting for the pattern and checking the numbers, and you didn't mind that the real answer needs a question to a person, not just more data."
+      }
+    },
+    {
+      "slug": "doctor-three-patients",
+      "career": "doctor",
+      "title": "Three patients, one doctor",
+      "minutes": 10,
+      "role": "You're the only doctor at a small-town clinic on a busy morning. This is simplified for learning and is not medical advice.",
+      "brief": "Three patients arrive at the same time. You need to decide who to see first, and then talk to a worried parent.",
+      "materials": [
+        {
+          "kind": "list",
+          "title": "Waiting room",
+          "items": [
+            "A. A 54-year-old man with chest pain that started 30 minutes ago and spreads to his left arm. He is sweating.",
+            "B. A 19-year-old woman who twisted her ankle playing football yesterday. She can walk with a limp.",
+            "C. A 6-year-old boy with a fever since last night. He is drinking water and playing a game on his mother's phone."
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "first",
+          "kind": "choice",
+          "prompt": "Who should you see first?",
+          "options": [
+            { "id": "a", "text": "A, the man with chest pain" },
+            { "id": "b", "text": "B, the woman with the twisted ankle" },
+            { "id": "c", "text": "C, the boy with a fever, because children come first" },
+            { "id": "order", "text": "Whoever arrived first" }
+          ],
+          "answer": "a",
+          "explanation": "Chest pain spreading to the arm with sweating can be a heart attack, where every minute counts. The ankle and the fever matter too, but neither patient is in danger right now. Deciding by urgency, not arrival order, is called triage."
+        },
+        {
+          "id": "warning",
+          "kind": "multi",
+          "prompt": "Which details about patient A are warning signs? Choose all that apply.",
+          "options": [
+            { "id": "arm", "text": "The pain spreads to his left arm" },
+            { "id": "sweat", "text": "He is sweating" },
+            { "id": "auto", "text": "He came by auto-rickshaw" },
+            { "id": "tea", "text": "He had tea before coming" }
+          ],
+          "answers": ["arm", "sweat"],
+          "explanation": "Pain spreading to the arm and sweating together are classic warning signs of a heart attack. How he travelled or what he drank doesn't change the urgency."
+        },
+        {
+          "id": "parent",
+          "kind": "written",
+          "prompt": "The boy's mother is upset that patient A went in first. Write what you would say to her (3–5 sentences).",
+          "max_words": 150,
+          "criteria": [
+            { "id": "kind", "text": "Acknowledges her worry kindly" },
+            { "id": "why", "text": "Explains simply why another patient went first, without sharing that patient's private details" },
+            { "id": "reassure", "text": "Gives honest reassurance about her son (he is drinking and playing) and says when he'll be seen" },
+            { "id": "watch", "text": "Tells her what changes to report straight away, such as trouble breathing, unusual sleepiness or not drinking" }
+          ],
+          "model_answer": "I understand how worrying it is to wait when your child is unwell. Another patient needed urgent help that couldn't wait, and I'll see your son next. It's a good sign that he's drinking and playing. If he has trouble breathing, becomes very sleepy, or stops drinking, tell the nurse straight away and we'll see him immediately."
+        }
+      ],
+      "debrief": {
+        "real_work": "Doctors make urgency decisions all day and then explain them to people who are scared or upset. Medical knowledge matters, and so does how you talk to people.",
+        "enjoy_if": "You felt the pull to get the decision right under pressure, and you cared about how the mother felt, not just about being correct."
+      }
+    },
+    {
+      "slug": "ux-designer-checkout",
+      "career": "ux-designer",
+      "title": "Fix a checkout screen",
+      "minutes": 10,
+      "role": "You're a junior UX designer at a food delivery app.",
+      "brief": "Many people add food to their cart and then leave at checkout. Your team lead asks you to look at the checkout screen.",
+      "materials": [
+        {
+          "kind": "list",
+          "title": "What the checkout screen does today",
+          "items": [
+            "The coupon box at the top is selected automatically, so the keyboard opens and covers half the screen.",
+            "The order total (₹420) is at the very bottom, so you have to scroll to see it.",
+            "A ₹49 delivery fee is added only after you tap Pay.",
+            "The Pay button is light grey text on a slightly darker grey.",
+            "The app's main colour is orange."
+          ]
+        },
+        {
+          "kind": "text",
+          "title": "From last week's user interviews",
+          "body": "6 of 10 people said they felt cheated when the delivery fee appeared after they tapped Pay. 3 said they couldn't find the Pay button at first."
+        }
+      ],
+      "tasks": [
+        {
+          "id": "problems",
+          "kind": "multi",
+          "prompt": "Which of these break basic usability rules? Choose all that apply.",
+          "options": [
+            { "id": "keyboard", "text": "The coupon box opens the keyboard automatically" },
+            { "id": "fee", "text": "The delivery fee appears only after tapping Pay" },
+            { "id": "contrast", "text": "The Pay button is grey on grey" },
+            { "id": "orange", "text": "The app's main colour is orange" }
+          ],
+          "answers": ["keyboard", "fee", "contrast"],
+          "explanation": "Hiding costs until the last moment, low-contrast buttons, and covering the screen with an unwanted keyboard are all common usability problems. Orange as a brand colour isn't a problem by itself."
+        },
+        {
+          "id": "first",
+          "kind": "choice",
+          "prompt": "Based on the interviews, which change would you test first?",
+          "options": [
+            { "id": "fee", "text": "Show the delivery fee in the total before people tap Pay" },
+            { "id": "colour", "text": "Change the app's colour from orange to blue" },
+            { "id": "coupon", "text": "Remove coupons entirely" },
+            { "id": "animation", "text": "Add an animation when the order is placed" }
+          ],
+          "answer": "fee",
+          "explanation": "Six out of ten people named the surprise fee. Testing the change that addresses the most common, most serious complaint first is how designers use research to decide."
+        },
+        {
+          "id": "note",
+          "kind": "written",
+          "prompt": "Write a short note (3–4 sentences) to the engineer explaining your top change and how you'll know it worked.",
+          "max_words": 120,
+          "criteria": [
+            { "id": "change", "text": "Describes one specific change clearly" },
+            { "id": "evidence", "text": "Links the change to what users said in the interviews" },
+            { "id": "measure", "text": "Says how success will be measured, such as more people completing checkout" },
+            { "id": "concise", "text": "Is concise and easy for an engineer to act on" }
+          ],
+          "model_answer": "Let's show the ₹49 delivery fee in the order total from the start, above a higher-contrast Pay button. In interviews, 6 of 10 people felt cheated by the late fee and 3 couldn't find Pay. We'll know it worked if the share of people who complete checkout goes up over the next two weeks."
+        }
+      ],
+      "debrief": {
+        "real_work": "UX designers turn what users say and do into specific changes, then check with data whether the change actually helped.",
+        "enjoy_if": "You liked spotting what was annoying about the screen and imagining how it should feel instead."
+      }
+    },
+    {
+      "slug": "lawyer-rental-agreement",
+      "career": "lawyer",
+      "title": "Read before you sign",
+      "minutes": 12,
+      "role": "You're a junior lawyer. A first-year college student is about to rent a room in Bengaluru and has asked you to check the agreement.",
+      "brief": "Read the clauses below, spot what could hurt your client, and explain it in plain words.",
+      "materials": [
+        {
+          "kind": "list",
+          "title": "From the rental agreement",
+          "items": [
+            "1. The rent is ₹12,000 per month, payable by the 5th of each month.",
+            "2. The security deposit is two months' rent. It will be returned within 30 days of the tenant leaving, after deducting unpaid dues and the cost of damage beyond normal wear and tear.",
+            "3. The landlord may increase the rent at any time, by any amount, with 7 days' notice.",
+            "4. The tenant is responsible for all repairs to the property, including structural repairs and the building's water tank.",
+            "5. Either party may end this agreement with one month's written notice."
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "risky",
+          "kind": "multi",
+          "prompt": "Which clauses are risky for your client? Choose all that apply.",
+          "options": [
+            { "id": "1", "text": "Clause 1: rent due by the 5th" },
+            { "id": "2", "text": "Clause 2: the security deposit" },
+            { "id": "3", "text": "Clause 3: rent increases" },
+            { "id": "4", "text": "Clause 4: repairs" },
+            { "id": "5", "text": "Clause 5: one month's notice" }
+          ],
+          "answers": ["3", "4"],
+          "explanation": "Clause 3 lets the rent rise by any amount at a week's notice, so the student can't plan or budget. Clause 4 makes the tenant pay for structural repairs and a shared water tank, which are normally the owner's job. The other clauses are common and fairly balanced."
+        },
+        {
+          "id": "wear",
+          "kind": "choice",
+          "prompt": "Clause 2 allows deductions for 'damage beyond normal wear and tear'. What does that mean?",
+          "options": [
+            { "id": "anything", "text": "The landlord can deduct for anything that looks older than on day one" },
+            { "id": "beyond", "text": "Ordinary ageing, like faded paint, isn't charged; damage like a broken window is" },
+            { "id": "nothing", "text": "Nothing can ever be deducted" },
+            { "id": "rent", "text": "It's only about unpaid rent" }
+          ],
+          "answer": "beyond",
+          "explanation": "Normal wear and tear is the ageing that happens with ordinary use. Tenants generally pay only for damage beyond that. Taking dated photos on moving-in day helps avoid disputes."
+        },
+        {
+          "id": "advice",
+          "kind": "written",
+          "prompt": "Your client asks: 'Should I sign this?' Write a short reply (4–5 sentences) in plain language.",
+          "max_words": 160,
+          "criteria": [
+            { "id": "rent", "text": "Explains why the rent-increase clause is risky" },
+            { "id": "repairs", "text": "Explains why the repairs clause is unfair to a tenant" },
+            { "id": "change", "text": "Suggests a specific change to ask for, such as a limit on yearly increases or the owner handling structural repairs" },
+            { "id": "plain", "text": "Uses plain language a first-year student would understand" }
+          ],
+          "model_answer": "Not as it stands. Clause 3 lets the landlord raise your rent by any amount with a week's notice, which makes it hard to budget. Clause 4 makes you pay for big repairs, like the building's structure and water tank, that are normally the owner's job. Ask for rent increases to be limited to once a year by an agreed percentage, and for structural and shared repairs to be the landlord's responsibility. The rest looks reasonable."
+        }
+      ],
+      "debrief": {
+        "real_work": "A lot of legal work is careful reading: finding the one sentence that could cost a client money, then explaining it so they can decide.",
+        "enjoy_if": "You enjoyed reading closely, spotting the catch, and arguing for a fairer version."
+      }
+    },
+    {
+      "slug": "teacher-fractions",
+      "career": "teacher",
+      "title": "The fractions mistake",
+      "minutes": 10,
+      "role": "You teach maths to Class 6.",
+      "brief": "Aarav keeps getting fraction sums wrong. Today he wrote this in his notebook, and he looks frustrated.",
+      "materials": [
+        {
+          "kind": "text",
+          "title": "Aarav's notebook",
+          "body": "1/2 + 1/3 = 2/5"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "thinking",
+          "kind": "choice",
+          "prompt": "What is Aarav most likely thinking?",
+          "options": [
+            { "id": "separate", "text": "He adds the top numbers and the bottom numbers separately, as if they were two ordinary sums" },
+            { "id": "careless", "text": "He made a careless slip and knows the right method" },
+            { "id": "lcm", "text": "He can't find the LCM of 2 and 3" },
+            { "id": "multiply", "text": "He multiplied instead of adding" }
+          ],
+          "answer": "separate",
+          "explanation": "Writing 2/5 is a very common pattern: adding tops and bottoms separately. It shows he hasn't yet seen a fraction as one amount made of equal-sized parts."
+        },
+        {
+          "id": "question",
+          "kind": "choice",
+          "prompt": "Which question would best help Aarav notice the problem himself?",
+          "options": [
+            { "id": "halves", "text": "\"What do you get for 1/2 + 1/2 with your method? Does that make sense?\"" },
+            { "id": "again", "text": "\"Can you do it again more carefully?\"" },
+            { "id": "class", "text": "\"Didn't we learn this last week?\"" },
+            { "id": "lcm", "text": "\"What is the LCM of 2 and 3?\"" }
+          ],
+          "answer": "halves",
+          "explanation": "His method gives 1/2 + 1/2 = 2/4, which is still a half. Two halves should make one whole, so he can see for himself that something is off. Good teachers help students find their own mistakes."
+        },
+        {
+          "id": "explain",
+          "kind": "written",
+          "prompt": "Write what you'd say to Aarav (4–5 sentences) to explain how to add 1/2 and 1/3.",
+          "max_words": 150,
+          "criteria": [
+            { "id": "picture", "text": "Uses a picture or everyday example, such as a roti, chocolate bar or pizza" },
+            { "id": "same-size", "text": "Explains that the pieces must be the same size first (sixths), before adding" },
+            { "id": "answer", "text": "Reaches the correct answer, 5/6" },
+            { "id": "tone", "text": "Is encouraging and doesn't make him feel bad" }
+          ],
+          "model_answer": "Good try, and this is a really common mix-up. Imagine one roti cut into halves and another the same size cut into thirds: the pieces are different sizes, so we can't just count them. If we cut both rotis into sixths, a half becomes 3 pieces and a third becomes 2 pieces. Now the pieces match, so 3 sixths and 2 sixths make 5 sixths: 5/6. Want to try 1/4 + 1/2 the same way?"
+        }
+      ],
+      "debrief": {
+        "real_work": "Teaching is mostly working out what a student is thinking, then finding the explanation that makes it click for that one child.",
+        "enjoy_if": "You liked figuring out the idea behind the mistake and finding a way to explain it kindly."
+      }
+    },
+    {
+      "slug": "civil-engineer-bricks",
+      "career": "civil-engineer",
+      "title": "How many bricks?",
+      "minutes": 10,
+      "role": "You're a site engineer on a small project: a new boundary wall for a school.",
+      "brief": "The wall is 20 m long, 2 m high and one brick thick (0.23 m). You need to place the brick order today and leave a note for the contractor.",
+      "materials": [
+        {
+          "kind": "list",
+          "title": "Site notes",
+          "items": [
+            "Wall: 20 m long × 2 m high × 0.23 m thick.",
+            "Rule of thumb used on this site: about 500 bricks for every cubic metre of brickwork, including mortar.",
+            "Add 5% extra for bricks that break during delivery and work.",
+            "The contractor wants to stop watering the new wall after one day to finish faster."
+          ]
+        }
+      ],
+      "tasks": [
+        {
+          "id": "volume",
+          "kind": "number",
+          "prompt": "What is the volume of the wall, in cubic metres?",
+          "answer": 9.2,
+          "tolerance": 0.05,
+          "unit": "m³",
+          "explanation": "20 × 2 × 0.23 = 9.2 cubic metres."
+        },
+        {
+          "id": "bricks",
+          "kind": "number",
+          "prompt": "How many bricks should you order, including the 5% extra?",
+          "answer": 4830,
+          "tolerance": 50,
+          "unit": "bricks",
+          "explanation": "9.2 × 500 = 4,600 bricks. Adding 5% (230) gives 4,830."
+        },
+        {
+          "id": "curing",
+          "kind": "choice",
+          "prompt": "What do you tell the contractor about watering the wall?",
+          "options": [
+            { "id": "fine", "text": "That's fine, it saves time and water" },
+            { "id": "cure", "text": "Keep the brickwork wet for the specified days, or the mortar won't gain its full strength" },
+            { "id": "winter", "text": "It only matters in winter" },
+            { "id": "paint", "text": "Paint the wall instead to seal it" }
+          ],
+          "answer": "cure",
+          "explanation": "Mortar keeps hardening for days after it's laid, and it needs water to do that. Stopping early gives a weaker wall. This is called curing, and specifications usually require it for about a week."
+        },
+        {
+          "id": "note",
+          "kind": "written",
+          "prompt": "Write a short site note (2–4 sentences) to the contractor about the brick order and the watering.",
+          "max_words": 120,
+          "criteria": [
+            { "id": "quantity", "text": "Gives the brick order, about 4,830, and mentions the extra for breakage" },
+            { "id": "curing", "text": "Says the wall must be kept wet for the required days and briefly says why" },
+            { "id": "actionable", "text": "Is clear about what to do and when, and is polite" }
+          ],
+          "model_answer": "Please order 4,830 bricks for the boundary wall: 4,600 for the brickwork plus 5% for breakage. Keep the new wall wet for the full curing period, about a week, so the mortar reaches its strength. Thank you, and let me know if the delivery date changes."
+        }
+      ],
+      "debrief": {
+        "real_work": "Site engineers turn drawings into quantities, orders and instructions, and make sure quality isn't traded for speed.",
+        "enjoy_if": "You liked getting a concrete number right and thinking about how something real gets built."
+      }
+    }
+  ]
+}

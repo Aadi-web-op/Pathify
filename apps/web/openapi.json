@@ -79,6 +79,135 @@
         "title": "AssessmentOverview",
         "type": "object"
       },
+      "AttemptOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "debrief": {
+            "$ref": "#/components/schemas/Debrief"
+          },
+          "graded_by": {
+            "title": "Graded By",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "max_points": {
+            "title": "Max Points",
+            "type": "integer"
+          },
+          "points": {
+            "title": "Points",
+            "type": "number"
+          },
+          "reflection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Reflection"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/TaskReview"
+            },
+            "title": "Reviews",
+            "type": "array"
+          },
+          "tryout": {
+            "$ref": "#/components/schemas/TryoutOut"
+          },
+          "ungraded": {
+            "title": "Ungraded",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "tryout",
+          "reviews",
+          "points",
+          "max_points",
+          "ungraded",
+          "graded_by",
+          "debrief",
+          "reflection",
+          "created_at"
+        ],
+        "title": "AttemptOut",
+        "type": "object"
+      },
+      "AttemptSummary": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "enjoyment": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enjoyment"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "max_points": {
+            "title": "Max Points",
+            "type": "integer"
+          },
+          "points": {
+            "title": "Points",
+            "type": "number"
+          },
+          "see_myself": {
+            "anyOf": [
+              {
+                "enum": [
+                  "yes",
+                  "maybe",
+                  "no"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "See Myself"
+          },
+          "ungraded": {
+            "title": "Ungraded",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "points",
+          "max_points",
+          "ungraded",
+          "enjoyment",
+          "see_myself",
+          "created_at"
+        ],
+        "title": "AttemptSummary",
+        "type": "object"
+      },
       "Board": {
         "enum": [
           "cbse",
@@ -237,6 +366,24 @@
           "summary"
         ],
         "title": "CareerSummary",
+        "type": "object"
+      },
+      "Debrief": {
+        "properties": {
+          "enjoy_if": {
+            "title": "Enjoy If",
+            "type": "string"
+          },
+          "real_work": {
+            "title": "Real Work",
+            "type": "string"
+          }
+        },
+        "required": [
+          "real_work",
+          "enjoy_if"
+        ],
+        "title": "Debrief",
         "type": "object"
       },
       "DeleteAccount": {
@@ -423,6 +570,13 @@
             ],
             "title": "Role",
             "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceOut"
+            },
+            "title": "Sources",
+            "type": "array"
           }
         },
         "required": [
@@ -523,6 +677,16 @@
             "title": "Title",
             "type": "string"
           },
+          "tryout": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TryoutLink"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "watch_outs": {
             "items": {
               "$ref": "#/components/schemas/ReasonOut"
@@ -571,6 +735,96 @@
         "title": "MatchesOut",
         "type": "object"
       },
+      "Material": {
+        "properties": {
+          "body": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body"
+          },
+          "columns": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Columns"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          },
+          "kind": {
+            "enum": [
+              "table",
+              "text",
+              "list"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "rows": {
+            "anyOf": [
+              {
+                "items": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rows"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "title"
+        ],
+        "title": "Material",
+        "type": "object"
+      },
       "OfficialBody": {
         "properties": {
           "name": {
@@ -596,6 +850,24 @@
           "name"
         ],
         "title": "OfficialBody",
+        "type": "object"
+      },
+      "Option": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "title": "Option",
         "type": "object"
       },
       "Preferences": {
@@ -675,6 +947,72 @@
         "title": "ProvidersOut",
         "type": "object"
       },
+      "PublicTask": {
+        "description": "A task as the student sees it before submitting: no answers, explanations or criteria.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "choice",
+              "multi",
+              "number",
+              "written"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "max_words": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Words"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Option"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "prompt"
+        ],
+        "title": "PublicTask",
+        "type": "object"
+      },
       "QuestionOut": {
         "properties": {
           "id": {
@@ -722,6 +1060,82 @@
           "text"
         ],
         "title": "ReasonOut",
+        "type": "object"
+      },
+      "Reflection": {
+        "properties": {
+          "enjoyment": {
+            "description": "1 = not at all, 5 = loved it",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Enjoyment",
+            "type": "integer"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "see_myself": {
+            "enum": [
+              "yes",
+              "maybe",
+              "no"
+            ],
+            "title": "See Myself",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enjoyment",
+          "see_myself"
+        ],
+        "title": "Reflection",
+        "type": "object"
+      },
+      "ReflectionIn": {
+        "properties": {
+          "enjoyment": {
+            "description": "1 = not at all, 5 = loved it",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Enjoyment",
+            "type": "integer"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "see_myself": {
+            "enum": [
+              "yes",
+              "maybe",
+              "no"
+            ],
+            "title": "See Myself",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enjoyment",
+          "see_myself"
+        ],
+        "title": "ReflectionIn",
         "type": "object"
       },
       "RegisterIn": {
@@ -1027,6 +1441,30 @@
         "title": "SessionOut",
         "type": "object"
       },
+      "SourceOut": {
+        "properties": {
+          "n": {
+            "description": "The number used in the reply, as in [1]",
+            "title": "N",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "n",
+          "slug",
+          "title"
+        ],
+        "title": "SourceOut",
+        "type": "object"
+      },
       "Stage": {
         "enum": [
           "school_9_10",
@@ -1097,6 +1535,123 @@
           "label"
         ],
         "title": "Step",
+        "type": "object"
+      },
+      "StoredCriterion": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "verdict": {
+            "enum": [
+              "met",
+              "partly",
+              "missed"
+            ],
+            "title": "Verdict",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "verdict",
+          "reason"
+        ],
+        "title": "StoredCriterion",
+        "type": "object"
+      },
+      "StoredTaskResult": {
+        "properties": {
+          "correct": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correct"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/StoredCriterion"
+            },
+            "title": "Criteria",
+            "type": "array"
+          },
+          "feedback": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Feedback"
+          },
+          "flagged": {
+            "default": false,
+            "title": "Flagged",
+            "type": "boolean"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "points": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Points"
+          },
+          "status": {
+            "enum": [
+              "graded",
+              "ungraded"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "task_id": {
+            "title": "Task Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "kind",
+          "status",
+          "points"
+        ],
+        "title": "StoredTaskResult",
         "type": "object"
       },
       "Stream": {
@@ -1228,6 +1783,286 @@
           "goals"
         ],
         "title": "StudentProfile",
+        "type": "object"
+      },
+      "SubmitIn": {
+        "properties": {
+          "answers": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "description": "Task id to answer: an option id, a list of option ids, a number, or text",
+            "title": "Answers",
+            "type": "object"
+          }
+        },
+        "required": [
+          "answers"
+        ],
+        "title": "SubmitIn",
+        "type": "object"
+      },
+      "TaskReview": {
+        "description": "What the student sees after submitting: their result plus the explanation or model answer.",
+        "properties": {
+          "correct_answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correct Answer"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "model_answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Answer"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/StoredTaskResult"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "your_answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Your Answer"
+          }
+        },
+        "required": [
+          "result",
+          "prompt",
+          "your_answer",
+          "correct_answer",
+          "explanation",
+          "model_answer",
+          "unit"
+        ],
+        "title": "TaskReview",
+        "type": "object"
+      },
+      "TryoutLink": {
+        "properties": {
+          "enjoyment": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The student's own 1-5 rating, if they've tried it",
+            "title": "Enjoyment"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "see_myself": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "See Myself"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "minutes"
+        ],
+        "title": "TryoutLink",
+        "type": "object"
+      },
+      "TryoutOut": {
+        "properties": {
+          "brief": {
+            "title": "Brief",
+            "type": "string"
+          },
+          "career": {
+            "title": "Career",
+            "type": "string"
+          },
+          "career_title": {
+            "title": "Career Title",
+            "type": "string"
+          },
+          "materials": {
+            "items": {
+              "$ref": "#/components/schemas/Material"
+            },
+            "title": "Materials",
+            "type": "array"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/PublicTask"
+            },
+            "title": "Tasks",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "career",
+          "career_title",
+          "title",
+          "minutes",
+          "role",
+          "brief",
+          "materials",
+          "tasks"
+        ],
+        "title": "TryoutOut",
+        "type": "object"
+      },
+      "TryoutSummary": {
+        "properties": {
+          "career": {
+            "title": "Career",
+            "type": "string"
+          },
+          "career_title": {
+            "title": "Career Title",
+            "type": "string"
+          },
+          "latest_attempt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AttemptSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "career",
+          "career_title",
+          "title",
+          "minutes",
+          "role",
+          "latest_attempt"
+        ],
+        "title": "TryoutSummary",
         "type": "object"
       },
       "UserOut": {
@@ -2269,6 +3104,311 @@
         ]
       }
     },
+    "/api/tryouts": {
+      "get": {
+        "operationId": "list_tryouts_api_tryouts_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TryoutSummary"
+                  },
+                  "title": "Response List Tryouts Api Tryouts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Tryouts",
+        "tags": [
+          "tryouts"
+        ]
+      }
+    },
+    "/api/tryouts/attempts/{attempt_id}": {
+      "get": {
+        "operationId": "get_attempt_api_tryouts_attempts__attempt_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Attempt",
+        "tags": [
+          "tryouts"
+        ]
+      }
+    },
+    "/api/tryouts/attempts/{attempt_id}/reflection": {
+      "put": {
+        "operationId": "reflect_api_tryouts_attempts__attempt_id__reflection_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReflectionIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reflect",
+        "tags": [
+          "tryouts"
+        ]
+      }
+    },
+    "/api/tryouts/{slug}": {
+      "get": {
+        "operationId": "get_tryout_api_tryouts__slug__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TryoutOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Tryout",
+        "tags": [
+          "tryouts"
+        ]
+      }
+    },
+    "/api/tryouts/{slug}/attempts": {
+      "post": {
+        "operationId": "submit_api_tryouts__slug__attempts_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttemptOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Submit",
+        "tags": [
+          "tryouts"
+        ]
+      }
+    },
     "/api/users/me": {
       "get": {
         "operationId": "me_api_users_me_get",
@@ -2377,7 +3517,7 @@
     },
     "/api/users/me/delete": {
       "post": {
-        "description": "Permanently delete the account, its sessions, assessments and Ksarth history.",
+        "description": "Permanently delete the account and everything in it: sessions, assessments, tryouts and Ksarth history.",
         "operationId": "delete_me_api_users_me_delete_post",
         "parameters": [
           {

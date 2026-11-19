@@ -16,11 +16,18 @@ class KsarthMessageIn(BaseModel):
         return value
 
 
+class SourceOut(BaseModel):
+    n: int = Field(description="The number used in the reply, as in [1]")
+    slug: str
+    title: str
+
+
 class KsarthMessageOut(BaseModel):
     id: str
     role: Literal["user", "assistant"]
     content: str
     created_at: datetime
+    sources: list[SourceOut] = Field(default_factory=list)
 
 
 class KsarthStatus(BaseModel):

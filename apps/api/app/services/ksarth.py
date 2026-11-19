@@ -1,8 +1,9 @@
-from app.catalog import item_bank
+from app.catalog import Career, item_bank
 from app.models import KsarthMessage, User
 from app.models.assessment import StoredResult
 from app.models.user import Goal, Stage, Stream, StudentProfile
 from app.services.llm import ChatMessage
+from app.services.retrieval import career_note
 
 HISTORY_TURNS = 12
 
@@ -86,9 +87,29 @@ def describe_interests(result: StoredResult | None, top_careers: list[str]) -> s
     return text + " Treat these as starting points to explore, not verdicts."
 
 
-def system_prompt(user: User, result: StoredResult | None = None, top_careers: list[str] | None = None) -> str:
+CITATION_RULES = """Reference notes from Pathify's career library follow. Use them for facts about routes, \
+exams, degrees and durations. When a sentence relies on a note, cite it with its number in square brackets, \
+like [1]. Only cite notes you actually used, and never invent a number. If the notes don't cover what was \
+asked, say so plainly and suggest the official body to check with, instead of guessing."""
+
+
+def reference_block(notes: list[Career]) -> str:
+    if not notes:
+        return ""
+    lines = "\n".join(f"[{i}] {career_note(c)}" for i, c in enumerate(notes, start=1))
+    return f"\n\n{CITATION_RULES}\n{lines}"
+
+
+def system_prompt(
+    user: User,
+    result: StoredResult | None = None,
+    top_careers: list[str] | None = None,
+    notes: list[Career] | None = None,
+) -> str:
     return (
-        f"{BASE_PROMPT}\nAbout this student:\n{describe_student(user)}\n{describe_interests(result, top_careers or [])}"
+        f"{BASE_PROMPT}\nAbout this student:\n{describe_student(user)}\n"
+        f"{describe_interests(result, top_careers or [])}"
+        f"{reference_block(notes or [])}"
     )
 
 

@@ -115,7 +115,7 @@ async def answer(session_id: str, body: AnswerIn, user: CurrentUser) -> SessionO
         raise HTTPException(status.HTTP_409_CONFLICT, "That question was already answered. Refresh to continue.")
     bank = item_bank()
     if body.value > bank.max_value:
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "That answer is out of range.")
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "That answer is out of range.")
     session.answers.append(StoredAnswer(item_id=expected.id, dimension=expected.dimension, value=body.value))
     session.updated_at = utcnow()
     if _next(session) is None:

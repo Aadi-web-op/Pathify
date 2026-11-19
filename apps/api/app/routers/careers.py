@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Query, status
 
-from app.catalog import Career, catalog
+from app.catalog import Career, catalog, tryout_bank
 from app.models.assessment import latest_result
+from app.routers.tryouts import latest_attempts
 from app.schemas.assessment import ResultOut
-from app.schemas.careers import CareerSummary, MatchesOut, MatchOut
+from app.schemas.careers import CareerSummary, MatchesOut, MatchOut, TryoutLink
 from app.security.deps import CurrentUser
 from app.services.matching import match
 
@@ -22,9 +23,25 @@ async def my_matches(user: CurrentUser, limit: int = Query(default=12, ge=1, le=
     if result is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Take the interest assessment to see your matches.")
     matches = match({d: float(v) for d, v in result.scores.items()}, catalog(), user.profile)
+    attempts = await latest_attempts(user.id)
+
+    def link(career_slug: str) -> TryoutLink | None:
+        tryout = tryout_bank().for_career(career_slug)
+        if tryout is None:
+            return None
+        attempt = attempts.get(tryout.slug)
+        reflection = attempt.reflection if attempt else None
+        return TryoutLink(
+            slug=tryout.slug,
+            title=tryout.title,
+            minutes=tryout.minutes,
+            enjoyment=reflection.enjoyment if reflection else None,
+            see_myself=reflection.see_myself if reflection else None,
+        )
+
     return MatchesOut(
         result=ResultOut.from_stored(result),
-        matches=[MatchOut.from_match(m) for m in matches[:limit]],
+        matches=[MatchOut.from_match(m, link(m.career.slug)) for m in matches[:limit]],
         total_careers=len(catalog().careers),
     )
 

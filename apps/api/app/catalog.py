@@ -163,3 +163,114 @@ def catalog() -> Catalog:
 @lru_cache
 def item_bank() -> ItemBank:
     return ItemBank.model_validate(_read(DATA_DIR / "assessment.json"))
+
+
+# ---------------------------------------------------------------- tryouts
+
+
+class Option(BaseModel):
+    id: str
+    text: str
+
+
+class Criterion(BaseModel):
+    id: str
+    text: str
+
+
+class Material(BaseModel):
+    kind: Literal["table", "text", "list"]
+    title: str
+    columns: list[str] | None = None
+    rows: list[list[str]] | None = None
+    note: str | None = None
+    body: str | None = None
+    items: list[str] | None = None
+
+    @model_validator(mode="after")
+    def has_content(self) -> "Material":
+        needed = {"table": self.rows and self.columns, "text": self.body, "list": self.items}[self.kind]
+        if not needed:
+            raise ValueError(f"{self.kind} material '{self.title}' is missing its content")
+        return self
+
+
+class Task(BaseModel):
+    id: str
+    kind: Literal["choice", "multi", "number", "written"]
+    prompt: str
+    options: list[Option] | None = None
+    answer: str | float | None = None
+    answers: list[str] | None = None
+    tolerance: float = 0
+    unit: str | None = None
+    explanation: str | None = None
+    max_words: int = 150
+    criteria: list[Criterion] | None = None
+    model_answer: str | None = None
+
+    @model_validator(mode="after")
+    def well_formed(self) -> "Task":
+        option_ids = {o.id for o in self.options or []}
+        if self.kind == "choice" and (not isinstance(self.answer, str) or self.answer not in option_ids):
+            raise ValueError(f"task {self.id}: choice answer must be one of its options")
+        if self.kind == "multi" and (not self.answers or not set(self.answers) <= option_ids):
+            raise ValueError(f"task {self.id}: multi answers must be a subset of its options")
+        if self.kind == "number" and not isinstance(self.answer, int | float):
+            raise ValueError(f"task {self.id}: number tasks need a numeric answer")
+        if self.kind == "written" and (not self.criteria or len(self.criteria) < 2 or not self.model_answer):
+            raise ValueError(f"task {self.id}: written tasks need at least two criteria and a model answer")
+        if self.kind != "written" and not self.explanation:
+            raise ValueError(f"task {self.id}: objective tasks need an explanation")
+        return self
+
+
+class Debrief(BaseModel):
+    real_work: str
+    enjoy_if: str
+
+
+class Tryout(BaseModel):
+    slug: str = Field(pattern=r"^[a-z0-9-]+$")
+    career: str
+    title: str
+    minutes: int = Field(ge=3, le=30)
+    role: str
+    brief: str
+    materials: list[Material]
+    tasks: list[Task] = Field(min_length=2)
+    debrief: Debrief
+
+    def task(self, task_id: str) -> Task | None:
+        return next((t for t in self.tasks if t.id == task_id), None)
+
+
+class TryoutBank(BaseModel):
+    version: str
+    about: str
+    tryouts: list[Tryout]
+
+    @model_validator(mode="after")
+    def consistent(self) -> "TryoutBank":
+        slugs = [t.slug for t in self.tryouts]
+        if len(slugs) != len(set(slugs)):
+            raise ValueError("tryout slugs must be unique")
+        known = {c.slug for c in catalog().careers}
+        for tryout in self.tryouts:
+            if tryout.career not in known:
+                raise ValueError(f"tryout {tryout.slug} points to unknown career {tryout.career}")
+            ids = [t.id for t in tryout.tasks]
+            if len(ids) != len(set(ids)):
+                raise ValueError(f"tryout {tryout.slug} has duplicate task ids")
+        return self
+
+    def get(self, slug: str) -> Tryout | None:
+        return next((t for t in self.tryouts if t.slug == slug), None)
+
+    def for_career(self, career_slug: str) -> Tryout | None:
+        return next((t for t in self.tryouts if t.career == career_slug), None)
+
+
+@lru_cache
+def tryout_bank() -> TryoutBank:
+    return TryoutBank.model_validate(_read(DATA_DIR / "tryouts.json"))

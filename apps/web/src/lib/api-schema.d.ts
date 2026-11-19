@@ -301,6 +301,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tryouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Tryouts */
+        get: operations["list_tryouts_api_tryouts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tryouts/attempts/{attempt_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Attempt */
+        get: operations["get_attempt_api_tryouts_attempts__attempt_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tryouts/attempts/{attempt_id}/reflection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Reflect */
+        put: operations["reflect_api_tryouts_attempts__attempt_id__reflection_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tryouts/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Tryout */
+        get: operations["get_tryout_api_tryouts__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tryouts/{slug}/attempts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit */
+        post: operations["submit_api_tryouts__slug__attempts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users/me": {
         parameters: {
             query?: never;
@@ -330,7 +415,7 @@ export interface paths {
         put?: never;
         /**
          * Delete Me
-         * @description Permanently delete the account, its sessions, assessments and Ksarth history.
+         * @description Permanently delete the account and everything in it: sessions, assessments, tryouts and Ksarth history.
          */
         post: operations["delete_me_api_users_me_delete_post"];
         delete?: never;
@@ -386,6 +471,49 @@ export interface components {
             /** Total Items */
             total_items: number;
         };
+        /** AttemptOut */
+        AttemptOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            debrief: components["schemas"]["Debrief"];
+            /** Graded By */
+            graded_by: string;
+            /** Id */
+            id: string;
+            /** Max Points */
+            max_points: number;
+            /** Points */
+            points: number;
+            reflection: components["schemas"]["Reflection"] | null;
+            /** Reviews */
+            reviews: components["schemas"]["TaskReview"][];
+            tryout: components["schemas"]["TryoutOut"];
+            /** Ungraded */
+            ungraded: number;
+        };
+        /** AttemptSummary */
+        AttemptSummary: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Enjoyment */
+            enjoyment: number | null;
+            /** Id */
+            id: string;
+            /** Max Points */
+            max_points: number;
+            /** Points */
+            points: number;
+            /** See Myself */
+            see_myself: ("yes" | "maybe" | "no") | null;
+            /** Ungraded */
+            ungraded: number;
+        };
         /**
          * Board
          * @enum {string}
@@ -433,6 +561,13 @@ export interface components {
             summary: string;
             /** Title */
             title: string;
+        };
+        /** Debrief */
+        Debrief: {
+            /** Enjoy If */
+            enjoy_if: string;
+            /** Real Work */
+            real_work: string;
         };
         /** DeleteAccount */
         DeleteAccount: {
@@ -522,6 +657,8 @@ export interface components {
              * @enum {string}
              */
             role: "user" | "assistant";
+            /** Sources */
+            sources?: components["schemas"]["SourceOut"][];
         };
         /** KsarthStatus */
         KsarthStatus: {
@@ -565,6 +702,7 @@ export interface components {
             summary: string;
             /** Title */
             title: string;
+            tryout?: components["schemas"]["TryoutLink"] | null;
             /** Watch Outs */
             watch_outs: components["schemas"]["ReasonOut"][];
         };
@@ -576,12 +714,39 @@ export interface components {
             /** Total Careers */
             total_careers: number;
         };
+        /** Material */
+        Material: {
+            /** Body */
+            body?: string | null;
+            /** Columns */
+            columns?: string[] | null;
+            /** Items */
+            items?: string[] | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "table" | "text" | "list";
+            /** Note */
+            note?: string | null;
+            /** Rows */
+            rows?: string[][] | null;
+            /** Title */
+            title: string;
+        };
         /** OfficialBody */
         OfficialBody: {
             /** Name */
             name: string;
             /** Url */
             url?: string | null;
+        };
+        /** Option */
+        Option: {
+            /** Id */
+            id: string;
+            /** Text */
+            text: string;
         };
         /** Preferences */
         Preferences: {
@@ -629,6 +794,27 @@ export interface components {
             /** Linkedin */
             linkedin: boolean;
         };
+        /**
+         * PublicTask
+         * @description A task as the student sees it before submitting: no answers, explanations or criteria.
+         */
+        PublicTask: {
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "choice" | "multi" | "number" | "written";
+            /** Max Words */
+            max_words?: number | null;
+            /** Options */
+            options?: components["schemas"]["Option"][] | null;
+            /** Prompt */
+            prompt: string;
+            /** Unit */
+            unit?: string | null;
+        };
         /** QuestionOut */
         QuestionOut: {
             /** Id */
@@ -647,6 +833,36 @@ export interface components {
             dimension: "R" | "I" | "A" | "S" | "E" | "C";
             /** Text */
             text: string;
+        };
+        /** Reflection */
+        Reflection: {
+            /**
+             * Enjoyment
+             * @description 1 = not at all, 5 = loved it
+             */
+            enjoyment: number;
+            /** Note */
+            note?: string | null;
+            /**
+             * See Myself
+             * @enum {string}
+             */
+            see_myself: "yes" | "maybe" | "no";
+        };
+        /** ReflectionIn */
+        ReflectionIn: {
+            /**
+             * Enjoyment
+             * @description 1 = not at all, 5 = loved it
+             */
+            enjoyment: number;
+            /** Note */
+            note?: string | null;
+            /**
+             * See Myself
+             * @enum {string}
+             */
+            see_myself: "yes" | "maybe" | "no";
         };
         /** RegisterIn */
         RegisterIn: {
@@ -754,6 +970,18 @@ export interface components {
             /** Total Items */
             total_items: number;
         };
+        /** SourceOut */
+        SourceOut: {
+            /**
+             * N
+             * @description The number used in the reply, as in [1]
+             */
+            n: number;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
         /**
          * Stage
          * @enum {string}
@@ -781,6 +1009,47 @@ export interface components {
             label: string;
             /** Years */
             years?: number | null;
+        };
+        /** StoredCriterion */
+        StoredCriterion: {
+            /** Id */
+            id: string;
+            /** Reason */
+            reason: string;
+            /** Text */
+            text: string;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "met" | "partly" | "missed";
+        };
+        /** StoredTaskResult */
+        StoredTaskResult: {
+            /** Correct */
+            correct?: boolean | null;
+            /** Criteria */
+            criteria?: components["schemas"]["StoredCriterion"][];
+            /** Feedback */
+            feedback?: string | null;
+            /**
+             * Flagged
+             * @default false
+             */
+            flagged: boolean;
+            /** Kind */
+            kind: string;
+            /** Note */
+            note?: string | null;
+            /** Points */
+            points: number | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "graded" | "ungraded";
+            /** Task Id */
+            task_id: string;
         };
         /**
          * Stream
@@ -829,6 +1098,88 @@ export interface components {
             stream?: components["schemas"]["Stream"] | null;
             /** Year Of Study */
             year_of_study?: number | null;
+        };
+        /** SubmitIn */
+        SubmitIn: {
+            /**
+             * Answers
+             * @description Task id to answer: an option id, a list of option ids, a number, or text
+             */
+            answers: {
+                [key: string]: string | number | string[];
+            };
+        };
+        /**
+         * TaskReview
+         * @description What the student sees after submitting: their result plus the explanation or model answer.
+         */
+        TaskReview: {
+            /** Correct Answer */
+            correct_answer: string | number | string[] | null;
+            /** Explanation */
+            explanation: string | null;
+            /** Model Answer */
+            model_answer: string | null;
+            /** Prompt */
+            prompt: string;
+            result: components["schemas"]["StoredTaskResult"];
+            /** Unit */
+            unit: string | null;
+            /** Your Answer */
+            your_answer: string | number | string[] | null;
+        };
+        /** TryoutLink */
+        TryoutLink: {
+            /**
+             * Enjoyment
+             * @description The student's own 1-5 rating, if they've tried it
+             */
+            enjoyment?: number | null;
+            /** Minutes */
+            minutes: number;
+            /** See Myself */
+            see_myself?: string | null;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** TryoutOut */
+        TryoutOut: {
+            /** Brief */
+            brief: string;
+            /** Career */
+            career: string;
+            /** Career Title */
+            career_title: string;
+            /** Materials */
+            materials: components["schemas"]["Material"][];
+            /** Minutes */
+            minutes: number;
+            /** Role */
+            role: string;
+            /** Slug */
+            slug: string;
+            /** Tasks */
+            tasks: components["schemas"]["PublicTask"][];
+            /** Title */
+            title: string;
+        };
+        /** TryoutSummary */
+        TryoutSummary: {
+            /** Career */
+            career: string;
+            /** Career Title */
+            career_title: string;
+            latest_attempt: components["schemas"]["AttemptSummary"] | null;
+            /** Minutes */
+            minutes: number;
+            /** Role */
+            role: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
         };
         /** UserOut */
         UserOut: {
@@ -1459,6 +1810,177 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["KsarthStatus"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_tryouts_api_tryouts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TryoutSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_attempt_api_tryouts_attempts__attempt_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reflect_api_tryouts_attempts__attempt_id__reflection_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReflectionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_tryout_api_tryouts__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TryoutOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_api_tryouts__slug__attempts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttemptOut"];
                 };
             };
             /** @description Validation Error */
