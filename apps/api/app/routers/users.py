@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
-from app.models import KsarthMessage
+from app.models import AssessmentSession, KsarthMessage
 from app.models.user import StudentProfile, utcnow
 from app.schemas.user import DeleteAccount, UserOut, UserUpdate
 from app.security.cookies import clear_auth_cookies
@@ -37,10 +37,11 @@ async def save_profile(profile: StudentProfile, user: CurrentUser) -> UserOut:
 
 @router.post("/me/delete", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_me(body: DeleteAccount, user: CurrentUser, settings: SettingsDep) -> Response:
-    """Permanently delete the account, its sessions and its Ksarth history."""
+    """Permanently delete the account, its sessions, assessments and Ksarth history."""
     if body.email.lower() != user.email:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "The email you typed doesn't match this account.")
     await KsarthMessage.find(KsarthMessage.user_id == user.id).delete()
+    await AssessmentSession.find(AssessmentSession.user_id == user.id).delete()
     await revoke_all_for_user(user.id)
     await user.delete()
     done = Response(status_code=status.HTTP_204_NO_CONTENT)

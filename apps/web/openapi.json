@@ -1,6 +1,66 @@
 {
   "components": {
     "schemas": {
+      "AnswerIn": {
+        "properties": {
+          "item_id": {
+            "title": "Item Id",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "item_id",
+          "value"
+        ],
+        "title": "AnswerIn",
+        "type": "object"
+      },
+      "AssessmentOverview": {
+        "properties": {
+          "in_progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SessionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResultOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "standard_length": {
+            "title": "Standard Length",
+            "type": "integer"
+          },
+          "total_items": {
+            "title": "Total Items",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "in_progress",
+          "latest",
+          "standard_length",
+          "total_items"
+        ],
+        "title": "AssessmentOverview",
+        "type": "object"
+      },
       "Board": {
         "enum": [
           "cbse",
@@ -11,6 +71,155 @@
         ],
         "title": "Board",
         "type": "string"
+      },
+      "Career": {
+        "properties": {
+          "check_with": {
+            "items": {
+              "$ref": "#/components/schemas/OfficialBody"
+            },
+            "title": "Check With",
+            "type": "array"
+          },
+          "cluster": {
+            "title": "Cluster",
+            "type": "string"
+          },
+          "graduate_route": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GraduateRoute"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "related": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Related",
+            "type": "array"
+          },
+          "riasec": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "enum": [
+                "R",
+                "I",
+                "A",
+                "S",
+                "E",
+                "C"
+              ]
+            },
+            "title": "Riasec",
+            "type": "object"
+          },
+          "routes": {
+            "items": {
+              "$ref": "#/components/schemas/Route"
+            },
+            "minItems": 1,
+            "title": "Routes",
+            "type": "array"
+          },
+          "similar_onet": {
+            "title": "Similar Onet",
+            "type": "string"
+          },
+          "skills": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Skills",
+            "type": "array"
+          },
+          "slug": {
+            "pattern": "^[a-z0-9-]+$",
+            "title": "Slug",
+            "type": "string"
+          },
+          "subjects": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Subjects",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "work": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "title": "Work",
+            "type": "array"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "cluster",
+          "summary",
+          "work",
+          "riasec",
+          "similar_onet",
+          "skills",
+          "subjects",
+          "routes"
+        ],
+        "title": "Career",
+        "type": "object"
+      },
+      "CareerSummary": {
+        "properties": {
+          "cluster": {
+            "title": "Cluster",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "cluster",
+          "summary"
+        ],
+        "title": "CareerSummary",
+        "type": "object"
       },
       "DeleteAccount": {
         "properties": {
@@ -25,6 +234,54 @@
           "email"
         ],
         "title": "DeleteAccount",
+        "type": "object"
+      },
+      "DimensionScore": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "key": {
+            "enum": [
+              "R",
+              "I",
+              "A",
+              "S",
+              "E",
+              "C"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "margin": {
+            "description": "About a 90% band either side of the score, in the same units",
+            "title": "Margin",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "score": {
+            "description": "0-100: how much the student enjoys this kind of activity",
+            "title": "Score",
+            "type": "integer"
+          },
+          "short": {
+            "title": "Short",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "short",
+          "description",
+          "score",
+          "margin"
+        ],
+        "title": "DimensionScore",
         "type": "object"
       },
       "Goal": {
@@ -51,6 +308,28 @@
           "credential"
         ],
         "title": "GoogleIn",
+        "type": "object"
+      },
+      "GraduateRoute": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "label",
+          "steps"
+        ],
+        "title": "GraduateRoute",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -182,6 +461,125 @@
         "title": "LoginIn",
         "type": "object"
       },
+      "MatchOut": {
+        "properties": {
+          "cluster": {
+            "title": "Cluster",
+            "type": "string"
+          },
+          "fit": {
+            "title": "Fit",
+            "type": "integer"
+          },
+          "fit_label": {
+            "title": "Fit Label",
+            "type": "string"
+          },
+          "open_to_you": {
+            "title": "Open To You",
+            "type": "boolean"
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonOut"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "routes": {
+            "items": {
+              "$ref": "#/components/schemas/RouteOptionOut"
+            },
+            "title": "Routes",
+            "type": "array"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "watch_outs": {
+            "items": {
+              "$ref": "#/components/schemas/ReasonOut"
+            },
+            "title": "Watch Outs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "cluster",
+          "summary",
+          "fit",
+          "fit_label",
+          "reasons",
+          "watch_outs",
+          "routes",
+          "open_to_you"
+        ],
+        "title": "MatchOut",
+        "type": "object"
+      },
+      "MatchesOut": {
+        "properties": {
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/MatchOut"
+            },
+            "title": "Matches",
+            "type": "array"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ResultOut"
+          },
+          "total_careers": {
+            "title": "Total Careers",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "result",
+          "matches",
+          "total_careers"
+        ],
+        "title": "MatchesOut",
+        "type": "object"
+      },
+      "OfficialBody": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "format": "uri",
+                "maxLength": 2083,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "OfficialBody",
+        "type": "object"
+      },
       "Preferences": {
         "properties": {
           "theme": {
@@ -259,6 +657,55 @@
         "title": "ProvidersOut",
         "type": "object"
       },
+      "QuestionOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "number"
+        ],
+        "title": "QuestionOut",
+        "type": "object"
+      },
+      "ReasonOut": {
+        "properties": {
+          "dimension": {
+            "enum": [
+              "R",
+              "I",
+              "A",
+              "S",
+              "E",
+              "C"
+            ],
+            "title": "Dimension",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "dimension",
+          "text"
+        ],
+        "title": "ReasonOut",
+        "type": "object"
+      },
       "RegisterIn": {
         "properties": {
           "email": {
@@ -287,6 +734,281 @@
         "title": "RegisterIn",
         "type": "object"
       },
+      "ResultOut": {
+        "properties": {
+          "answered": {
+            "title": "Answered",
+            "type": "integer"
+          },
+          "code": {
+            "description": "Top three dimensions, strongest first, e.g. 'ISA'",
+            "title": "Code",
+            "type": "string"
+          },
+          "completed_at": {
+            "format": "date-time",
+            "title": "Completed At",
+            "type": "string"
+          },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ],
+            "title": "Confidence",
+            "type": "string"
+          },
+          "dimensions": {
+            "description": "All six, in RIASEC order",
+            "items": {
+              "$ref": "#/components/schemas/DimensionScore"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
+          "even_spread": {
+            "title": "Even Spread",
+            "type": "boolean"
+          },
+          "ranked": {
+            "items": {
+              "enum": [
+                "R",
+                "I",
+                "A",
+                "S",
+                "E",
+                "C"
+              ],
+              "type": "string"
+            },
+            "title": "Ranked",
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "dimensions",
+          "ranked",
+          "confidence",
+          "even_spread",
+          "answered",
+          "completed_at"
+        ],
+        "title": "ResultOut",
+        "type": "object"
+      },
+      "Route": {
+        "properties": {
+          "after": {
+            "default": "class_12",
+            "enum": [
+              "class_10",
+              "class_12",
+              "graduation"
+            ],
+            "title": "After",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "requirement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirement"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "minItems": 2,
+            "title": "Steps",
+            "type": "array"
+          },
+          "streams": {
+            "items": {
+              "enum": [
+                "science_pcm",
+                "science_pcb",
+                "science_pcmb",
+                "commerce",
+                "humanities",
+                "vocational",
+                "any"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Streams",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "streams",
+          "steps"
+        ],
+        "title": "Route",
+        "type": "object"
+      },
+      "RouteOptionOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "open": {
+            "title": "Open",
+            "type": "boolean"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "title": "Steps",
+            "type": "array"
+          },
+          "years": {
+            "title": "Years",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "open",
+          "note",
+          "steps",
+          "years"
+        ],
+        "title": "RouteOptionOut",
+        "type": "object"
+      },
+      "ScalePointOut": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value",
+          "label"
+        ],
+        "title": "ScalePointOut",
+        "type": "object"
+      },
+      "SessionOut": {
+        "properties": {
+          "answered": {
+            "title": "Answered",
+            "type": "integer"
+          },
+          "can_extend": {
+            "title": "Can Extend",
+            "type": "boolean"
+          },
+          "can_go_back": {
+            "title": "Can Go Back",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "question": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/QuestionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResultOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scale": {
+            "items": {
+              "$ref": "#/components/schemas/ScalePointOut"
+            },
+            "title": "Scale",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "in_progress",
+              "completed",
+              "abandoned"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "integer"
+          },
+          "total_items": {
+            "title": "Total Items",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "question",
+          "answered",
+          "target",
+          "total_items",
+          "can_go_back",
+          "can_extend",
+          "scale",
+          "result"
+        ],
+        "title": "SessionOut",
+        "type": "object"
+      },
       "Stage": {
         "enum": [
           "school_9_10",
@@ -296,6 +1018,68 @@
         ],
         "title": "Stage",
         "type": "string"
+      },
+      "StartIn": {
+        "properties": {
+          "restart": {
+            "default": false,
+            "description": "Abandon any unfinished test and start a new one.",
+            "title": "Restart",
+            "type": "boolean"
+          }
+        },
+        "title": "StartIn",
+        "type": "object"
+      },
+      "Step": {
+        "properties": {
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "kind": {
+            "enum": [
+              "exam",
+              "degree",
+              "diploma",
+              "course",
+              "work",
+              "role"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "years": {
+            "anyOf": [
+              {
+                "maximum": 10.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Years"
+          }
+        },
+        "required": [
+          "kind",
+          "label"
+        ],
+        "title": "Step",
+        "type": "object"
       },
       "Stream": {
         "enum": [
@@ -579,6 +1363,299 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/assessment": {
+      "get": {
+        "operationId": "overview_api_assessment_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentOverview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Overview",
+        "tags": [
+          "assessment"
+        ]
+      }
+    },
+    "/api/assessment/start": {
+      "post": {
+        "operationId": "start_api_assessment_start_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start",
+        "tags": [
+          "assessment"
+        ]
+      }
+    },
+    "/api/assessment/{session_id}/answer": {
+      "post": {
+        "operationId": "answer_api_assessment__session_id__answer_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Answer",
+        "tags": [
+          "assessment"
+        ]
+      }
+    },
+    "/api/assessment/{session_id}/back": {
+      "post": {
+        "operationId": "back_api_assessment__session_id__back_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Back",
+        "tags": [
+          "assessment"
+        ]
+      }
+    },
+    "/api/assessment/{session_id}/extend": {
+      "post": {
+        "description": "Answer the remaining statements for a sharper result. The current result stays until then.",
+        "operationId": "extend_api_assessment__session_id__extend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Extend",
+        "tags": [
+          "assessment"
+        ]
+      }
+    },
     "/api/auth/google": {
       "post": {
         "operationId": "google_api_auth_google_post",
@@ -815,6 +1892,134 @@
         "summary": "Register",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/careers": {
+      "get": {
+        "operationId": "list_careers_api_careers_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CareerSummary"
+                  },
+                  "title": "Response List Careers Api Careers Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Careers",
+        "tags": [
+          "careers"
+        ]
+      }
+    },
+    "/api/careers/matches": {
+      "get": {
+        "operationId": "my_matches_api_careers_matches_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 12,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Matches",
+        "tags": [
+          "careers"
+        ]
+      }
+    },
+    "/api/careers/{slug}": {
+      "get": {
+        "operationId": "get_career_api_careers__slug__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Career"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Career",
+        "tags": [
+          "careers"
         ]
       }
     },
@@ -1154,7 +2359,7 @@
     },
     "/api/users/me/delete": {
       "post": {
-        "description": "Permanently delete the account, its sessions and its Ksarth history.",
+        "description": "Permanently delete the account, its sessions, assessments and Ksarth history.",
         "operationId": "delete_me_api_users_me_delete_post",
         "parameters": [
           {

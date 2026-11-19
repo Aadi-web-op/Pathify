@@ -1,0 +1,74 @@
+{
+  "version": "riasec-in-1",
+  "about": "Pathify's own interest statements, written for Indian students and organised by Holland's RIASEC model. Each statement is an activity, not a job title, so students rate what they enjoy rather than what sounds prestigious.",
+  "scale": [
+    { "value": 0, "label": "Dislike a lot" },
+    { "value": 1, "label": "Dislike" },
+    { "value": 2, "label": "Not sure" },
+    { "value": 3, "label": "Like" },
+    { "value": 4, "label": "Like a lot" }
+  ],
+  "dimensions": [
+    { "key": "R", "name": "Realistic", "short": "Hands-on", "description": "Building, fixing and working with tools, machines, plants or animals." },
+    { "key": "I", "name": "Investigative", "short": "Curious", "description": "Asking why, solving problems, and working with ideas, data and science." },
+    { "key": "A", "name": "Artistic", "short": "Creative", "description": "Making things that express ideas: design, writing, music, film, performance." },
+    { "key": "S", "name": "Social", "short": "Helping", "description": "Teaching, caring for, guiding and working closely with people." },
+    { "key": "E", "name": "Enterprising", "short": "Leading", "description": "Leading, persuading, selling, and taking charge of plans and teams." },
+    { "key": "C", "name": "Conventional", "short": "Organising", "description": "Keeping things accurate and organised: records, numbers, schedules, rules." }
+  ],
+  "items": [
+    { "id": "r1", "dimension": "R", "text": "Fix a fan, bicycle or gadget that has stopped working" },
+    { "id": "r2", "dimension": "R", "text": "Build a working model for a science exhibition" },
+    { "id": "r3", "dimension": "R", "text": "Grow plants or vegetables and look after them" },
+    { "id": "r4", "dimension": "R", "text": "Use tools like a drill, saw or soldering iron" },
+    { "id": "r5", "dimension": "R", "text": "Assemble furniture or equipment from instructions" },
+    { "id": "r6", "dimension": "R", "text": "Work outdoors on a field, farm or site instead of at a desk" },
+    { "id": "r7", "dimension": "R", "text": "Take apart a machine to see how it works" },
+    { "id": "r8", "dimension": "R", "text": "Look after animals and keep them healthy" },
+
+    { "id": "i1", "dimension": "I", "text": "Work out why an experiment gave an unexpected result" },
+    { "id": "i2", "dimension": "I", "text": "Solve tricky maths or logic puzzles" },
+    { "id": "i3", "dimension": "I", "text": "Read about how the human body fights disease" },
+    { "id": "i4", "dimension": "I", "text": "Spot patterns in a table of numbers" },
+    { "id": "i5", "dimension": "I", "text": "Learn how a computer program works, step by step" },
+    { "id": "i6", "dimension": "I", "text": "Research a question by comparing many sources" },
+    { "id": "i7", "dimension": "I", "text": "Watch documentaries about space, nature or science" },
+    { "id": "i8", "dimension": "I", "text": "Test an idea by trying it several different ways" },
+
+    { "id": "a1", "dimension": "A", "text": "Draw, paint or design posters" },
+    { "id": "a2", "dimension": "A", "text": "Write stories, poems or scripts" },
+    { "id": "a3", "dimension": "A", "text": "Shoot and edit short videos or photos" },
+    { "id": "a4", "dimension": "A", "text": "Design how a room, stage or app should look" },
+    { "id": "a5", "dimension": "A", "text": "Play music, sing or dance" },
+    { "id": "a6", "dimension": "A", "text": "Act in a play or perform on stage" },
+    { "id": "a7", "dimension": "A", "text": "Come up with a fresh look for something everyday" },
+    { "id": "a8", "dimension": "A", "text": "Choose the fonts, colours and layout for a school magazine" },
+
+    { "id": "s1", "dimension": "S", "text": "Explain a hard topic to a friend who is stuck" },
+    { "id": "s2", "dimension": "S", "text": "Help someone who is upset feel better" },
+    { "id": "s3", "dimension": "S", "text": "Volunteer with an NGO or in your neighbourhood" },
+    { "id": "s4", "dimension": "S", "text": "Look after younger children or elderly relatives" },
+    { "id": "s5", "dimension": "S", "text": "Coach a junior team or help run a club" },
+    { "id": "s6", "dimension": "S", "text": "Listen to people's problems and suggest what might help" },
+    { "id": "s7", "dimension": "S", "text": "Teach a skill to a group of people" },
+    { "id": "s8", "dimension": "S", "text": "Care for someone who is ill or injured" },
+
+    { "id": "e1", "dimension": "E", "text": "Lead a team for a school fest or competition" },
+    { "id": "e2", "dimension": "E", "text": "Persuade people to back your idea" },
+    { "id": "e3", "dimension": "E", "text": "Run a small business, like selling things you made" },
+    { "id": "e4", "dimension": "E", "text": "Speak in front of a large audience" },
+    { "id": "e5", "dimension": "E", "text": "Bargain for a better deal" },
+    { "id": "e6", "dimension": "E", "text": "Take charge when a group can't decide" },
+    { "id": "e7", "dimension": "E", "text": "Represent your school in a debate or Model UN" },
+    { "id": "e8", "dimension": "E", "text": "Plan how to get more people to join a club or event" },
+
+    { "id": "c1", "dimension": "C", "text": "Keep the accounts for a club or event" },
+    { "id": "c2", "dimension": "C", "text": "Organise notes, files or data so they're easy to find" },
+    { "id": "c3", "dimension": "C", "text": "Check a document carefully for mistakes" },
+    { "id": "c4", "dimension": "C", "text": "Make a timetable and stick to it" },
+    { "id": "c5", "dimension": "C", "text": "Enter exact figures into a spreadsheet" },
+    { "id": "c6", "dimension": "C", "text": "Follow a clear set of rules to finish a task" },
+    { "id": "c7", "dimension": "C", "text": "Keep track of stock or supplies" },
+    { "id": "c8", "dimension": "C", "text": "Sort and label things so nothing gets lost" }
+  ]
+}

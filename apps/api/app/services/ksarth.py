@@ -1,4 +1,6 @@
+from app.catalog import item_bank
 from app.models import KsarthMessage, User
+from app.models.assessment import StoredResult
 from app.models.user import Goal, Stage, Stream, StudentProfile
 from app.services.llm import ChatMessage
 
@@ -70,8 +72,24 @@ def describe_student(user: User) -> str:
     return "".join(parts)
 
 
-def system_prompt(user: User) -> str:
-    return f"{BASE_PROMPT}\nAbout this student:\n{describe_student(user)}"
+def describe_interests(result: StoredResult | None, top_careers: list[str]) -> str:
+    if result is None:
+        return "They haven't taken the interest assessment yet; you can suggest it when it would help."
+    bank = item_bank()
+    names = [bank.dimension(k).name for k in result.code]
+    text = (
+        f"Their interest assessment (Holland RIASEC) is strongest in {names[0]}, then {names[1]} and {names[2]} "
+        f"(confidence: {result.confidence})."
+    )
+    if top_careers:
+        text += f" Their closest career matches are {', '.join(top_careers)}."
+    return text + " Treat these as starting points to explore, not verdicts."
+
+
+def system_prompt(user: User, result: StoredResult | None = None, top_careers: list[str] | None = None) -> str:
+    return (
+        f"{BASE_PROMPT}\nAbout this student:\n{describe_student(user)}\n{describe_interests(result, top_careers or [])}"
+    )
 
 
 async def recent_history(user: User) -> list[ChatMessage]:

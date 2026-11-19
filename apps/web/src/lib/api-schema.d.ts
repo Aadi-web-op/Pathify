@@ -4,6 +4,94 @@
  */
 
 export interface paths {
+    "/api/assessment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Overview */
+        get: operations["overview_api_assessment_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assessment/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start */
+        post: operations["start_api_assessment_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assessment/{session_id}/answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Answer */
+        post: operations["answer_api_assessment__session_id__answer_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assessment/{session_id}/back": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Back */
+        post: operations["back_api_assessment__session_id__back_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assessment/{session_id}/extend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Extend
+         * @description Answer the remaining statements for a sharper result. The current result stays until then.
+         */
+        post: operations["extend_api_assessment__session_id__extend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/google": {
         parameters: {
             query?: never;
@@ -109,6 +197,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/careers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Careers */
+        get: operations["list_careers_api_careers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/careers/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Matches */
+        get: operations["my_matches_api_careers_matches_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/careers/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Career */
+        get: operations["get_career_api_careers__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -191,7 +330,7 @@ export interface paths {
         put?: never;
         /**
          * Delete Me
-         * @description Permanently delete the account, its sessions and its Ksarth history.
+         * @description Permanently delete the account, its sessions, assessments and Ksarth history.
          */
         post: operations["delete_me_api_users_me_delete_post"];
         delete?: never;
@@ -224,11 +363,70 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AnswerIn */
+        AnswerIn: {
+            /** Item Id */
+            item_id: string;
+            /** Value */
+            value: number;
+        };
+        /** AssessmentOverview */
+        AssessmentOverview: {
+            in_progress: components["schemas"]["SessionOut"] | null;
+            latest: components["schemas"]["ResultOut"] | null;
+            /** Standard Length */
+            standard_length: number;
+            /** Total Items */
+            total_items: number;
+        };
         /**
          * Board
          * @enum {string}
          */
         Board: "cbse" | "icse" | "state" | "ib" | "other";
+        /** Career */
+        Career: {
+            /** Check With */
+            check_with?: components["schemas"]["OfficialBody"][];
+            /** Cluster */
+            cluster: string;
+            graduate_route?: components["schemas"]["GraduateRoute"] | null;
+            /** Note */
+            note?: string | null;
+            /** Related */
+            related?: string[];
+            /** Riasec */
+            riasec: {
+                [key: string]: number;
+            };
+            /** Routes */
+            routes: components["schemas"]["Route"][];
+            /** Similar Onet */
+            similar_onet: string;
+            /** Skills */
+            skills: string[];
+            /** Slug */
+            slug: string;
+            /** Subjects */
+            subjects: string[];
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+            /** Work */
+            work: string[];
+        };
+        /** CareerSummary */
+        CareerSummary: {
+            /** Cluster */
+            cluster: string;
+            /** Slug */
+            slug: string;
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+        };
         /** DeleteAccount */
         DeleteAccount: {
             /**
@@ -237,6 +435,30 @@ export interface components {
              * @description Type the account email to confirm.
              */
             email: string;
+        };
+        /** DimensionScore */
+        DimensionScore: {
+            /** Description */
+            description: string;
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "R" | "I" | "A" | "S" | "E" | "C";
+            /**
+             * Margin
+             * @description About a 90% band either side of the score, in the same units
+             */
+            margin: number;
+            /** Name */
+            name: string;
+            /**
+             * Score
+             * @description 0-100: how much the student enjoys this kind of activity
+             */
+            score: number;
+            /** Short */
+            short: string;
         };
         /**
          * Goal
@@ -250,6 +472,13 @@ export interface components {
              * @description ID token from Google Identity Services
              */
             credential: string;
+        };
+        /** GraduateRoute */
+        GraduateRoute: {
+            /** Label */
+            label: string;
+            /** Steps */
+            steps: components["schemas"]["Step"][];
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -309,6 +538,44 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** MatchOut */
+        MatchOut: {
+            /** Cluster */
+            cluster: string;
+            /** Fit */
+            fit: number;
+            /** Fit Label */
+            fit_label: string;
+            /** Open To You */
+            open_to_you: boolean;
+            /** Reasons */
+            reasons: components["schemas"]["ReasonOut"][];
+            /** Routes */
+            routes: components["schemas"]["RouteOptionOut"][];
+            /** Slug */
+            slug: string;
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+            /** Watch Outs */
+            watch_outs: components["schemas"]["ReasonOut"][];
+        };
+        /** MatchesOut */
+        MatchesOut: {
+            /** Matches */
+            matches: components["schemas"]["MatchOut"][];
+            result: components["schemas"]["ResultOut"];
+            /** Total Careers */
+            total_careers: number;
+        };
+        /** OfficialBody */
+        OfficialBody: {
+            /** Name */
+            name: string;
+            /** Url */
+            url?: string | null;
+        };
         /** Preferences */
         Preferences: {
             /**
@@ -355,6 +622,25 @@ export interface components {
             /** Linkedin */
             linkedin: boolean;
         };
+        /** QuestionOut */
+        QuestionOut: {
+            /** Id */
+            id: string;
+            /** Number */
+            number: number;
+            /** Text */
+            text: string;
+        };
+        /** ReasonOut */
+        ReasonOut: {
+            /**
+             * Dimension
+             * @enum {string}
+             */
+            dimension: "R" | "I" | "A" | "S" | "E" | "C";
+            /** Text */
+            text: string;
+        };
         /** RegisterIn */
         RegisterIn: {
             /**
@@ -367,11 +653,128 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** ResultOut */
+        ResultOut: {
+            /** Answered */
+            answered: number;
+            /**
+             * Code
+             * @description Top three dimensions, strongest first, e.g. 'ISA'
+             */
+            code: string;
+            /**
+             * Completed At
+             * Format: date-time
+             */
+            completed_at: string;
+            /**
+             * Confidence
+             * @enum {string}
+             */
+            confidence: "high" | "medium" | "low";
+            /**
+             * Dimensions
+             * @description All six, in RIASEC order
+             */
+            dimensions: components["schemas"]["DimensionScore"][];
+            /** Even Spread */
+            even_spread: boolean;
+            /** Ranked */
+            ranked: ("R" | "I" | "A" | "S" | "E" | "C")[];
+        };
+        /** Route */
+        Route: {
+            /**
+             * After
+             * @default class_12
+             * @enum {string}
+             */
+            after: "class_10" | "class_12" | "graduation";
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Requirement */
+            requirement?: string | null;
+            /** Steps */
+            steps: components["schemas"]["Step"][];
+            /** Streams */
+            streams: ("science_pcm" | "science_pcb" | "science_pcmb" | "commerce" | "humanities" | "vocational" | "any")[];
+        };
+        /** RouteOptionOut */
+        RouteOptionOut: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Note */
+            note: string | null;
+            /** Open */
+            open: boolean;
+            /** Steps */
+            steps: components["schemas"]["Step"][];
+            /** Years */
+            years: number;
+        };
+        /** ScalePointOut */
+        ScalePointOut: {
+            /** Label */
+            label: string;
+            /** Value */
+            value: number;
+        };
+        /** SessionOut */
+        SessionOut: {
+            /** Answered */
+            answered: number;
+            /** Can Extend */
+            can_extend: boolean;
+            /** Can Go Back */
+            can_go_back: boolean;
+            /** Id */
+            id: string;
+            question: components["schemas"]["QuestionOut"] | null;
+            result: components["schemas"]["ResultOut"] | null;
+            /** Scale */
+            scale: components["schemas"]["ScalePointOut"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "in_progress" | "completed" | "abandoned";
+            /** Target */
+            target: number;
+            /** Total Items */
+            total_items: number;
+        };
         /**
          * Stage
          * @enum {string}
          */
         Stage: "school_9_10" | "school_11_12" | "college" | "graduate";
+        /** StartIn */
+        StartIn: {
+            /**
+             * Restart
+             * @description Abandon any unfinished test and start a new one.
+             * @default false
+             */
+            restart: boolean;
+        };
+        /** Step */
+        Step: {
+            /** Detail */
+            detail?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "exam" | "degree" | "diploma" | "course" | "work" | "role";
+            /** Label */
+            label: string;
+            /** Years */
+            years?: number | null;
+        };
         /**
          * Stream
          * @enum {string}
@@ -475,6 +878,175 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    overview_api_assessment_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssessmentOverview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    start_api_assessment_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    answer_api_assessment__session_id__answer_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnswerIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    back_api_assessment__session_id__back_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    extend_api_assessment__session_id__extend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     google_api_auth_google_post: {
         parameters: {
             query?: never;
@@ -648,6 +1220,90 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_careers_api_careers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CareerSummary"][];
+                };
+            };
+        };
+    };
+    my_matches_api_careers_matches_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_career_api_careers__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Career"];
                 };
             };
             /** @description Validation Error */

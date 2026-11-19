@@ -6,11 +6,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import StreamingResponse
 
+from app.catalog import catalog
 from app.models import KsarthMessage
+from app.models.assessment import latest_result
 from app.schemas.ksarth import KsarthMessageIn, KsarthMessageOut, KsarthStatus
 from app.security.deps import CurrentUser, SettingsDep
 from app.services.ksarth import recent_history, system_prompt
 from app.services.llm import ChatMessage, LLMError, LLMProvider, Usage
+from app.services.matching import career_index
 from app.services.rate_limit import Limit, limiter
 
 log = logging.getLogger("pathify.ksarth")
@@ -78,7 +81,12 @@ async def send_message(
     conversation = [*await recent_history(user), ChatMessage(role="user", content=body.content)]
     question = KsarthMessage(user_id=user.id, role="user", content=body.content)
     await question.insert()
-    prompt = system_prompt(user)
+    result = await latest_result(user.id)
+    top_careers = []
+    if result:
+        slugs = career_index().top({d: float(v) for d, v in result.scores.items()}, 3)
+        top_careers = [catalog().get(slug).title for slug in slugs]
+    prompt = system_prompt(user, result, top_careers)
 
     async def events() -> AsyncIterator[str]:
         yield _event("question", {"message": _out(question).model_dump(mode="json")})

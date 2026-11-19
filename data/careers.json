@@ -1,0 +1,3317 @@
+{
+  "version": "2026-11",
+  "about": "Careers and education routes in India, written by Pathify. Interest profiles are Pathify's estimates on a 1-7 scale, informed by O*NET's interest ratings for the similar US occupation named on each career. Exams and rules change: always confirm with the official body listed.",
+  "careers": [
+    {
+      "slug": "software-engineer",
+      "title": "Software engineer",
+      "cluster": "technology",
+      "summary": "Designs, writes and maintains the code behind apps, websites and the systems that run them.",
+      "work": [
+        "Turn a feature idea into working code",
+        "Track down and fix bugs",
+        "Review teammates' code and agree on designs"
+      ],
+      "riasec": {
+        "R": 3,
+        "I": 6,
+        "A": 3,
+        "S": 2,
+        "E": 2,
+        "C": 5
+      },
+      "similar_onet": "Software Developers",
+      "skills": [
+        "Programming",
+        "Breaking big problems into small ones",
+        "Working in a team"
+      ],
+      "subjects": [
+        "Maths",
+        "Computer science"
+      ],
+      "routes": [
+        {
+          "id": "btech",
+          "label": "Engineering degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main, JEE Advanced or a state test",
+              "detail": "JEE Main for NITs and IIITs, JEE Advanced for IITs. Your state's engineering entrance test, BITSAT and other university tests are other ways in."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech / B.E. in Computer Science or IT",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior software engineer"
+            }
+          ]
+        },
+        {
+          "id": "bca",
+          "label": "Computer applications degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb",
+            "commerce"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or the college's own admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BCA (and optionally an MCA)",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Junior developer"
+            }
+          ],
+          "requirement": "Most BCA courses want Maths in Class 12."
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn one language well and build 3–4 real projects",
+            "detail": "Free courses such as NPTEL, freeCodeCamp and CS50 cover the basics.",
+            "years": 1
+          },
+          {
+            "kind": "work",
+            "label": "Internship or trainee role",
+            "detail": "Many companies test coding skill directly, so a strong portfolio matters more than the degree name."
+          },
+          {
+            "kind": "role",
+            "label": "Junior software engineer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        },
+        {
+          "name": "JEE Advanced (for IITs)",
+          "url": "https://jeeadv.ac.in"
+        }
+      ],
+      "related": [
+        "data-scientist",
+        "ux-designer",
+        "product-manager",
+        "electronics-engineer"
+      ]
+    },
+    {
+      "slug": "data-scientist",
+      "title": "Data scientist",
+      "cluster": "technology",
+      "summary": "Uses statistics and code to find patterns in data and build models that predict or explain what happens.",
+      "work": [
+        "Clean and explore large datasets",
+        "Build and test prediction models",
+        "Explain findings to people who make decisions"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 7,
+        "A": 3,
+        "S": 2,
+        "E": 3,
+        "C": 5
+      },
+      "similar_onet": "Data Scientists",
+      "skills": [
+        "Statistics",
+        "Python or R",
+        "Explaining numbers in plain words"
+      ],
+      "subjects": [
+        "Maths",
+        "Computer science"
+      ],
+      "routes": [
+        {
+          "id": "stats",
+          "label": "Maths or statistics degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb",
+            "commerce"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG, or ISI / CMI entrance tests",
+              "detail": "Indian Statistical Institute and Chennai Mathematical Institute run their own tests."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc / B.Stat in Statistics, Maths or Data Science",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "M.Sc or M.Stat (common, not always required)",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Junior data scientist or analyst"
+            }
+          ],
+          "requirement": "Needs Maths in Class 12."
+        },
+        {
+          "id": "btech",
+          "label": "Engineering degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main, JEE Advanced or a state test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech in Computer Science, Data Science or AI",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior data scientist"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From a degree with maths",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn Python, SQL and statistics; publish 2–3 analyses",
+            "years": 1
+          },
+          {
+            "kind": "work",
+            "label": "Data analyst role first, then move into modelling"
+          },
+          {
+            "kind": "role",
+            "label": "Data scientist"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "data-analyst",
+        "software-engineer",
+        "economist",
+        "research-scientist"
+      ]
+    },
+    {
+      "slug": "data-analyst",
+      "title": "Data analyst",
+      "cluster": "technology",
+      "summary": "Turns business data into clear reports and dashboards so teams know what is working.",
+      "work": [
+        "Pull data with SQL and spreadsheets",
+        "Build dashboards and weekly reports",
+        "Answer questions like 'why did sales drop in March?'"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 5,
+        "A": 2,
+        "S": 2,
+        "E": 3,
+        "C": 6
+      },
+      "similar_onet": "Business Intelligence Analysts",
+      "skills": [
+        "Spreadsheets and SQL",
+        "Attention to detail",
+        "Clear charts and summaries"
+      ],
+      "subjects": [
+        "Maths",
+        "Economics",
+        "Computer science"
+      ],
+      "routes": [
+        {
+          "id": "degree",
+          "label": "Any numbers-heavy degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb",
+            "commerce",
+            "humanities"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Com, BBA, B.Sc Statistics or BA Economics",
+              "years": 3
+            },
+            {
+              "kind": "course",
+              "label": "Excel, SQL and a dashboard tool such as Power BI or Tableau",
+              "years": 0.5
+            },
+            {
+              "kind": "role",
+              "label": "Junior data analyst"
+            }
+          ],
+          "requirement": "Maths in Class 12 helps a lot."
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn Excel, SQL and one dashboard tool",
+            "years": 0.5
+          },
+          {
+            "kind": "work",
+            "label": "Build a portfolio of 3 analyses on public data"
+          },
+          {
+            "kind": "role",
+            "label": "Junior data analyst"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "data-scientist",
+        "financial-analyst",
+        "chartered-accountant"
+      ]
+    },
+    {
+      "slug": "ux-designer",
+      "title": "UX designer",
+      "cluster": "design",
+      "summary": "Works out how an app or website should work and feel, so people can do what they came to do.",
+      "work": [
+        "Interview users and watch them use a product",
+        "Sketch flows and build clickable prototypes",
+        "Work with engineers to ship the design"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 5,
+        "A": 6,
+        "S": 4,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Web and Digital Interface Designers",
+      "skills": [
+        "Empathy for users",
+        "Visual design",
+        "Testing ideas quickly"
+      ],
+      "subjects": [
+        "Any subject; art and psychology help"
+      ],
+      "routes": [
+        {
+          "id": "bdes",
+          "label": "Design degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NID DAT, UCEED, NIFT or a university design test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Des in Interaction, Communication or Product Design",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior UX / product designer"
+            }
+          ]
+        },
+        {
+          "id": "psych",
+          "label": "Psychology, then design",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BA / B.Sc Psychology",
+              "years": 3
+            },
+            {
+              "kind": "course",
+              "label": "UX course and a portfolio of case studies",
+              "years": 1
+            },
+            {
+              "kind": "role",
+              "label": "UX researcher or designer"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn Figma and user research; redesign 3 real products as case studies",
+            "years": 1
+          },
+          {
+            "kind": "degree",
+            "label": "M.Des (optional)",
+            "detail": "NID, IITs and other institutes offer master's programmes.",
+            "years": 2
+          },
+          {
+            "kind": "role",
+            "label": "Junior UX designer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Institute of Design",
+          "url": "https://www.nid.edu"
+        },
+        {
+          "name": "UCEED (B.Des at IITs)",
+          "url": "https://www.uceed.iitb.ac.in"
+        },
+        {
+          "name": "National Institute of Fashion Technology",
+          "url": "https://www.nift.ac.in"
+        }
+      ],
+      "related": [
+        "graphic-designer",
+        "product-manager",
+        "software-engineer",
+        "clinical-psychologist"
+      ]
+    },
+    {
+      "slug": "graphic-designer",
+      "title": "Graphic designer",
+      "cluster": "design",
+      "summary": "Creates the visuals people see every day: logos, posters, packaging, social media and books.",
+      "work": [
+        "Design a brand's logo, colours and type",
+        "Lay out posters, packaging and ads",
+        "Turn feedback into revised designs on deadline"
+      ],
+      "riasec": {
+        "R": 3,
+        "I": 2,
+        "A": 7,
+        "S": 2,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Graphic Designers",
+      "skills": [
+        "Drawing and layout",
+        "Design software",
+        "Taking feedback well"
+      ],
+      "subjects": [
+        "Art",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "bdes",
+          "label": "Design degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NID DAT, UCEED, NIFT or a university design test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Des in Communication Design",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior graphic designer"
+            }
+          ]
+        },
+        {
+          "id": "bfa",
+          "label": "Fine arts degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "College entrance or portfolio review"
+            },
+            {
+              "kind": "degree",
+              "label": "BFA in Applied Art",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior designer at a studio or agency"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn design software and build a portfolio",
+            "years": 1
+          },
+          {
+            "kind": "work",
+            "label": "Freelance or join a studio as a junior"
+          },
+          {
+            "kind": "role",
+            "label": "Graphic designer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Institute of Design",
+          "url": "https://www.nid.edu"
+        },
+        {
+          "name": "National Institute of Fashion Technology",
+          "url": "https://www.nift.ac.in"
+        },
+        {
+          "name": "UCEED (B.Des at IITs)",
+          "url": "https://www.uceed.iitb.ac.in"
+        }
+      ],
+      "related": [
+        "ux-designer",
+        "animator",
+        "fashion-designer"
+      ]
+    },
+    {
+      "slug": "animator",
+      "title": "Animator / VFX artist",
+      "cluster": "design",
+      "summary": "Brings characters, scenes and effects to life for films, games, ads and explainers.",
+      "work": [
+        "Animate characters frame by frame or with rigs",
+        "Build 3D models and scenes",
+        "Composite effects into live footage"
+      ],
+      "riasec": {
+        "R": 4,
+        "I": 3,
+        "A": 7,
+        "S": 2,
+        "E": 2,
+        "C": 3
+      },
+      "similar_onet": "Special Effects Artists and Animators",
+      "skills": [
+        "Drawing and observation",
+        "3D or 2D software",
+        "Patience with detail"
+      ],
+      "subjects": [
+        "Art",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "bdes",
+          "label": "Design degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NID DAT, UCEED or a university design test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Des in Animation or Film",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Junior animator"
+            }
+          ]
+        },
+        {
+          "id": "bsc",
+          "label": "Animation degree or diploma",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "College admission or portfolio"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc / BA in Animation and VFX",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Junior animator or compositor"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "course",
+            "label": "Learn Blender or Maya; build a 1-minute showreel",
+            "years": 1
+          },
+          {
+            "kind": "role",
+            "label": "Junior animator"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Institute of Design",
+          "url": "https://www.nid.edu"
+        },
+        {
+          "name": "UCEED (B.Des at IITs)",
+          "url": "https://www.uceed.iitb.ac.in"
+        }
+      ],
+      "related": [
+        "graphic-designer",
+        "journalist",
+        "ux-designer"
+      ]
+    },
+    {
+      "slug": "fashion-designer",
+      "title": "Fashion designer",
+      "cluster": "design",
+      "summary": "Designs clothes and accessories, from the first sketch to a finished collection.",
+      "work": [
+        "Research trends and fabrics",
+        "Sketch, drape and make samples",
+        "Work with tailors, suppliers and buyers"
+      ],
+      "riasec": {
+        "R": 4,
+        "I": 2,
+        "A": 7,
+        "S": 3,
+        "E": 5,
+        "C": 3
+      },
+      "similar_onet": "Fashion Designers",
+      "skills": [
+        "Drawing",
+        "Knowing fabrics and fit",
+        "Running a project to a deadline"
+      ],
+      "subjects": [
+        "Art",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "nift",
+          "label": "Fashion design degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NIFT entrance, NID DAT or a university design test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Des in Fashion Design",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Assistant designer at a label or export house"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "degree",
+            "label": "M.Des / PG diploma in fashion (optional)",
+            "years": 2
+          },
+          {
+            "kind": "role",
+            "label": "Assistant designer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Institute of Fashion Technology",
+          "url": "https://www.nift.ac.in"
+        },
+        {
+          "name": "National Institute of Design",
+          "url": "https://www.nid.edu"
+        }
+      ],
+      "related": [
+        "graphic-designer",
+        "entrepreneur",
+        "marketing-manager"
+      ]
+    },
+    {
+      "slug": "architect",
+      "title": "Architect",
+      "cluster": "design",
+      "summary": "Designs buildings and spaces that are safe, useful and good to be in, and sees them through construction.",
+      "work": [
+        "Turn a client's needs into drawings and models",
+        "Make sure designs meet building rules",
+        "Visit sites and solve problems with builders"
+      ],
+      "riasec": {
+        "R": 5,
+        "I": 5,
+        "A": 6,
+        "S": 2,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Architects",
+      "skills": [
+        "Drawing and spatial thinking",
+        "Maths and physics basics",
+        "Presenting ideas to clients"
+      ],
+      "subjects": [
+        "Maths",
+        "Physics",
+        "Art"
+      ],
+      "routes": [
+        {
+          "id": "barch",
+          "label": "Architecture degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NATA or JEE Main Paper 2"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Arch",
+              "detail": "Registration with the Council of Architecture is needed to practise.",
+              "years": 5
+            },
+            {
+              "kind": "role",
+              "label": "Junior architect"
+            }
+          ],
+          "requirement": "Needs Physics, Chemistry and Maths in Class 12."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Council of Architecture",
+          "url": "https://www.coa.gov.in"
+        },
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "civil-engineer",
+        "ux-designer",
+        "graphic-designer"
+      ]
+    },
+    {
+      "slug": "civil-engineer",
+      "title": "Civil engineer",
+      "cluster": "engineering",
+      "summary": "Plans and builds roads, bridges, buildings, water systems and other things a city runs on.",
+      "work": [
+        "Design structures and check that they are safe",
+        "Supervise work on construction sites",
+        "Estimate materials, cost and time"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 5,
+        "A": 2,
+        "S": 2,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Civil Engineers",
+      "skills": [
+        "Maths and physics",
+        "Working outdoors with teams",
+        "Planning and estimating"
+      ],
+      "subjects": [
+        "Maths",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "btech",
+          "label": "Engineering degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main, JEE Advanced or a state test",
+              "detail": "JEE Main for NITs and IIITs, JEE Advanced for IITs. Your state's engineering entrance test and some private universities' tests are other ways in."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech / B.E. in Civil Engineering",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Site or design engineer"
+            }
+          ]
+        },
+        {
+          "id": "diploma",
+          "label": "Polytechnic diploma after Class 10",
+          "after": "class_10",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State polytechnic entrance",
+              "detail": "Each state runs admissions to its government polytechnics."
+            },
+            {
+              "kind": "diploma",
+              "label": "Diploma in Civil Engineering",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "Lateral entry into the 2nd year of a B.Tech (optional)",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Site or design engineer"
+            }
+          ],
+          "requirement": "Usually needs good marks in Maths and Science in Class 10."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        },
+        {
+          "name": "JEE Advanced (for IITs)",
+          "url": "https://jeeadv.ac.in"
+        }
+      ],
+      "related": [
+        "architect",
+        "mechanical-engineer",
+        "civil-servant"
+      ]
+    },
+    {
+      "slug": "mechanical-engineer",
+      "title": "Mechanical engineer",
+      "cluster": "engineering",
+      "summary": "Designs and improves machines, from engines and pumps to robots and production lines.",
+      "work": [
+        "Design parts and machines with CAD software",
+        "Test prototypes and fix what fails",
+        "Keep a factory line running smoothly"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 5,
+        "A": 2,
+        "S": 1,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Mechanical Engineers",
+      "skills": [
+        "Physics and maths",
+        "Hands-on problem solving",
+        "CAD and drawing"
+      ],
+      "subjects": [
+        "Maths",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "btech",
+          "label": "Engineering degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main, JEE Advanced or a state test",
+              "detail": "JEE Main for NITs and IIITs, JEE Advanced for IITs. Your state's engineering entrance test and some private universities' tests are other ways in."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech / B.E. in Mechanical Engineering",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Graduate engineer trainee"
+            }
+          ]
+        },
+        {
+          "id": "diploma",
+          "label": "Polytechnic diploma after Class 10",
+          "after": "class_10",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State polytechnic entrance",
+              "detail": "Each state runs admissions to its government polytechnics."
+            },
+            {
+              "kind": "diploma",
+              "label": "Diploma in Mechanical Engineering",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "Lateral entry into the 2nd year of a B.Tech (optional)",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Graduate engineer trainee"
+            }
+          ],
+          "requirement": "Usually needs good marks in Maths and Science in Class 10."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        },
+        {
+          "name": "JEE Advanced (for IITs)",
+          "url": "https://jeeadv.ac.in"
+        }
+      ],
+      "related": [
+        "civil-engineer",
+        "electronics-engineer",
+        "commercial-pilot"
+      ]
+    },
+    {
+      "slug": "electronics-engineer",
+      "title": "Electrical / electronics engineer",
+      "cluster": "engineering",
+      "summary": "Designs circuits, power systems and devices, from chips and phones to the electricity grid.",
+      "work": [
+        "Design and test circuits",
+        "Program small devices and sensors",
+        "Maintain power and communication systems"
+      ],
+      "riasec": {
+        "R": 5,
+        "I": 6,
+        "A": 2,
+        "S": 1,
+        "E": 2,
+        "C": 4
+      },
+      "similar_onet": "Electronics Engineers",
+      "skills": [
+        "Physics and maths",
+        "Careful testing",
+        "Programming basics"
+      ],
+      "subjects": [
+        "Maths",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "btech",
+          "label": "Engineering degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main, JEE Advanced or a state test",
+              "detail": "JEE Main for NITs and IIITs, JEE Advanced for IITs. Your state's engineering entrance test and some private universities' tests are other ways in."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech / B.E. in Electrical or Electronics Engineering",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Graduate engineer trainee"
+            }
+          ]
+        },
+        {
+          "id": "diploma",
+          "label": "Polytechnic diploma after Class 10",
+          "after": "class_10",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State polytechnic entrance",
+              "detail": "Each state runs admissions to its government polytechnics."
+            },
+            {
+              "kind": "diploma",
+              "label": "Diploma in Electrical or Electronics Engineering",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "Lateral entry into the 2nd year of a B.Tech (optional)",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Graduate engineer trainee"
+            }
+          ],
+          "requirement": "Usually needs good marks in Maths and Science in Class 10."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        },
+        {
+          "name": "JEE Advanced (for IITs)",
+          "url": "https://jeeadv.ac.in"
+        }
+      ],
+      "related": [
+        "software-engineer",
+        "mechanical-engineer",
+        "electrician"
+      ]
+    },
+    {
+      "slug": "electrician",
+      "title": "Electrician",
+      "cluster": "skilled-trades",
+      "summary": "Installs, repairs and maintains wiring and electrical equipment in homes, shops and factories.",
+      "work": [
+        "Wire new buildings and fit switchboards",
+        "Find and fix electrical faults safely",
+        "Install and service motors and equipment"
+      ],
+      "riasec": {
+        "R": 7,
+        "I": 3,
+        "A": 1,
+        "S": 2,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Electricians",
+      "skills": [
+        "Working safely with tools",
+        "Reading wiring diagrams",
+        "Patient fault-finding"
+      ],
+      "subjects": [
+        "Science",
+        "Maths"
+      ],
+      "routes": [
+        {
+          "id": "iti",
+          "label": "ITI trade course after Class 10",
+          "after": "class_10",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "ITI admission",
+              "detail": "Government and private ITIs admit through state counselling."
+            },
+            {
+              "kind": "diploma",
+              "label": "ITI Electrician trade",
+              "years": 2
+            },
+            {
+              "kind": "work",
+              "label": "Apprenticeship",
+              "detail": "Paid on-the-job training under the Apprenticeship scheme.",
+              "years": 1
+            },
+            {
+              "kind": "role",
+              "label": "Electrician; a state licence lets you take on contracts"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Directorate General of Training (ITI courses)",
+          "url": "https://dgt.gov.in"
+        }
+      ],
+      "note": "Skilled trades are in steady demand and you can start earning sooner than through a degree.",
+      "related": [
+        "electronics-engineer",
+        "entrepreneur",
+        "mechanical-engineer"
+      ]
+    },
+    {
+      "slug": "doctor",
+      "title": "Doctor",
+      "cluster": "health",
+      "summary": "Diagnoses and treats illness, and helps people stay healthy, in hospitals, clinics and communities.",
+      "work": [
+        "Examine patients and order tests",
+        "Decide on treatment and explain it clearly",
+        "Keep learning as medicine changes"
+      ],
+      "riasec": {
+        "R": 4,
+        "I": 6,
+        "A": 2,
+        "S": 6,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Family Medicine Physicians",
+      "skills": [
+        "Biology and chemistry",
+        "Calm under pressure",
+        "Explaining things kindly"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "mbbs",
+          "label": "Medical degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NEET-UG",
+              "detail": "One national exam for MBBS seats across India."
+            },
+            {
+              "kind": "degree",
+              "label": "MBBS",
+              "detail": "About 5.5 years including a one-year internship.",
+              "years": 5.5
+            },
+            {
+              "kind": "role",
+              "label": "Junior resident / medical officer"
+            }
+          ],
+          "requirement": "Needs Physics, Chemistry and Biology in Class 12."
+        }
+      ],
+      "graduate_route": {
+        "label": "After MBBS",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "NEET-PG (or its replacement)",
+            "detail": "For MD / MS specialisation seats."
+          },
+          {
+            "kind": "degree",
+            "label": "MD / MS",
+            "years": 3
+          },
+          {
+            "kind": "role",
+            "label": "Specialist doctor"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "note": "Training is long. Most doctors study for about 9 years before they practise as specialists.",
+      "related": [
+        "dentist",
+        "nurse",
+        "physiotherapist",
+        "pharmacist"
+      ]
+    },
+    {
+      "slug": "dentist",
+      "title": "Dentist",
+      "cluster": "health",
+      "summary": "Looks after teeth and gums: prevents problems, treats pain and restores smiles.",
+      "work": [
+        "Check, clean and fill teeth",
+        "Do procedures such as root canals and extractions",
+        "Teach patients how to look after their teeth"
+      ],
+      "riasec": {
+        "R": 5,
+        "I": 6,
+        "A": 3,
+        "S": 5,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Dentists, General",
+      "skills": [
+        "Steady hands",
+        "Biology",
+        "Putting nervous people at ease"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "bds",
+          "label": "Dental degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NEET-UG"
+            },
+            {
+              "kind": "degree",
+              "label": "BDS",
+              "detail": "Includes a one-year internship.",
+              "years": 5
+            },
+            {
+              "kind": "role",
+              "label": "Dental surgeon at a clinic or hospital"
+            }
+          ],
+          "requirement": "Needs Physics, Chemistry and Biology in Class 12."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "doctor",
+        "physiotherapist",
+        "pharmacist"
+      ]
+    },
+    {
+      "slug": "nurse",
+      "title": "Nurse",
+      "cluster": "health",
+      "summary": "Cares for patients around the clock, gives treatment and is often the person patients trust most.",
+      "work": [
+        "Monitor patients and give medicines",
+        "Assist doctors in procedures",
+        "Support patients and families through hard days"
+      ],
+      "riasec": {
+        "R": 4,
+        "I": 4,
+        "A": 2,
+        "S": 7,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Registered Nurses",
+      "skills": [
+        "Care and patience",
+        "Staying calm in emergencies",
+        "Careful record keeping"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry",
+        "English"
+      ],
+      "routes": [
+        {
+          "id": "bsc",
+          "label": "Nursing degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "Nursing entrance (AIIMS, state or university test; some use NEET-UG)"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc Nursing",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Staff nurse"
+            }
+          ],
+          "requirement": "Usually needs Physics, Chemistry, Biology and English in Class 12."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Indian Nursing Council"
+        }
+      ],
+      "related": [
+        "doctor",
+        "physiotherapist",
+        "social-worker"
+      ]
+    },
+    {
+      "slug": "physiotherapist",
+      "title": "Physiotherapist",
+      "cluster": "health",
+      "summary": "Helps people recover movement and manage pain after injury, surgery or illness.",
+      "work": [
+        "Assess how a patient moves",
+        "Plan and guide exercise and therapy",
+        "Work with athletes, older people or children"
+      ],
+      "riasec": {
+        "R": 5,
+        "I": 5,
+        "A": 2,
+        "S": 6,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Physical Therapists",
+      "skills": [
+        "Anatomy",
+        "Encouraging people",
+        "Hands-on treatment"
+      ],
+      "subjects": [
+        "Biology",
+        "Physics",
+        "Chemistry"
+      ],
+      "routes": [
+        {
+          "id": "bpt",
+          "label": "Physiotherapy degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State or university entrance"
+            },
+            {
+              "kind": "degree",
+              "label": "BPT (Bachelor of Physiotherapy)",
+              "detail": "About 4.5 years including internship.",
+              "years": 4.5
+            },
+            {
+              "kind": "role",
+              "label": "Physiotherapist at a hospital, clinic or sports team"
+            }
+          ],
+          "requirement": "Needs Physics, Chemistry and Biology in Class 12."
+        }
+      ],
+      "related": [
+        "doctor",
+        "nurse",
+        "teacher"
+      ]
+    },
+    {
+      "slug": "pharmacist",
+      "title": "Pharmacist",
+      "cluster": "health",
+      "summary": "Makes sure medicines are right, safe and used well, in pharmacies, hospitals and drug companies.",
+      "work": [
+        "Check and dispense prescriptions",
+        "Advise patients on dosage and side effects",
+        "Work on drug testing and quality in industry"
+      ],
+      "riasec": {
+        "R": 3,
+        "I": 5,
+        "A": 1,
+        "S": 4,
+        "E": 3,
+        "C": 5
+      },
+      "similar_onet": "Pharmacists",
+      "skills": [
+        "Chemistry",
+        "Accuracy",
+        "Clear advice"
+      ],
+      "subjects": [
+        "Chemistry",
+        "Biology or Maths"
+      ],
+      "routes": [
+        {
+          "id": "bpharm",
+          "label": "Pharmacy degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State CET or university entrance"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Pharm",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Pharmacist, or trainee in a pharma company"
+            }
+          ],
+          "requirement": "Needs Physics and Chemistry with Maths or Biology in Class 12."
+        },
+        {
+          "id": "dpharm",
+          "label": "Pharmacy diploma",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "State admission"
+            },
+            {
+              "kind": "diploma",
+              "label": "D.Pharm",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Registered pharmacist at a pharmacy"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Pharmacy Council of India"
+        }
+      ],
+      "related": [
+        "doctor",
+        "biotechnologist",
+        "research-scientist"
+      ]
+    },
+    {
+      "slug": "veterinarian",
+      "title": "Veterinarian",
+      "cluster": "health",
+      "summary": "Treats animals, from pets and livestock to wildlife, and protects people from diseases animals carry.",
+      "work": [
+        "Examine and treat sick animals",
+        "Vaccinate and advise farmers and pet owners",
+        "Work on dairy, poultry or wildlife health"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 6,
+        "A": 2,
+        "S": 3,
+        "E": 3,
+        "C": 3
+      },
+      "similar_onet": "Veterinarians",
+      "skills": [
+        "Biology",
+        "Comfort with animals",
+        "Working outdoors"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry",
+        "Physics"
+      ],
+      "routes": [
+        {
+          "id": "bvsc",
+          "label": "Veterinary degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NEET-UG",
+              "detail": "Used for the national quota and by many states."
+            },
+            {
+              "kind": "degree",
+              "label": "B.V.Sc & A.H.",
+              "detail": "About 5.5 years including internship.",
+              "years": 5.5
+            },
+            {
+              "kind": "role",
+              "label": "Veterinary officer or clinic vet"
+            }
+          ],
+          "requirement": "Needs Physics, Chemistry and Biology in Class 12."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Veterinary Council of India"
+        },
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "doctor",
+        "agricultural-scientist",
+        "biotechnologist"
+      ]
+    },
+    {
+      "slug": "clinical-psychologist",
+      "title": "Clinical psychologist",
+      "cluster": "health",
+      "summary": "Assesses and treats mental health conditions through therapy and testing.",
+      "work": [
+        "Listen to clients and assess what's going on",
+        "Plan and run therapy sessions",
+        "Work with schools, hospitals or psychiatrists"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 6,
+        "A": 4,
+        "S": 7,
+        "E": 2,
+        "C": 3
+      },
+      "similar_onet": "Clinical and Counseling Psychologists",
+      "skills": [
+        "Listening without judging",
+        "Research methods",
+        "Keeping confidences"
+      ],
+      "subjects": [
+        "Psychology",
+        "Biology",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "psych",
+          "label": "Psychology degrees",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BA / B.Sc Psychology",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "MA / M.Sc Psychology",
+              "years": 2
+            },
+            {
+              "kind": "course",
+              "label": "An RCI-recognised clinical psychology programme",
+              "detail": "Needed to practise as a licensed clinical psychologist in India.",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Clinical psychologist"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Rehabilitation Council of India"
+        }
+      ],
+      "note": "Counselling roles in schools and companies are open sooner, after a master's.",
+      "related": [
+        "social-worker",
+        "teacher",
+        "ux-designer"
+      ]
+    },
+    {
+      "slug": "research-scientist",
+      "title": "Research scientist",
+      "cluster": "science",
+      "summary": "Asks questions nobody has answered yet in physics, chemistry, biology or maths, and runs the experiments to find out.",
+      "work": [
+        "Design and run experiments",
+        "Analyse results and write papers",
+        "Present findings at labs and conferences"
+      ],
+      "riasec": {
+        "R": 4,
+        "I": 7,
+        "A": 3,
+        "S": 2,
+        "E": 2,
+        "C": 4
+      },
+      "similar_onet": "Physicists; Chemists",
+      "skills": [
+        "Deep curiosity",
+        "Maths",
+        "Sticking with hard problems"
+      ],
+      "subjects": [
+        "Physics",
+        "Chemistry",
+        "Maths",
+        "Biology"
+      ],
+      "routes": [
+        {
+          "id": "bsms",
+          "label": "Science research degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "IISER Aptitude Test, NEST, or CUET-UG",
+              "detail": "IISERs and NISER offer integrated BS-MS programmes."
+            },
+            {
+              "kind": "degree",
+              "label": "BS-MS (integrated) or B.Sc then M.Sc",
+              "years": 5
+            },
+            {
+              "kind": "exam",
+              "label": "CSIR-NET, GATE or JEST for PhD funding"
+            },
+            {
+              "kind": "degree",
+              "label": "PhD",
+              "years": 5
+            },
+            {
+              "kind": "role",
+              "label": "Postdoctoral researcher or scientist"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "IISER admissions",
+          "url": "https://iiseradmission.in"
+        },
+        {
+          "name": "NEST (NISER and UM-DAE CEBS)",
+          "url": "https://www.nestexam.in"
+        },
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "biotechnologist",
+        "data-scientist",
+        "agricultural-scientist",
+        "economist"
+      ]
+    },
+    {
+      "slug": "biotechnologist",
+      "title": "Biotechnologist",
+      "cluster": "science",
+      "summary": "Uses living cells and biology to make medicines, vaccines, better crops and greener industry.",
+      "work": [
+        "Run lab experiments with cells and DNA",
+        "Test product quality and safety",
+        "Scale processes up from lab to factory"
+      ],
+      "riasec": {
+        "R": 5,
+        "I": 6,
+        "A": 2,
+        "S": 2,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Biochemists and Biophysicists",
+      "skills": [
+        "Biology and chemistry",
+        "Careful lab work",
+        "Recording results precisely"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry"
+      ],
+      "routes": [
+        {
+          "id": "btech",
+          "label": "Biotechnology engineering",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb",
+            "science_pcb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "JEE Main or a state / university test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Tech Biotechnology",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Research associate or production trainee"
+            }
+          ]
+        },
+        {
+          "id": "bsc",
+          "label": "Biotechnology degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc Biotechnology, then M.Sc",
+              "years": 5
+            },
+            {
+              "kind": "role",
+              "label": "Research associate"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "research-scientist",
+        "pharmacist",
+        "agricultural-scientist"
+      ]
+    },
+    {
+      "slug": "agricultural-scientist",
+      "title": "Agricultural scientist",
+      "cluster": "science",
+      "summary": "Works on how India grows its food: better seeds, healthier soil, smarter water use and fewer crop losses.",
+      "work": [
+        "Run field trials of crops and methods",
+        "Advise farmers through extension work",
+        "Study soil, pests and climate effects"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 6,
+        "A": 2,
+        "S": 3,
+        "E": 3,
+        "C": 4
+      },
+      "similar_onet": "Soil and Plant Scientists",
+      "skills": [
+        "Biology and chemistry",
+        "Fieldwork",
+        "Explaining science to farmers"
+      ],
+      "subjects": [
+        "Biology",
+        "Chemistry"
+      ],
+      "routes": [
+        {
+          "id": "bsc",
+          "label": "Agriculture degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcb",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG for ICAR seats, or your state agricultural university's test"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc (Hons) Agriculture",
+              "years": 4
+            },
+            {
+              "kind": "role",
+              "label": "Agriculture officer, field researcher or agri-business trainee"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "Into research",
+        "steps": [
+          {
+            "kind": "degree",
+            "label": "M.Sc and PhD in an agricultural science",
+            "years": 5
+          },
+          {
+            "kind": "exam",
+            "label": "ICAR / ASRB exams for scientist posts"
+          },
+          {
+            "kind": "role",
+            "label": "Agricultural scientist"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "Indian Council of Agricultural Research",
+          "url": "https://icar.org.in"
+        },
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "veterinarian",
+        "biotechnologist",
+        "research-scientist"
+      ]
+    },
+    {
+      "slug": "economist",
+      "title": "Economist",
+      "cluster": "science",
+      "summary": "Studies how people, companies and governments make choices about money and resources, and advises on policy.",
+      "work": [
+        "Analyse data on prices, jobs and growth",
+        "Write reports and policy briefs",
+        "Forecast how a decision will play out"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 6,
+        "A": 3,
+        "S": 3,
+        "E": 4,
+        "C": 5
+      },
+      "similar_onet": "Economists",
+      "skills": [
+        "Maths and statistics",
+        "Clear writing",
+        "Reading the news critically"
+      ],
+      "subjects": [
+        "Maths",
+        "Economics"
+      ],
+      "routes": [
+        {
+          "id": "ba",
+          "label": "Economics degree",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb",
+            "commerce",
+            "humanities"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BA / B.Sc Economics",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "MA Economics",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Research analyst at a think tank, bank or consultancy"
+            }
+          ],
+          "requirement": "Most good programmes want Maths in Class 12."
+        }
+      ],
+      "graduate_route": {
+        "label": "Into government",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "UPSC Indian Economic Service, or RBI Grade B",
+            "detail": "Both need a relevant degree; check eligibility each year."
+          },
+          {
+            "kind": "role",
+            "label": "Government economist"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        },
+        {
+          "name": "Union Public Service Commission",
+          "url": "https://upsc.gov.in"
+        }
+      ],
+      "related": [
+        "data-scientist",
+        "financial-analyst",
+        "civil-servant"
+      ]
+    },
+    {
+      "slug": "chartered-accountant",
+      "title": "Chartered accountant",
+      "cluster": "business",
+      "summary": "Audits accounts, handles tax and advises businesses on money, with a qualification companies trust.",
+      "work": [
+        "Audit company accounts",
+        "Plan and file taxes",
+        "Advise on budgets, deals and risks"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 4,
+        "A": 1,
+        "S": 2,
+        "E": 5,
+        "C": 7
+      },
+      "similar_onet": "Accountants and Auditors",
+      "skills": [
+        "Accounting and law",
+        "Accuracy under deadlines",
+        "Integrity"
+      ],
+      "subjects": [
+        "Accountancy",
+        "Maths",
+        "Economics"
+      ],
+      "routes": [
+        {
+          "id": "ca",
+          "label": "CA qualification",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CA Foundation",
+              "detail": "You can register after Class 10 and sit it after Class 12."
+            },
+            {
+              "kind": "exam",
+              "label": "CA Intermediate"
+            },
+            {
+              "kind": "work",
+              "label": "Articleship (practical training) with a CA firm",
+              "years": 2
+            },
+            {
+              "kind": "exam",
+              "label": "CA Final"
+            },
+            {
+              "kind": "role",
+              "label": "Chartered accountant"
+            }
+          ],
+          "requirement": "Commerce helps, but students from any stream can register."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Institute of Chartered Accountants of India",
+          "url": "https://www.icai.org"
+        }
+      ],
+      "note": "Many students take several attempts at each level. Plan for the journey to take a few years.",
+      "related": [
+        "financial-analyst",
+        "bank-officer",
+        "data-analyst"
+      ]
+    },
+    {
+      "slug": "financial-analyst",
+      "title": "Financial analyst",
+      "cluster": "business",
+      "summary": "Studies companies and markets to help investors, banks and businesses decide where money should go.",
+      "work": [
+        "Build financial models in spreadsheets",
+        "Research companies and industries",
+        "Write recommendations for investors"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 5,
+        "A": 2,
+        "S": 2,
+        "E": 5,
+        "C": 6
+      },
+      "similar_onet": "Financial and Investment Analysts",
+      "skills": [
+        "Spreadsheets",
+        "Accounting basics",
+        "Making a clear case"
+      ],
+      "subjects": [
+        "Maths",
+        "Accountancy",
+        "Economics"
+      ],
+      "routes": [
+        {
+          "id": "bcom",
+          "label": "Commerce or economics degree",
+          "after": "class_12",
+          "streams": [
+            "commerce",
+            "science_pcm",
+            "science_pcmb",
+            "humanities"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG, IPMAT or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Com, BBA, BMS or BA Economics",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "MBA in Finance, or the CFA programme",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Analyst at a bank, fund or company"
+            }
+          ],
+          "requirement": "Maths in Class 12 helps."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "chartered-accountant",
+        "economist",
+        "data-analyst"
+      ]
+    },
+    {
+      "slug": "bank-officer",
+      "title": "Bank officer",
+      "cluster": "business",
+      "summary": "Runs the day-to-day of a bank branch: loans, accounts, customers and the team.",
+      "work": [
+        "Approve loans and check documents",
+        "Solve customer problems",
+        "Lead a branch team as you grow"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 3,
+        "A": 1,
+        "S": 4,
+        "E": 5,
+        "C": 6
+      },
+      "similar_onet": "Loan Officers",
+      "skills": [
+        "Numbers",
+        "Dealing with customers",
+        "Following procedures"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "po",
+          "label": "Graduate, then bank exams",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "degree",
+              "label": "Any bachelor's degree",
+              "years": 3
+            },
+            {
+              "kind": "exam",
+              "label": "IBPS PO, SBI PO or RBI exams"
+            },
+            {
+              "kind": "role",
+              "label": "Probationary officer"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "IBPS PO, SBI PO or RBI exams",
+            "detail": "Prepare for aptitude, reasoning, English and general awareness."
+          },
+          {
+            "kind": "role",
+            "label": "Probationary officer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "Institute of Banking Personnel Selection",
+          "url": "https://www.ibps.in"
+        }
+      ],
+      "related": [
+        "chartered-accountant",
+        "financial-analyst",
+        "civil-servant"
+      ]
+    },
+    {
+      "slug": "marketing-manager",
+      "title": "Marketing manager",
+      "cluster": "business",
+      "summary": "Decides how a product is presented, priced and promoted so the right people want it.",
+      "work": [
+        "Plan campaigns across social media, stores and ads",
+        "Study what customers want",
+        "Track results and adjust spending"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 3,
+        "A": 5,
+        "S": 4,
+        "E": 7,
+        "C": 4
+      },
+      "similar_onet": "Marketing Managers",
+      "skills": [
+        "Understanding people",
+        "Writing and presenting",
+        "Reading data on what works"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "bba",
+          "label": "Business degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG, IPMAT or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BBA, BMS or B.Com",
+              "years": 3
+            },
+            {
+              "kind": "exam",
+              "label": "CAT or other MBA entrance (common, not essential)"
+            },
+            {
+              "kind": "degree",
+              "label": "MBA in Marketing",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Marketing or brand executive"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "work",
+            "label": "Start in sales, social media or a marketing agency"
+          },
+          {
+            "kind": "degree",
+            "label": "MBA (optional)",
+            "years": 2
+          },
+          {
+            "kind": "role",
+            "label": "Marketing manager"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "product-manager",
+        "entrepreneur",
+        "journalist"
+      ]
+    },
+    {
+      "slug": "product-manager",
+      "title": "Product manager",
+      "cluster": "business",
+      "summary": "Decides what a tech product should do next, and gets designers, engineers and business teams building it.",
+      "work": [
+        "Talk to users and study data",
+        "Write down what to build and why",
+        "Keep the team aligned on priorities"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 5,
+        "A": 4,
+        "S": 4,
+        "E": 6,
+        "C": 4
+      },
+      "similar_onet": "Computer and Information Systems Managers",
+      "skills": [
+        "Clear thinking and writing",
+        "Understanding tech",
+        "Bringing people together"
+      ],
+      "subjects": [
+        "Any stream; maths helps"
+      ],
+      "routes": [
+        {
+          "id": "tech",
+          "label": "Engineering or business degree, then work",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "degree",
+              "label": "B.Tech, BBA or any degree",
+              "years": 4
+            },
+            {
+              "kind": "work",
+              "label": "2–4 years as an engineer, analyst, designer or consultant"
+            },
+            {
+              "kind": "role",
+              "label": "Associate product manager"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "work",
+            "label": "A role close to product: analyst, designer, engineer, support lead",
+            "years": 2
+          },
+          {
+            "kind": "degree",
+            "label": "MBA (some do, many don't)",
+            "years": 2
+          },
+          {
+            "kind": "role",
+            "label": "Associate product manager"
+          }
+        ]
+      },
+      "related": [
+        "ux-designer",
+        "software-engineer",
+        "marketing-manager",
+        "entrepreneur"
+      ]
+    },
+    {
+      "slug": "entrepreneur",
+      "title": "Entrepreneur",
+      "cluster": "business",
+      "summary": "Spots a problem, builds a business that solves it, and takes on the risk of making it work.",
+      "work": [
+        "Test an idea with real customers",
+        "Raise money or run on revenue",
+        "Hire, sell, and handle whatever comes up"
+      ],
+      "riasec": {
+        "R": 3,
+        "I": 4,
+        "A": 4,
+        "S": 4,
+        "E": 7,
+        "C": 3
+      },
+      "similar_onet": "Chief Executives",
+      "skills": [
+        "Selling an idea",
+        "Handling uncertainty",
+        "Learning fast"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "any",
+          "label": "Any path, starting small",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "degree",
+              "label": "Any degree that teaches you something useful (optional)",
+              "years": 3
+            },
+            {
+              "kind": "work",
+              "label": "Start a small venture or join an early-stage startup"
+            },
+            {
+              "kind": "course",
+              "label": "College incubators and government startup schemes"
+            },
+            {
+              "kind": "role",
+              "label": "Founder"
+            }
+          ]
+        }
+      ],
+      "note": "Most new businesses fail or change shape. Many founders work in a company first to learn the industry.",
+      "related": [
+        "product-manager",
+        "marketing-manager",
+        "fashion-designer"
+      ]
+    },
+    {
+      "slug": "hotel-manager",
+      "title": "Hotel manager",
+      "cluster": "hospitality",
+      "summary": "Runs a hotel or resort so guests are looked after and every department works together.",
+      "work": [
+        "Lead teams across front office, food and housekeeping",
+        "Handle guest problems on the spot",
+        "Plan budgets, events and staffing"
+      ],
+      "riasec": {
+        "R": 3,
+        "I": 2,
+        "A": 3,
+        "S": 5,
+        "E": 6,
+        "C": 5
+      },
+      "similar_onet": "Lodging Managers",
+      "skills": [
+        "Looking after people",
+        "Staying calm when busy",
+        "Organising teams"
+      ],
+      "subjects": [
+        "Any stream",
+        "English"
+      ],
+      "routes": [
+        {
+          "id": "ihm",
+          "label": "Hotel management degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NCHM JEE",
+              "detail": "For Institutes of Hotel Management across India."
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc Hospitality and Hotel Administration",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Management trainee at a hotel chain"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Council for Hotel Management",
+          "url": "https://nchm.gov.in"
+        }
+      ],
+      "related": [
+        "chef",
+        "marketing-manager",
+        "entrepreneur"
+      ]
+    },
+    {
+      "slug": "chef",
+      "title": "Chef",
+      "cluster": "hospitality",
+      "summary": "Creates and cooks food in restaurants, hotels and kitchens, and runs the kitchen team.",
+      "work": [
+        "Prepare dishes to a consistent standard",
+        "Create new menus",
+        "Manage stock, hygiene and a kitchen team"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 2,
+        "A": 5,
+        "S": 3,
+        "E": 4,
+        "C": 4
+      },
+      "similar_onet": "Chefs and Head Cooks",
+      "skills": [
+        "Cooking and taste",
+        "Working fast on your feet",
+        "Teamwork under pressure"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "ihm",
+          "label": "Hotel management degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NCHM JEE"
+            },
+            {
+              "kind": "degree",
+              "label": "B.Sc Hospitality and Hotel Administration",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Commis chef in a hotel kitchen"
+            }
+          ]
+        },
+        {
+          "id": "culinary",
+          "label": "Culinary course",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "Institute admission"
+            },
+            {
+              "kind": "diploma",
+              "label": "Diploma or degree in culinary arts",
+              "years": 1.5
+            },
+            {
+              "kind": "role",
+              "label": "Commis chef"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Council for Hotel Management",
+          "url": "https://nchm.gov.in"
+        }
+      ],
+      "related": [
+        "hotel-manager",
+        "entrepreneur"
+      ]
+    },
+    {
+      "slug": "lawyer",
+      "title": "Lawyer",
+      "cluster": "law-government",
+      "summary": "Advises people and companies on the law, drafts agreements, and argues cases in court.",
+      "work": [
+        "Research laws and past judgments",
+        "Draft contracts and legal notices",
+        "Represent clients in court or negotiations"
+      ],
+      "riasec": {
+        "R": 1,
+        "I": 5,
+        "A": 3,
+        "S": 5,
+        "E": 6,
+        "C": 4
+      },
+      "similar_onet": "Lawyers",
+      "skills": [
+        "Reading closely",
+        "Arguing a case",
+        "Writing precisely"
+      ],
+      "subjects": [
+        "English",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "llb5",
+          "label": "Five-year law degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CLAT, AILET or a university law test",
+              "detail": "CLAT is used by most National Law Universities."
+            },
+            {
+              "kind": "degree",
+              "label": "BA LLB / BBA LLB (integrated)",
+              "years": 5
+            },
+            {
+              "kind": "exam",
+              "label": "All India Bar Examination",
+              "detail": "Needed to practise in court."
+            },
+            {
+              "kind": "role",
+              "label": "Associate at a law firm or advocate"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "After any degree",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "University LLB entrance"
+          },
+          {
+            "kind": "degree",
+            "label": "LLB",
+            "years": 3
+          },
+          {
+            "kind": "exam",
+            "label": "All India Bar Examination"
+          },
+          {
+            "kind": "role",
+            "label": "Advocate"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "Consortium of National Law Universities (CLAT)",
+          "url": "https://consortiumofnlus.ac.in"
+        },
+        {
+          "name": "Bar Council of India (All India Bar Examination)"
+        }
+      ],
+      "related": [
+        "civil-servant",
+        "journalist",
+        "chartered-accountant"
+      ]
+    },
+    {
+      "slug": "civil-servant",
+      "title": "Civil servant (IAS, IPS, IFS…)",
+      "cluster": "law-government",
+      "summary": "Runs government at district, state or national level: law and order, development, diplomacy and policy.",
+      "work": [
+        "Manage a district's administration or a ministry's programme",
+        "Make decisions that affect thousands of people",
+        "Respond to crises and public complaints"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 4,
+        "A": 2,
+        "S": 5,
+        "E": 6,
+        "C": 5
+      },
+      "similar_onet": "General and Operations Managers (public sector)",
+      "skills": [
+        "Broad reading and current affairs",
+        "Decision-making",
+        "Writing and speaking"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "upsc",
+          "label": "Graduate, then UPSC",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "degree",
+              "label": "Any bachelor's degree",
+              "years": 3
+            },
+            {
+              "kind": "exam",
+              "label": "UPSC Civil Services Examination",
+              "detail": "Prelims, Mains and an interview. State PSCs run similar exams for state services."
+            },
+            {
+              "kind": "role",
+              "label": "Officer trainee"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "From any degree",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "UPSC Civil Services or your state PSC exam",
+            "detail": "Most candidates prepare for one to three years."
+          },
+          {
+            "kind": "role",
+            "label": "Officer trainee"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "Union Public Service Commission",
+          "url": "https://upsc.gov.in"
+        }
+      ],
+      "note": "Competition is intense. Many aspirants keep a second career plan alongside their preparation.",
+      "related": [
+        "lawyer",
+        "economist",
+        "armed-forces-officer",
+        "social-worker"
+      ]
+    },
+    {
+      "slug": "armed-forces-officer",
+      "title": "Armed forces officer",
+      "cluster": "defence-aviation",
+      "summary": "Leads soldiers, sailors or air warriors, and trains to protect the country in peace and war.",
+      "work": [
+        "Lead and train a unit",
+        "Plan operations and logistics",
+        "Serve in different parts of India and sometimes abroad"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 3,
+        "A": 1,
+        "S": 4,
+        "E": 5,
+        "C": 4
+      },
+      "similar_onet": "Military Officer Special and Tactical Operations Leaders",
+      "skills": [
+        "Physical fitness",
+        "Leadership",
+        "Discipline"
+      ],
+      "subjects": [
+        "Any stream (Physics and Maths for Navy and Air Force)"
+      ],
+      "routes": [
+        {
+          "id": "nda",
+          "label": "National Defence Academy",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "UPSC NDA exam and SSB interview",
+              "detail": "Army wing is open to all streams; Air Force and Navy need Physics and Maths."
+            },
+            {
+              "kind": "degree",
+              "label": "NDA training with a degree",
+              "years": 3
+            },
+            {
+              "kind": "course",
+              "label": "Training at the IMA, Naval or Air Force Academy",
+              "years": 1
+            },
+            {
+              "kind": "role",
+              "label": "Commissioned officer"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "After graduation",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "UPSC CDS, AFCAT or a technical entry, plus the SSB interview"
+          },
+          {
+            "kind": "course",
+            "label": "Officer training",
+            "years": 1.5
+          },
+          {
+            "kind": "role",
+            "label": "Commissioned officer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "Union Public Service Commission",
+          "url": "https://upsc.gov.in"
+        }
+      ],
+      "related": [
+        "commercial-pilot",
+        "civil-servant",
+        "mechanical-engineer"
+      ]
+    },
+    {
+      "slug": "commercial-pilot",
+      "title": "Commercial pilot",
+      "cluster": "defence-aviation",
+      "summary": "Flies passenger or cargo aircraft safely between cities and countries.",
+      "work": [
+        "Plan flights with weather and fuel data",
+        "Fly and monitor the aircraft with a co-pilot",
+        "Train regularly in simulators"
+      ],
+      "riasec": {
+        "R": 6,
+        "I": 4,
+        "A": 1,
+        "S": 3,
+        "E": 4,
+        "C": 5
+      },
+      "similar_onet": "Airline Pilots, Copilots, and Flight Engineers",
+      "skills": [
+        "Calm decisions under pressure",
+        "Physics and maths",
+        "Following checklists exactly"
+      ],
+      "subjects": [
+        "Physics",
+        "Maths"
+      ],
+      "routes": [
+        {
+          "id": "cpl",
+          "label": "Commercial Pilot Licence",
+          "after": "class_12",
+          "streams": [
+            "science_pcm",
+            "science_pcmb"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "DGCA medical and flying school entrance"
+            },
+            {
+              "kind": "course",
+              "label": "CPL training at a DGCA-approved flying school",
+              "detail": "Includes ground exams and flying hours.",
+              "years": 1.5
+            },
+            {
+              "kind": "course",
+              "label": "Type rating for a specific aircraft"
+            },
+            {
+              "kind": "role",
+              "label": "First officer (co-pilot)"
+            }
+          ],
+          "requirement": "Needs Physics and Maths in Class 12."
+        }
+      ],
+      "check_with": [
+        {
+          "name": "Directorate General of Civil Aviation",
+          "url": "https://www.dgca.gov.in"
+        }
+      ],
+      "note": "Flight training is expensive. Check the full cost and medical requirements before you start.",
+      "related": [
+        "armed-forces-officer",
+        "mechanical-engineer"
+      ]
+    },
+    {
+      "slug": "teacher",
+      "title": "Teacher",
+      "cluster": "education-social",
+      "summary": "Helps children and young people learn, think and grow, in schools, coaching centres or online.",
+      "work": [
+        "Plan and teach lessons",
+        "Check work and give feedback",
+        "Support students who are struggling"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 4,
+        "A": 4,
+        "S": 7,
+        "E": 4,
+        "C": 4
+      },
+      "similar_onet": "Secondary School Teachers",
+      "skills": [
+        "Explaining clearly",
+        "Patience",
+        "Knowing your subject well"
+      ],
+      "subjects": [
+        "Any stream; the subject you'd teach"
+      ],
+      "routes": [
+        {
+          "id": "bed",
+          "label": "Degree, then B.Ed",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "degree",
+              "label": "Bachelor's in the subject you want to teach",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "B.Ed",
+              "years": 2
+            },
+            {
+              "kind": "exam",
+              "label": "CTET or your state's TET"
+            },
+            {
+              "kind": "role",
+              "label": "School teacher"
+            }
+          ]
+        },
+        {
+          "id": "itep",
+          "label": "Integrated teacher education",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "NCET",
+              "detail": "Entrance for the four-year Integrated Teacher Education Programme."
+            },
+            {
+              "kind": "degree",
+              "label": "ITEP (BA B.Ed, B.Sc B.Ed or B.Com B.Ed)",
+              "years": 4
+            },
+            {
+              "kind": "exam",
+              "label": "CTET or your state's TET"
+            },
+            {
+              "kind": "role",
+              "label": "School teacher"
+            }
+          ]
+        }
+      ],
+      "check_with": [
+        {
+          "name": "National Council for Teacher Education",
+          "url": "https://ncte.gov.in"
+        },
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "clinical-psychologist",
+        "social-worker",
+        "research-scientist"
+      ]
+    },
+    {
+      "slug": "journalist",
+      "title": "Journalist",
+      "cluster": "media",
+      "summary": "Finds out what's happening, checks the facts, and tells the story in print, on screen or online.",
+      "work": [
+        "Report on events and interview people",
+        "Check facts and sources",
+        "Write, edit or present stories on deadline"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 5,
+        "A": 6,
+        "S": 5,
+        "E": 5,
+        "C": 3
+      },
+      "similar_onet": "News Analysts, Reporters, and Journalists",
+      "skills": [
+        "Writing",
+        "Curiosity about people",
+        "Checking facts"
+      ],
+      "subjects": [
+        "English or Hindi",
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "bjmc",
+          "label": "Journalism degree",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BA Journalism and Mass Communication",
+              "years": 3
+            },
+            {
+              "kind": "role",
+              "label": "Trainee reporter or content producer"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "After any degree",
+        "steps": [
+          {
+            "kind": "exam",
+            "label": "PG diploma entrance, such as IIMC's"
+          },
+          {
+            "kind": "course",
+            "label": "PG diploma in journalism",
+            "years": 1
+          },
+          {
+            "kind": "role",
+            "label": "Trainee reporter"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "marketing-manager",
+        "lawyer",
+        "animator"
+      ]
+    },
+    {
+      "slug": "social-worker",
+      "title": "Social worker",
+      "cluster": "education-social",
+      "summary": "Supports people and communities facing hardship, and works to fix the systems that cause it.",
+      "work": [
+        "Work with families, children or patients",
+        "Run community programmes for an NGO or CSR team",
+        "Connect people to government schemes"
+      ],
+      "riasec": {
+        "R": 2,
+        "I": 3,
+        "A": 3,
+        "S": 7,
+        "E": 5,
+        "C": 3
+      },
+      "similar_onet": "Child, Family, and School Social Workers",
+      "skills": [
+        "Empathy",
+        "Organising people",
+        "Knowing how schemes and systems work"
+      ],
+      "subjects": [
+        "Any stream"
+      ],
+      "routes": [
+        {
+          "id": "bsw",
+          "label": "Social work degrees",
+          "after": "class_12",
+          "streams": [
+            "any"
+          ],
+          "steps": [
+            {
+              "kind": "exam",
+              "label": "CUET-UG or college admission"
+            },
+            {
+              "kind": "degree",
+              "label": "BSW (Bachelor of Social Work)",
+              "years": 3
+            },
+            {
+              "kind": "degree",
+              "label": "MSW (common for senior roles)",
+              "years": 2
+            },
+            {
+              "kind": "role",
+              "label": "Programme officer at an NGO, hospital or CSR team"
+            }
+          ]
+        }
+      ],
+      "graduate_route": {
+        "label": "After any degree",
+        "steps": [
+          {
+            "kind": "degree",
+            "label": "MSW",
+            "years": 2
+          },
+          {
+            "kind": "role",
+            "label": "Social worker or programme officer"
+          }
+        ]
+      },
+      "check_with": [
+        {
+          "name": "National Testing Agency: JEE Main, NEET-UG, CUET-UG",
+          "url": "https://nta.ac.in"
+        }
+      ],
+      "related": [
+        "teacher",
+        "clinical-psychologist",
+        "civil-servant"
+      ]
+    }
+  ]
+}
