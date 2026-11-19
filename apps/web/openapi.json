@@ -23,6 +23,10 @@
       },
       "AssessmentOverview": {
         "properties": {
+          "can_extend": {
+            "title": "Can Extend",
+            "type": "boolean"
+          },
           "in_progress": {
             "anyOf": [
               {
@@ -43,6 +47,18 @@
               }
             ]
           },
+          "latest_session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The finished session behind `latest`; use it to extend.",
+            "title": "Latest Session Id"
+          },
           "standard_length": {
             "title": "Standard Length",
             "type": "integer"
@@ -55,6 +71,8 @@
         "required": [
           "in_progress",
           "latest",
+          "latest_session_id",
+          "can_extend",
           "standard_length",
           "total_items"
         ],

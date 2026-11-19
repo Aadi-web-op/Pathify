@@ -13,6 +13,7 @@ import { useMe, useSignOut } from "@/lib/session";
 
 const NAV = [
   { href: "/home", label: "Home" },
+  { href: "/results", label: "Results" },
   { href: "/ksarth", label: "Ksarth" },
   { href: "/settings", label: "Settings" },
 ];
@@ -40,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="grid min-h-dvh grid-rows-[auto_1fr]">
       <header className="gutter sticky top-0 z-20 border-b border-rule bg-paper/95 backdrop-blur-[2px] [top:env(safe-area-inset-top,0px)]">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4">
-          <Logo href="/home" />
+          <Logo href="/home" compactOnPhone />
           <nav aria-label="Main" className="flex items-center gap-1">
             {NAV.map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -50,12 +51,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={clsx(
-                    "relative rounded-md px-2.5 py-2 font-display text-[0.95rem] font-bold sm:px-3",
+                    "relative rounded-md px-2 py-2 font-display text-[0.95rem] font-bold sm:px-3",
                     active ? "text-ink" : "text-muted hover:text-ink",
                   )}
                 >
                   {item.label}
-                  {active && <span className="absolute inset-x-2.5 -bottom-[13px] h-1 rounded-full bg-sign sm:inset-x-3" />}
+                  {active && <span className="absolute inset-x-2 -bottom-[13px] h-1 rounded-full bg-sign sm:inset-x-3" />}
                 </Link>
               );
             })}

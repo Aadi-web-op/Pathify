@@ -1,8 +1,7 @@
-import Link from "next/link";
-
+import { PublicFooter, PublicHeader } from "@/components/app/public-header";
 import { HeroMap } from "@/components/brand/hero-map";
-import { Logo } from "@/components/brand/logo";
 import { ButtonLink } from "@/components/ui/button";
+import { CAREERS } from "@/lib/careers";
 
 const DECISIONS = [
   {
@@ -25,16 +24,28 @@ const DECISIONS = [
 const AVAILABLE = [
   { title: "Your profile in two minutes", body: "Tell Pathify your class, board, stream or degree, and what you want help with." },
   {
+    title: "Interest assessment",
+    body: "Rate 30 everyday activities. Based on Holland's six interest types, with an honest note on how sure the result is.",
+  },
+  {
+    title: "Your career map",
+    body: "Your best-fit careers drawn as routes from where you are, with why each one fits and which routes your stream allows.",
+  },
+  {
+    title: `A library of ${CAREERS.length} careers`,
+    body: "What the work is like and the exams, degrees and steps to get there. Open to everyone, no account needed.",
+  },
+  {
     title: "Ksarth, your guide",
-    body: "Ask anything about streams, exams, degrees or jobs. Ksarth knows where you are and says when it isn't sure.",
+    body: "Ask anything about streams, exams, degrees or jobs. Ksarth knows your profile and results, and says when it isn't sure.",
   },
 ];
 
 const NEXT = [
-  { title: "Interest assessment", body: "A short, adaptive test based on the Holland (RIASEC) interest model." },
-  { title: "Your career map", body: "Your best-fit careers drawn as routes, with every step from where you are now." },
   { title: "Job tryouts", body: "Ten-minute tasks from real jobs, so you can feel the work before you choose it." },
   { title: "Parent report", body: "A summary in English and Hindi to help your family talk the decision through." },
+  { title: "Hindi interface", body: "The whole app in Hindi, not just Ksarth's replies." },
+  { title: "Progress on your route", body: "Track the steps on your chosen route and get reminders for exam dates." },
 ];
 
 const RULES = [
@@ -47,19 +58,7 @@ const RULES = [
 export default function LandingPage() {
   return (
     <>
-      <header className="gutter">
-        <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-4">
-          <Logo />
-          <nav className="flex items-center gap-2" aria-label="Account">
-            <ButtonLink href="/signin" variant="ghost" size="sm" className="sm:h-11 sm:px-4">
-              Sign in
-            </ButtonLink>
-            <ButtonLink href="/signup" size="sm" className="sm:h-11 sm:px-5">
-              Create account
-            </ButtonLink>
-          </nav>
-        </div>
-      </header>
+      <PublicHeader />
 
       <main id="main">
         <section className="gutter pb-10 pt-10 sm:pt-16">
@@ -77,8 +76,8 @@ export default function LandingPage() {
                 <ButtonLink href="/signup" size="lg">
                   Create your free account
                 </ButtonLink>
-                <ButtonLink href="/signin" size="lg" variant="secondary">
-                  Sign in
+                <ButtonLink href="/careers" size="lg" variant="secondary">
+                  Explore careers
                 </ButtonLink>
               </div>
               <p className="text-sm text-muted">Free for students. Built around CBSE, ICSE and state boards.</p>
@@ -191,19 +190,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="gutter border-t border-rule py-8 text-sm text-muted">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-          <span>Pathify · Career guidance for Indian students</span>
-          <nav className="flex gap-5" aria-label="Footer">
-            <Link href="/signin" className="hover:text-ink">
-              Sign in
-            </Link>
-            <Link href="/signup" className="hover:text-ink">
-              Create account
-            </Link>
-          </nav>
-        </div>
-      </footer>
+      <PublicFooter />
     </>
   );
 }

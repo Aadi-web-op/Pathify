@@ -78,6 +78,8 @@ class SessionOut(BaseModel):
 class AssessmentOverview(BaseModel):
     in_progress: SessionOut | None
     latest: ResultOut | None
+    latest_session_id: str | None = Field(description="The finished session behind `latest`; use it to extend.")
+    can_extend: bool
     standard_length: int
     total_items: int
 

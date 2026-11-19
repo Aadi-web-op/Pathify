@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // Set by the API next to the httpOnly tokens. It holds no secret; it only says a session exists.
 const SESSION_HINT = "pathify_session";
 
-const APP_ROUTES = ["/home", "/ksarth", "/settings", "/onboarding"];
+const APP_ROUTES = ["/home", "/ksarth", "/settings", "/onboarding", "/assessment", "/results"];
 const GUEST_ROUTES = ["/signin", "/signup"];
 
 export function middleware(request: NextRequest) {
@@ -26,5 +26,14 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/home/:path*", "/ksarth/:path*", "/settings/:path*", "/onboarding/:path*", "/signin", "/signup"],
+  matcher: [
+    "/home/:path*",
+    "/ksarth/:path*",
+    "/settings/:path*",
+    "/onboarding/:path*",
+    "/assessment/:path*",
+    "/results/:path*",
+    "/signin",
+    "/signup",
+  ],
 };

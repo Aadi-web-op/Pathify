@@ -4,7 +4,7 @@ import type { Station } from "@/lib/profile";
 
 type Props = {
   stations: Station[];
-  /** Index of the station the student is at. Earlier stations show as passed. */
+  /** Index of the station the student is at. Earlier stations show as passed. Use -1 for a plan with no position. */
   current?: number;
   className?: string;
   label: string;
@@ -18,7 +18,7 @@ export function RouteLine({ stations, current = 0, className, label }: Props) {
   return (
     <ol aria-label={label} className={clsx("grid gap-0 sm:flex sm:gap-0", className)}>
       {stations.map((station, index) => {
-        const state = index < current ? "passed" : index === current ? "here" : "ahead";
+        const state = current < 0 ? "plan" : index < current ? "passed" : index === current ? "here" : "ahead";
         const last = index === stations.length - 1;
         return (
           <li
@@ -31,7 +31,7 @@ export function RouteLine({ stations, current = 0, className, label }: Props) {
                 aria-hidden="true"
                 className={clsx(
                   "absolute left-[12px] top-[22px] h-[calc(100%-14px)] w-1 rounded-full sm:left-[22px] sm:top-[12px] sm:h-1 sm:w-[calc(100%-14px)]",
-                  state === "ahead" ? "bg-rule-strong" : "bg-sign",
+                  state === "ahead" ? "bg-rule-strong" : state === "plan" ? "bg-ink/35" : "bg-sign",
                 )}
               />
             )}
@@ -42,6 +42,7 @@ export function RouteLine({ stations, current = 0, className, label }: Props) {
                 state === "here" ? "size-7 border-sign" : "ml-[3px] mt-[3px] size-[22px] sm:ml-0",
                 state === "passed" && "border-sign bg-sign",
                 state === "ahead" && "border-rule-strong",
+                state === "plan" && "border-ink",
               )}
             >
               {state === "here" && <span className="size-2.5 rounded-full bg-sign" />}

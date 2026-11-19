@@ -3,7 +3,8 @@
 import Link from "next/link";
 
 import { RouteLine } from "@/components/brand/route-line";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink, Spinner } from "@/components/ui/button";
+import { useMatches, useOverview } from "@/lib/assessment";
 import type { StudentProfile } from "@/lib/api";
 import { BOARDS, GOALS, routeAhead, stageLabel } from "@/lib/profile";
 import { useMe } from "@/lib/session";
@@ -87,16 +88,7 @@ export default function HomePage() {
         </section>
 
         <div className="grid content-start gap-6">
-          <section aria-labelledby="coming" className="grid gap-3 rounded-[14px] border border-dashed border-rule-strong p-5 sm:p-6">
-            <p className="font-display text-xs font-bold uppercase tracking-[0.1em] text-muted">In development</p>
-            <h2 id="coming" className="text-lg font-bold">
-              Interest assessment and career map
-            </h2>
-            <p className="text-sm text-muted">
-              A short test based on the Holland (RIASEC) interest model, then your best-fit careers drawn as routes from
-              where you are. This is the next part we&apos;re building.
-            </p>
-          </section>
+          <AssessmentCard />
 
           <section aria-labelledby="profile" className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
             <div className="flex items-baseline justify-between gap-2">
@@ -127,5 +119,66 @@ function Row({ term, value }: { term: string; value: string }) {
       <dt className="text-muted">{term}</dt>
       <dd className="min-w-0">{value}</dd>
     </div>
+  );
+}
+
+function AssessmentCard() {
+  const overview = useOverview();
+  const hasResult = Boolean(overview.data?.latest);
+  const matches = useMatches(hasResult);
+
+  if (overview.isPending || (hasResult && matches.isPending)) {
+    return (
+      <section className="grid gap-3 rounded-[14px] border border-rule p-5 sm:p-6">
+        <p className="flex items-center gap-2 text-muted">
+          <Spinner /> Loading your results…
+        </p>
+      </section>
+    );
+  }
+
+  if (hasResult && matches.data) {
+    return (
+      <section aria-labelledby="matches" className="grid gap-4 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+        <div className="flex items-baseline justify-between gap-2">
+          <h2 id="matches" className="text-lg font-bold">
+            Your top matches
+          </h2>
+          <Link href="/results" className="text-sm font-semibold text-sign underline underline-offset-4">
+            See your map
+          </Link>
+        </div>
+        <ol className="grid gap-2">
+          {matches.data.matches.slice(0, 3).map((m, i) => (
+            <li key={m.slug} className="flex items-center justify-between gap-3">
+              <span className="flex min-w-0 items-center gap-2.5">
+                <span className="font-mono text-sm text-muted">{i + 1}</span>
+                <Link href={`/careers/${m.slug}`} className="truncate font-display font-bold hover:underline">
+                  {m.title}
+                </Link>
+              </span>
+              <span className="tabular shrink-0 text-sm text-muted">{m.fit_label}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    );
+  }
+
+  const inProgress = overview.data?.in_progress;
+  return (
+    <section aria-labelledby="assessment" className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+      <p className="eyebrow">{inProgress ? "Halfway there" : "5 minutes"}</p>
+      <h2 id="assessment" className="text-lg font-bold">
+        Find careers that fit what you enjoy
+      </h2>
+      <p className="text-sm text-muted">
+        Rate {overview.data?.standard_length ?? 30} everyday activities. You&apos;ll get your best-fit careers drawn as
+        routes from where you are now.
+      </p>
+      <ButtonLink href="/assessment" className="justify-self-start">
+        {inProgress ? `Continue (${inProgress.answered} of ${inProgress.target})` : "Take the interest assessment"}
+      </ButtonLink>
+    </section>
   );
 }

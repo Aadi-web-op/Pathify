@@ -174,7 +174,8 @@ def match(scores: dict[str, float], catalog: Catalog, profile: StudentProfile | 
             if reason is None:
                 continue
             (reasons if w > 0 else watch).append(reason)
-        reasons.sort(key=lambda r: -r.weight)
+        # Lead with what the student enjoys; "you both avoid X" is a weaker reason, so it comes after.
+        reasons.sort(key=lambda r: (r.kind != "shared_strength", -r.weight))
         watch.sort(key=lambda r: r.weight)
         results.append(
             Match(

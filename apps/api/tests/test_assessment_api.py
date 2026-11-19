@@ -27,7 +27,14 @@ async def start(client: httpx.AsyncClient, restart: bool = False) -> dict:
 
 async def test_overview_before_starting(signed_in):
     body = (await signed_in.get("/api/assessment")).json()
-    assert body == {"in_progress": None, "latest": None, "standard_length": 30, "total_items": 48}
+    assert body == {
+        "in_progress": None,
+        "latest": None,
+        "latest_session_id": None,
+        "can_extend": False,
+        "standard_length": 30,
+        "total_items": 48,
+    }
 
 
 async def test_full_flow_to_a_result(signed_in):
@@ -88,6 +95,8 @@ async def test_back_undoes_the_last_answer(signed_in):
 
 async def test_extend_keeps_the_result_until_the_longer_test_is_done(signed_in):
     done = await finish(signed_in, await start(signed_in))
+    before = (await signed_in.get("/api/assessment")).json()
+    assert before["can_extend"] is True and before["latest_session_id"] == done["id"]
     extended = (await signed_in.post(f"/api/assessment/{done['id']}/extend")).json()
     assert extended["status"] == "in_progress" and extended["target"] == 48
     assert extended["question"]["number"] == 31
@@ -95,6 +104,7 @@ async def test_extend_keeps_the_result_until_the_longer_test_is_done(signed_in):
     assert extended["can_go_back"] is False
     overview = (await signed_in.get("/api/assessment")).json()
     assert overview["latest"]["answered"] == 30
+    assert overview["latest_session_id"] == done["id"] and overview["can_extend"] is False
     final = await finish(signed_in, extended)
     assert final["result"]["answered"] == 48 and final["can_extend"] is False
 

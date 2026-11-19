@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.catalog import item_bank
 from app.models import AssessmentSession, User
-from app.models.assessment import StoredAnswer, StoredResult, latest_result
+from app.models.assessment import StoredAnswer, StoredResult
 from app.models.user import utcnow
 from app.schemas.assessment import (
     AnswerIn,
@@ -69,12 +69,19 @@ async def _in_progress(user: User) -> AssessmentSession | None:
 @router.get("", response_model=AssessmentOverview)
 async def overview(user: CurrentUser) -> AssessmentOverview:
     current = await _in_progress(user)
-    latest = await latest_result(user.id)
+    finished = (
+        await AssessmentSession.find(AssessmentSession.user_id == user.id, AssessmentSession.result != None)  # noqa: E711
+        .sort(-AssessmentSession.updated_at)
+        .first_or_none()
+    )
+    total = len(item_bank().items)
     return AssessmentOverview(
         in_progress=_out(current) if current else None,
-        latest=ResultOut.from_stored(latest) if latest else None,
+        latest=ResultOut.from_stored(finished.result) if finished and finished.result else None,
+        latest_session_id=str(finished.id) if finished else None,
+        can_extend=bool(finished and finished.status == "completed" and finished.target < total),
         standard_length=engine.STANDARD_LENGTH,
-        total_items=len(item_bank().items),
+        total_items=total,
     )
 
 

@@ -372,8 +372,15 @@ export interface components {
         };
         /** AssessmentOverview */
         AssessmentOverview: {
+            /** Can Extend */
+            can_extend: boolean;
             in_progress: components["schemas"]["SessionOut"] | null;
             latest: components["schemas"]["ResultOut"] | null;
+            /**
+             * Latest Session Id
+             * @description The finished session behind `latest`; use it to extend.
+             */
+            latest_session_id: string | null;
             /** Standard Length */
             standard_length: number;
             /** Total Items */

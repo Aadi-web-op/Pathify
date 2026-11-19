@@ -13,11 +13,13 @@ export function Mark({ className }: { className?: string }) {
   );
 }
 
-export function Logo({ href = "/", className }: { href?: string; className?: string }) {
+export function Logo({ href = "/", className, compactOnPhone }: { href?: string; className?: string; compactOnPhone?: boolean }) {
   return (
     <Link href={href} className={clsx("inline-flex items-center gap-2.5 rounded-md", className)} aria-label="Pathify home">
       <Mark className="size-8" />
-      <span className="font-display text-[1.35rem] font-extrabold tracking-[-0.01em]">Pathify</span>
+      <span className={clsx("font-display text-[1.35rem] font-extrabold tracking-[-0.01em]", compactOnPhone && "max-sm:hidden")}>
+        Pathify
+      </span>
     </Link>
   );
 }
