@@ -1,15 +1,19 @@
+# Build from the repository root so the shared data/ folder is available:
+#   docker build -f apps/api/Dockerfile .
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
-WORKDIR /app
+# Mirror the repo layout so the app finds ../../data like it does in development.
+WORKDIR /repo/apps/api
 
-COPY requirements.txt .
+COPY apps/api/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY app ./app
+COPY data /repo/data
+COPY apps/api/app ./app
 
 RUN useradd --create-home --uid 10001 pathify
 USER pathify
