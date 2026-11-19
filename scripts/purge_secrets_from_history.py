@@ -38,9 +38,9 @@ def git(*args: str, binary: bool = False) -> str | bytes:
     return out.stdout if binary else out.stdout.decode()
 
 
-def history_blobs() -> list[tuple[str, str]]:
+def history_blobs(*refs: str) -> list[tuple[str, str]]:
     blobs = []
-    for line in str(git("rev-list", "--all", "--objects")).splitlines():
+    for line in str(git("rev-list", "--objects", *(refs or ("--all",)))).splitlines():
         sha, _, path = line.partition(" ")
         if path and str(git("cat-file", "-t", sha)).strip() == "blob":
             blobs.append((sha, path))
@@ -117,7 +117,9 @@ def main() -> int:
     # This only updates refs/remotes/origin/*; local branches keep the clean history.
     subprocess.run(["git", "fetch", "origin"], check=False)
 
-    problems = remaining(history_blobs(), secrets)
+    # Check only local branches and tags: the re-fetched remote-tracking refs still hold
+    # the old history until the force-push replaces it.
+    problems = remaining(history_blobs("--branches", "--tags"), secrets)
     if problems:
         print("Rewrite finished but these remain:", *problems, sep="\n  ")
         return 1
