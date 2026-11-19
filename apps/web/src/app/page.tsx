@@ -36,17 +36,25 @@ const AVAILABLE = [
     body: "What the work is like and the exams, degrees and steps to get there. Open to everyone, no account needed.",
   },
   {
+    title: "Job tryouts",
+    body: "Ten-minute tasks from real jobs, with feedback on your answers, so you can feel the work before you choose it.",
+  },
+  {
     title: "Ksarth, your guide",
-    body: "Ask anything about streams, exams, degrees or jobs. Ksarth knows your profile and results, and says when it isn't sure.",
+    body: "Ask anything about streams, exams, degrees or jobs. Answers point to the career guides they come from.",
+  },
+  {
+    title: "Family report",
+    body: "A summary in English or Hindi to talk the decision through at home, with a private link you control.",
   },
 ];
 
 const NEXT = [
-  { title: "Job tryouts", body: "Ten-minute tasks from real jobs, so you can feel the work before you choose it." },
-  { title: "Parent report", body: "A summary in English and Hindi to help your family talk the decision through." },
-  { title: "Hindi interface", body: "The whole app in Hindi, not just Ksarth's replies." },
+  { title: "Hindi interface", body: "The whole app in Hindi, not just Ksarth's replies and the family report." },
   { title: "Progress on your route", body: "Track the steps on your chosen route and get reminders for exam dates." },
-];
+  { title: "More job tryouts", body: "Tryouts for every career in the library, written with people who do the work." },
+  { title: "School counsellor view", body: "A class-level picture for counsellors, so they know who needs a conversation." },
+]
 
 const RULES = [
   { title: "No made-up numbers", body: "Salaries, cut-offs and fees come with a source and a date, or we don't show them." },

@@ -9,6 +9,8 @@ Career guidance for Indian students from Class 9 to college. Pathify helps a stu
 | Assessment | Career guide |
 | --- | --- |
 | ![Assessment: one activity at a time, five answers](docs/screenshots/assessment.png) | ![Career guide: routes in India with exams, degrees and durations](docs/screenshots/career-guide.png) |
+| **Job tryout feedback** | **Family report in Hindi** |
+| ![Tryout feedback: each task marked, with the reasoning](docs/screenshots/tryout-feedback.png) | ![Family report in Hindi for parents](docs/screenshots/family-report-hindi.png) |
 | **Onboarding** | **Home** |
 | ![Onboarding: Class 10 student picks class and board](docs/screenshots/onboarding.png) | ![Home: the student's route ahead and Ksarth prompts](docs/screenshots/home.png) |
 
@@ -20,10 +22,12 @@ Career guidance for Indian students from Class 9 to college. Pathify helps a stu
 - **Interest assessment**: 30 everyday activities (48 if the student wants a sharper result), scored on Holland's six interest types (RIASEC). Students can go back, leave and resume.
 - **Results**: the student's top three careers drawn as metro lines from where they are now, through each real step (stream, entrance exam, degree) to the career. Every match explains why it fits, what to keep in mind, and whether the student's stream allows the route. The page also says how settled the result is.
 - **Career library**: a public, statically generated guide to 38 careers across health, engineering, design, law, business, science, public service and skilled trades, filterable by stream. No account needed, so it can be found through search.
-- **Ksarth**, an AI guide that knows the student's stage, stream, goals, interest results and top matches. Replies stream in, history is saved, and Ksarth can answer in Hindi.
+- **Job tryouts**: six 10-minute tasks taken from real jobs (data analyst, doctor, UX designer, lawyer, teacher, civil engineer), covering all six interest types. Students get feedback on each answer, see how a professional would approach it, then rate how much they enjoyed it. That rating shows up next to the career in their results and in the family report.
+- **Ksarth**, an AI guide that knows the student's stage, stream, goals, interest results and top matches. Its answers draw on Pathify's career guides and link to the ones they used. Replies stream in, history is saved, and Ksarth can answer in Hindi.
+- **Family report** in English or Hindi: what the student enjoys, their top three careers with reasons and routes, how their tryouts went, and questions to talk through at home. It can be printed or saved as a PDF, or shared through a private link that expires after 30 days and can be turned off.
 - **Settings**: name, light / dark / system theme, sign out, and full account deletion.
 
-Coming next: job tryouts (short tasks from real jobs), a parent report in English and Hindi, a Hindi interface, and progress tracking along a chosen route.
+Coming next: a full Hindi interface, tryouts for every career in the library, progress tracking along a chosen route, and a class-level view for school counsellors.
 
 ## How matching works, and how well
 
@@ -46,6 +50,26 @@ Even all 48 statements find only about 4 of the 5 true top careers, because neig
 **The adaptive test we didn't ship.** The first design picked each next question adaptively, and later tried stopping once the career list stopped moving. Measured against a balanced test of the same length, neither helped (70.6% vs 70.5% top-5 agreement over 1,000 simulated students). With statements that are interchangeable within a type and not yet calibrated on real students, accuracy depends on how many questions are answered, not which. So the shipped test is a balanced 30, with an optional 18 more. Adaptive selection becomes worthwhile once real responses let us calibrate each statement (item response theory).
 
 **Confidence.** The result is labelled high, medium or low by nudging each score up and down by its own uncertainty and counting how many top-5 careers change. In simulation this tracks real accuracy: a list that doesn't move finds about 95% of the true top five; one that moves by two careers finds about 61%. A test checks that the labels stay in that order.
+
+## Job tryouts and how they're graded
+
+Objective tasks (single choice, multi-select, numbers with a tolerance) are marked exactly. Multi-select gets half credit only if every chosen option is right.
+
+Written answers are graded by the model against the task's published criteria, with structured JSON output. The model returns a verdict per criterion (met / partly / missed) with a reason, plus two or three sentences of feedback. **The server computes the points from the verdicts**, so the model can't be talked into "full marks". The student's answer is sent inside `<answer>` tags with any fake closing tag stripped, the prompt tells the model to treat it as data, and phrases that try to instruct the grader are flagged. Answers under five words skip the model. Malformed output is retried once and otherwise left ungraded, and with no AI key, written answers are marked "not graded" instead of getting an invented score.
+
+`evals/grader_cases.json` holds 20 hand-labelled answers: a strong, a partial and a weak one for each written task, plus two injection attempts. `scripts/eval_grader.py` runs the real model against them and fails if exact agreement is below 70%, agreement within one step is below 95%, or an injection attempt scores above 0.25. CI runs it whenever the repository has a `GEMINI_API_KEY` secret.
+
+## How Ksarth stays grounded
+
+Before each reply, a BM25 search over the career library (titles, the names students use such as "MBBS", "CA" or "UPSC", day-to-day work, routes, exams) picks up to three relevant guides. Class numbers and words that appear in every route ("exam", "stream", "college") are ignored, so a vague question finds nothing instead of noise. When a question names no career ("which exams fit my stream?"), the student's own top matches are used instead.
+
+The guides go into the prompt as numbered notes, and the model is asked to cite them like [1]. After the reply, the server removes any citation number that doesn't point at a note and saves the rest as links under the reply. In offline mode Ksarth still lists the guides that look related.
+
+## Sharing the family report safely
+
+The report includes the student's first name only, never an email or contact details. Each student has at most one active link, made of a 32-character random token. It expires after 30 days, a new link replaces the old one, and the student can turn it off at any time. Deleting the account deletes the link. The public endpoint is rate-limited and sends `Cache-Control: no-store` and `X-Robots-Tag: noindex`, and the page is marked `noindex` with `no-referrer`.
+
+Every heading, reason, question and note exists in English and Hindi, and a test checks that both languages have the same keys and the same placeholders. Exam and degree names stay in English in both, as they appear on official forms.
 
 **Where the career data comes from.** `data/careers.json` is written by hand: routes, entrance exams, degrees and typical durations in India, plus the official body to check with. Interest profiles are Pathify's estimates on a 1–7 scale, guided by O*NET's ratings for the similar U.S. occupation named on each career. The catalog deliberately has no salaries or cut-offs, because we can't source and date them yet. A test fails if one slips in. Replacing the estimates with O*NET's published interest data (CC BY 4.0) is a planned improvement.
 
@@ -144,7 +168,7 @@ The API reads `X-Forwarded-For` for rate limiting, so keep it reachable only thr
 cd apps/api && .venv/bin/pytest
 ```
 
-95 tests run against a real MongoDB (set `TEST_DATABASE_URL` if it isn't on localhost). They cover sign-up, sign-in, refresh-token reuse, OAuth state, origin checks, rate limits, profile validation, account deletion, Ksarth streaming, the Gemini client, the career data, scoring, matching and explanations, stream rules, the assessment flow, and the simulated accuracy figures quoted above.
+139 tests run against a real MongoDB (set `TEST_DATABASE_URL` if it isn't on localhost). They cover sign-up, sign-in, refresh-token reuse, OAuth state, origin checks, rate limits, profile validation, account deletion, Ksarth streaming, the Gemini client, the career data, scoring, matching and explanations, stream rules, the assessment flow, the simulated accuracy figures quoted above, tryout marking and the grader's contract with the model, retrieval and citations, and the family report and its share links.
 
 ```bash
 cd apps/api && .venv/bin/python -m scripts.simulate_assessment 2000
@@ -158,7 +182,7 @@ cd apps/web && npm run lint && npm run typecheck && npm run build
 cd apps/web && npx playwright test
 ```
 
-The end-to-end suite runs against the full stack on a desktop and a phone viewport. It walks through sign-up, onboarding, Ksarth, theme, sign-out, sign-in and account deletion; takes the full assessment as a Class 11 Commerce student, including going back and resuming; checks the results map, explanations and stream rules; and browses the public career library. It also checks that model output can't inject HTML, that an expired access token refreshes silently, and that no page scrolls sideways.
+The end-to-end suite runs against the full stack on a desktop, a 412px phone and a 360px phone. It walks through sign-up, onboarding, Ksarth, theme, sign-out, sign-in and account deletion; takes the full assessment as a Class 11 Commerce student, including going back and resuming; checks the results map, explanations and stream rules; browses the public career library; takes a job tryout and reflects on it; follows Ksarth's sources; and opens the family report in both languages, shares it, opens the link signed out, and checks it stops working once turned off. It also checks that model output can't inject HTML, that an expired access token refreshes silently, and that no page scrolls sideways.
 
 CI (`.github/workflows/ci.yml`) runs all of the above on every pull request.
 

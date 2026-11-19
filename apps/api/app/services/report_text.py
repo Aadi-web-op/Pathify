@@ -131,7 +131,9 @@ REASONS: dict[Lang, dict[str, str]] = {
     },
     "hi": {
         "shared_strength": "{name} को {activity} पसंद है, और इस करियर में यह बहुत होता है।",
-        "shared_dislike": "इसमें {activity} की ज़्यादा ज़रूरत नहीं होती, जो {name} को कम पसंद है।",
+        # No postposition straight after {activity}: the phrases end in infinitives (करना), which would need
+        # their oblique form (करने) before की.
+        "shared_dislike": "इसमें ज़्यादा {activity} शामिल नहीं होता, जो {name} को कम पसंद है।",
         "career_needs_more": "इसमें {activity} बहुत होता है, जिसे {name} ने कम पसंद किया।",
         "career_uses_less": "{name} को {activity} पसंद है, लेकिन इस करियर में यह कम होता है।",
     },

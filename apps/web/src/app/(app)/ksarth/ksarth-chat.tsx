@@ -2,6 +2,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
@@ -164,7 +165,7 @@ export function KsarthChat() {
           </div>
         )}
         {messages.map((message) => (
-          <Bubble key={message.id} role={message.role} content={message.content} />
+          <Bubble key={message.id} role={message.role} content={message.content} sources={message.sources} />
         ))}
         {showPendingQuestion && <Bubble role="user" content={pending.question} />}
         {pending && (
@@ -177,7 +178,7 @@ export function KsarthChat() {
 
       <form
         onSubmit={submit}
-        className="sticky bottom-0 -mx-4 grid gap-2 border-t border-rule bg-paper px-4 pb-[max(16px,env(safe-area-inset-bottom,0px))] pt-4 sm:mx-0 sm:px-0"
+        className="sticky bottom-0 -mx-4 grid gap-2 border-t border-rule bg-paper px-4 pb-[max(16px,env(safe-area-inset-bottom,0px))] pt-4 max-sm:bottom-[calc(62px+env(safe-area-inset-bottom,0px))] max-sm:pb-4 sm:mx-0 sm:px-0"
       >
         <label htmlFor="ksarth-input" className="sr-only">
           Message Ksarth
@@ -216,11 +217,13 @@ function Bubble({
   content,
   thinking,
   streaming,
+  sources,
 }: {
   role: "user" | "assistant";
   content: string;
   thinking?: boolean;
   streaming?: boolean;
+  sources?: KsarthMessage["sources"];
 }) {
   if (role === "user") {
     return (
@@ -246,6 +249,24 @@ function Bubble({
         ) : (
           <div className="prose-ksarth">
             <Markdown>{content}</Markdown>
+          </div>
+        )}
+        {sources && sources.length > 0 && (
+          <div className="mt-3 border-t border-rule pt-2.5">
+            <p className="font-display text-xs font-bold uppercase tracking-[0.08em] text-muted">From Pathify&apos;s career guides</p>
+            <ul className="mt-1.5 flex flex-wrap gap-2">
+              {sources.map((s) => (
+                <li key={s.n}>
+                  <Link
+                    href={`/careers/${s.slug}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-rule-strong px-2.5 py-0.5 text-sm hover:border-sign hover:text-sign"
+                  >
+                    <span className="font-mono text-xs text-muted">[{s.n}]</span>
+                    {s.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>

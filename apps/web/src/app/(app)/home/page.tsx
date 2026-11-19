@@ -161,6 +161,14 @@ function AssessmentCard() {
             </li>
           ))}
         </ol>
+        <div className="flex flex-wrap gap-x-5 gap-y-1 border-t border-rule pt-3 text-sm">
+          <Link href="/tryouts" className="font-semibold text-sign underline underline-offset-4">
+            Try a job
+          </Link>
+          <Link href="/report" className="font-semibold text-sign underline underline-offset-4">
+            Family report
+          </Link>
+        </div>
       </section>
     );
   }

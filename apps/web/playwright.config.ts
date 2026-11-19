@@ -18,5 +18,7 @@ export default defineConfig({
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "phone", use: { ...devices["Pixel 7"] } },
+    // Many students use smaller Android phones; 360px is a common width in India.
+    { name: "small-phone", use: { ...devices["Galaxy S9+"], viewport: { width: 360, height: 740 } } },
   ],
 });

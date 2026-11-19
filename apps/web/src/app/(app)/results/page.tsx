@@ -160,6 +160,18 @@ export default function ResultsPage() {
         </section>
       )}
 
+      <section aria-labelledby="family" className="grid gap-3 rounded-[14px] border-2 border-sign bg-surface p-5 sm:flex sm:items-center sm:justify-between sm:p-6">
+        <div className="grid gap-1">
+          <h2 id="family" className="text-xl font-extrabold">
+            Talk it through at home
+          </h2>
+          <p className="text-muted">A one-page report for your parents or guardian, in English or Hindi, with questions to discuss.</p>
+        </div>
+        <ButtonLink href="/report" className="justify-self-start">
+          Open the family report
+        </ButtonLink>
+      </section>
+
       <details className="group rounded-[14px] border border-rule p-5 sm:p-6">
         <summary className="cursor-pointer font-display text-lg font-bold">How we work this out</summary>
         <div className="mt-4 grid max-w-[68ch] gap-3 text-muted">
@@ -312,6 +324,26 @@ function MatchCard({ match, index, profile }: { match: Match; index: number; pro
           </p>
         )}
       </div>
+
+      {match.tryout && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-sunk px-4 py-3">
+          <p className="text-[0.95rem]">
+            {match.tryout.enjoyment ? (
+              <>
+                You tried <span className="font-semibold">{match.tryout.title}</span> and rated it{" "}
+                <span className="font-semibold">{match.tryout.enjoyment} of 5</span>.
+              </>
+            ) : (
+              <>
+                Feel the work: <span className="font-semibold">{match.tryout.title}</span>, about {match.tryout.minutes} minutes.
+              </>
+            )}
+          </p>
+          <ButtonLink href={`/tryouts/${match.tryout.slug}`} size="sm" variant={match.tryout.enjoyment ? "ghost" : "primary"}>
+            {match.tryout.enjoyment ? "See it again" : "Try it"}
+          </ButtonLink>
+        </div>
+      )}
 
       <footer className="flex flex-wrap gap-x-6 gap-y-2 border-t border-rule pt-4">
         <Link href={`/careers/${match.slug}`} className="font-semibold text-sign underline underline-offset-4">

@@ -228,3 +228,33 @@
   padding: 0.35em 0.6em;
   text-align: left;
 }
+
+/* Printing (the family report): paper colours, no app chrome, no split cards. */
+@media print {
+  :root,
+  :root:not([data-theme="light"]),
+  :root[data-theme="dark"] {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --surface-sunk: #f1f3ef;
+    --ink: #111111;
+    --muted: #444444;
+    --rule: #cccccc;
+    --sign: #0d6b4e;
+    --sign-tint: #e8f2ec;
+    color-scheme: light;
+  }
+  body {
+    font-size: 11pt;
+  }
+  header.sticky,
+  nav[aria-label="Main"] {
+    display: none !important;
+  }
+  .report-block {
+    break-inside: avoid;
+  }
+  a {
+    text-decoration: none;
+  }
+}
