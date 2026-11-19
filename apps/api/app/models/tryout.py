@@ -49,3 +49,11 @@ class TryoutAttempt(Document):
     class Settings:
         name = "tryout_attempts"
         indexes = [IndexModel([("user_id", ASCENDING), ("created_at", DESCENDING)])]
+
+
+async def latest_attempts(user_id: PydanticObjectId) -> dict[str, TryoutAttempt]:
+    """The most recent attempt per tryout."""
+    latest: dict[str, TryoutAttempt] = {}
+    for a in await TryoutAttempt.find(TryoutAttempt.user_id == user_id).sort(-TryoutAttempt.created_at).to_list():
+        latest.setdefault(a.tryout_slug, a)
+    return latest

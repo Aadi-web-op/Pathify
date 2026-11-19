@@ -5,8 +5,10 @@
     {
       "slug": "software-engineer",
       "title": "Software engineer",
+      "title_hi": "सॉफ़्टवेयर इंजीनियर",
       "cluster": "technology",
       "summary": "Designs, writes and maintains the code behind apps, websites and the systems that run them.",
+      "summary_hi": "ऐप, वेबसाइट और उन्हें चलाने वाले सिस्टम का कोड डिज़ाइन करते, लिखते और सँभालते हैं।",
       "work": [
         "Turn a feature idea into working code",
         "Track down and fix bugs",
@@ -123,8 +125,10 @@
     {
       "slug": "data-scientist",
       "title": "Data scientist",
+      "title_hi": "डेटा साइंटिस्ट",
       "cluster": "technology",
       "summary": "Uses statistics and code to find patterns in data and build models that predict or explain what happens.",
+      "summary_hi": "आँकड़ों और कोड की मदद से डेटा में पैटर्न ढूँढते हैं और ऐसे मॉडल बनाते हैं जो आगे का अनुमान लगाएँ।",
       "work": [
         "Clean and explore large datasets",
         "Build and test prediction models",
@@ -240,8 +244,10 @@
     {
       "slug": "data-analyst",
       "title": "Data analyst",
+      "title_hi": "डेटा एनालिस्ट",
       "cluster": "technology",
       "summary": "Turns business data into clear reports and dashboards so teams know what is working.",
+      "summary_hi": "कंपनी के डेटा को साफ़ रिपोर्ट और डैशबोर्ड में बदलते हैं, ताकि टीम जान सके कि क्या काम कर रहा है।",
       "work": [
         "Pull data with SQL and spreadsheets",
         "Build dashboards and weekly reports",
@@ -333,8 +339,10 @@
     {
       "slug": "ux-designer",
       "title": "UX designer",
+      "title_hi": "UX डिज़ाइनर",
       "cluster": "design",
       "summary": "Works out how an app or website should work and feel, so people can do what they came to do.",
+      "summary_hi": "तय करते हैं कि कोई ऐप या वेबसाइट कैसे काम करे, ताकि लोग आसानी से अपना काम कर सकें।",
       "work": [
         "Interview users and watch them use a product",
         "Sketch flows and build clickable prototypes",
@@ -454,8 +462,10 @@
     {
       "slug": "graphic-designer",
       "title": "Graphic designer",
+      "title_hi": "ग्राफ़िक डिज़ाइनर",
       "cluster": "design",
       "summary": "Creates the visuals people see every day: logos, posters, packaging, social media and books.",
+      "summary_hi": "रोज़ दिखने वाली चीज़ें बनाते हैं: लोगो, पोस्टर, पैकेजिंग, सोशल मीडिया और किताबें।",
       "work": [
         "Design a brand's logo, colours and type",
         "Lay out posters, packaging and ads",
@@ -568,8 +578,10 @@
     {
       "slug": "animator",
       "title": "Animator / VFX artist",
+      "title_hi": "एनिमेटर / VFX आर्टिस्ट",
       "cluster": "design",
       "summary": "Brings characters, scenes and effects to life for films, games, ads and explainers.",
+      "summary_hi": "फ़िल्मों, गेम और विज्ञापनों के लिए किरदारों, दृश्यों और इफ़ेक्ट्स में जान डालते हैं।",
       "work": [
         "Animate characters frame by frame or with rigs",
         "Build 3D models and scenes",
@@ -674,8 +686,10 @@
     {
       "slug": "fashion-designer",
       "title": "Fashion designer",
+      "title_hi": "फ़ैशन डिज़ाइनर",
       "cluster": "design",
       "summary": "Designs clothes and accessories, from the first sketch to a finished collection.",
+      "summary_hi": "कपड़े और एक्सेसरीज़ डिज़ाइन करते हैं, पहले स्केच से लेकर पूरे कलेक्शन तक।",
       "work": [
         "Research trends and fabrics",
         "Sketch, drape and make samples",
@@ -757,8 +771,10 @@
     {
       "slug": "architect",
       "title": "Architect",
+      "title_hi": "आर्किटेक्ट",
       "cluster": "design",
       "summary": "Designs buildings and spaces that are safe, useful and good to be in, and sees them through construction.",
+      "summary_hi": "सुरक्षित, उपयोगी और अच्छी लगने वाली इमारतें और जगहें डिज़ाइन करते हैं, और उन्हें बनते हुए देखते हैं।",
       "work": [
         "Turn a client's needs into drawings and models",
         "Make sure designs meet building rules",
@@ -830,8 +846,10 @@
     {
       "slug": "civil-engineer",
       "title": "Civil engineer",
+      "title_hi": "सिविल इंजीनियर",
       "cluster": "engineering",
       "summary": "Plans and builds roads, bridges, buildings, water systems and other things a city runs on.",
+      "summary_hi": "सड़कें, पुल, इमारतें और पानी की व्यवस्था जैसी चीज़ें योजना बनाकर बनवाते हैं, जिन पर शहर चलता है।",
       "work": [
         "Design structures and check that they are safe",
         "Supervise work on construction sites",
@@ -931,8 +949,10 @@
     {
       "slug": "mechanical-engineer",
       "title": "Mechanical engineer",
+      "title_hi": "मैकेनिकल इंजीनियर",
       "cluster": "engineering",
       "summary": "Designs and improves machines, from engines and pumps to robots and production lines.",
+      "summary_hi": "इंजन और पंप से लेकर रोबोट और फ़ैक्टरी लाइन तक, मशीनें डिज़ाइन करते और बेहतर बनाते हैं।",
       "work": [
         "Design parts and machines with CAD software",
         "Test prototypes and fix what fails",
@@ -1032,8 +1052,10 @@
     {
       "slug": "electronics-engineer",
       "title": "Electrical / electronics engineer",
+      "title_hi": "इलेक्ट्रिकल / इलेक्ट्रॉनिक्स इंजीनियर",
       "cluster": "engineering",
       "summary": "Designs circuits, power systems and devices, from chips and phones to the electricity grid.",
+      "summary_hi": "सर्किट, बिजली व्यवस्था और उपकरण डिज़ाइन करते हैं, चिप और फ़ोन से लेकर बिजली ग्रिड तक।",
       "work": [
         "Design and test circuits",
         "Program small devices and sensors",
@@ -1133,8 +1155,10 @@
     {
       "slug": "electrician",
       "title": "Electrician",
+      "title_hi": "इलेक्ट्रीशियन",
       "cluster": "skilled-trades",
       "summary": "Installs, repairs and maintains wiring and electrical equipment in homes, shops and factories.",
+      "summary_hi": "घरों, दुकानों और फ़ैक्टरियों में वायरिंग और बिजली के उपकरण लगाते, ठीक करते और सँभालते हैं।",
       "work": [
         "Wire new buildings and fit switchboards",
         "Find and fix electrical faults safely",
@@ -1206,8 +1230,10 @@
     {
       "slug": "doctor",
       "title": "Doctor",
+      "title_hi": "डॉक्टर",
       "cluster": "health",
       "summary": "Diagnoses and treats illness, and helps people stay healthy, in hospitals, clinics and communities.",
+      "summary_hi": "बीमारियों की पहचान और इलाज करते हैं, और अस्पतालों, क्लिनिक व समुदाय में लोगों को स्वस्थ रखने में मदद करते हैं।",
       "work": [
         "Examine patients and order tests",
         "Decide on treatment and explain it clearly",
@@ -1297,8 +1323,10 @@
     {
       "slug": "dentist",
       "title": "Dentist",
+      "title_hi": "डेंटिस्ट (दाँतों के डॉक्टर)",
       "cluster": "health",
       "summary": "Looks after teeth and gums: prevents problems, treats pain and restores smiles.",
+      "summary_hi": "दाँतों और मसूड़ों का ध्यान रखते हैं: समस्याओं से बचाते हैं, दर्द का इलाज करते हैं और मुस्कान लौटाते हैं।",
       "work": [
         "Check, clean and fill teeth",
         "Do procedures such as root canals and extractions",
@@ -1366,8 +1394,10 @@
     {
       "slug": "nurse",
       "title": "Nurse",
+      "title_hi": "नर्स",
       "cluster": "health",
       "summary": "Cares for patients around the clock, gives treatment and is often the person patients trust most.",
+      "summary_hi": "दिन-रात मरीज़ों की देखभाल करते हैं, इलाज देते हैं और अक्सर वही होते हैं जिन पर मरीज़ सबसे ज़्यादा भरोसा करते हैं।",
       "work": [
         "Monitor patients and give medicines",
         "Assist doctors in procedures",
@@ -1433,8 +1463,10 @@
     {
       "slug": "physiotherapist",
       "title": "Physiotherapist",
+      "title_hi": "फ़िज़ियोथेरेपिस्ट",
       "cluster": "health",
       "summary": "Helps people recover movement and manage pain after injury, surgery or illness.",
+      "summary_hi": "चोट, सर्जरी या बीमारी के बाद लोगों को फिर से चलने-फिरने और दर्द सँभालने में मदद करते हैं।",
       "work": [
         "Assess how a patient moves",
         "Plan and guide exercise and therapy",
@@ -1496,8 +1528,10 @@
     {
       "slug": "pharmacist",
       "title": "Pharmacist",
+      "title_hi": "फ़ार्मासिस्ट",
       "cluster": "health",
       "summary": "Makes sure medicines are right, safe and used well, in pharmacies, hospitals and drug companies.",
+      "summary_hi": "फ़ार्मेसी, अस्पताल और दवा कंपनियों में यह पक्का करते हैं कि दवाएँ सही, सुरक्षित और ठीक से इस्तेमाल हों।",
       "work": [
         "Check and dispense prescriptions",
         "Advise patients on dosage and side effects",
@@ -1588,8 +1622,10 @@
     {
       "slug": "veterinarian",
       "title": "Veterinarian",
+      "title_hi": "पशु चिकित्सक",
       "cluster": "health",
       "summary": "Treats animals, from pets and livestock to wildlife, and protects people from diseases animals carry.",
+      "summary_hi": "पालतू और खेती के पशुओं से लेकर वन्यजीवों तक का इलाज करते हैं, और लोगों को जानवरों से फैलने वाली बीमारियों से बचाते हैं।",
       "work": [
         "Examine and treat sick animals",
         "Vaccinate and advise farmers and pet owners",
@@ -1661,8 +1697,10 @@
     {
       "slug": "clinical-psychologist",
       "title": "Clinical psychologist",
+      "title_hi": "क्लिनिकल साइकोलॉजिस्ट",
       "cluster": "health",
       "summary": "Assesses and treats mental health conditions through therapy and testing.",
+      "summary_hi": "थेरेपी और टेस्ट के ज़रिए मानसिक स्वास्थ्य से जुड़ी समस्याओं की पहचान और इलाज करते हैं।",
       "work": [
         "Listen to clients and assess what's going on",
         "Plan and run therapy sessions",
@@ -1738,8 +1776,10 @@
     {
       "slug": "research-scientist",
       "title": "Research scientist",
+      "title_hi": "रिसर्च साइंटिस्ट",
       "cluster": "science",
       "summary": "Asks questions nobody has answered yet in physics, chemistry, biology or maths, and runs the experiments to find out.",
+      "summary_hi": "भौतिकी, रसायन, जीवविज्ञान या गणित के ऐसे सवाल पूछते हैं जिनके जवाब अभी किसी के पास नहीं, और प्रयोग करके पता लगाते हैं।",
       "work": [
         "Design and run experiments",
         "Analyse results and write papers",
@@ -1826,8 +1866,10 @@
     {
       "slug": "biotechnologist",
       "title": "Biotechnologist",
+      "title_hi": "बायोटेक्नोलॉजिस्ट",
       "cluster": "science",
       "summary": "Uses living cells and biology to make medicines, vaccines, better crops and greener industry.",
+      "summary_hi": "जीवित कोशिकाओं और जीवविज्ञान की मदद से दवाएँ, टीके, बेहतर फ़सलें और साफ़-सुथरे उद्योग बनाते हैं।",
       "work": [
         "Run lab experiments with cells and DNA",
         "Test product quality and safety",
@@ -1917,8 +1959,10 @@
     {
       "slug": "agricultural-scientist",
       "title": "Agricultural scientist",
+      "title_hi": "कृषि वैज्ञानिक",
       "cluster": "science",
       "summary": "Works on how India grows its food: better seeds, healthier soil, smarter water use and fewer crop losses.",
+      "summary_hi": "भारत में अनाज उगाने के तरीकों पर काम करते हैं: बेहतर बीज, स्वस्थ मिट्टी, पानी का सही इस्तेमाल और फ़सल का कम नुक़सान।",
       "work": [
         "Run field trials of crops and methods",
         "Advise farmers through extension work",
@@ -2006,8 +2050,10 @@
     {
       "slug": "economist",
       "title": "Economist",
+      "title_hi": "अर्थशास्त्री",
       "cluster": "science",
       "summary": "Studies how people, companies and governments make choices about money and resources, and advises on policy.",
+      "summary_hi": "अध्ययन करते हैं कि लोग, कंपनियाँ और सरकारें पैसे और संसाधनों के बारे में कैसे फ़ैसले लेती हैं, और नीतियों पर सलाह देते हैं।",
       "work": [
         "Analyse data on prices, jobs and growth",
         "Write reports and policy briefs",
@@ -2098,8 +2144,10 @@
     {
       "slug": "chartered-accountant",
       "title": "Chartered accountant",
+      "title_hi": "चार्टर्ड अकाउंटेंट (CA)",
       "cluster": "business",
       "summary": "Audits accounts, handles tax and advises businesses on money, with a qualification companies trust.",
+      "summary_hi": "कंपनियों के खातों की ऑडिट करते हैं, टैक्स सँभालते हैं और पैसे से जुड़ी सलाह देते हैं, ऐसी योग्यता के साथ जिस पर कंपनियाँ भरोसा करती हैं।",
       "work": [
         "Audit company accounts",
         "Plan and file taxes",
@@ -2175,8 +2223,10 @@
     {
       "slug": "financial-analyst",
       "title": "Financial analyst",
+      "title_hi": "फ़ाइनेंशियल एनालिस्ट",
       "cluster": "business",
       "summary": "Studies companies and markets to help investors, banks and businesses decide where money should go.",
+      "summary_hi": "कंपनियों और बाज़ार का अध्ययन करते हैं, ताकि निवेशक, बैंक और कारोबार तय कर सकें कि पैसा कहाँ लगाना है।",
       "work": [
         "Build financial models in spreadsheets",
         "Research companies and industries",
@@ -2250,8 +2300,10 @@
     {
       "slug": "bank-officer",
       "title": "Bank officer",
+      "title_hi": "बैंक अधिकारी",
       "cluster": "business",
       "summary": "Runs the day-to-day of a bank branch: loans, accounts, customers and the team.",
+      "summary_hi": "बैंक शाखा का रोज़ का काम चलाते हैं: लोन, खाते, ग्राहक और टीम।",
       "work": [
         "Approve loans and check documents",
         "Solve customer problems",
@@ -2328,8 +2380,10 @@
     {
       "slug": "marketing-manager",
       "title": "Marketing manager",
+      "title_hi": "मार्केटिंग मैनेजर",
       "cluster": "business",
       "summary": "Decides how a product is presented, priced and promoted so the right people want it.",
+      "summary_hi": "तय करते हैं कि कोई प्रोडक्ट कैसे पेश किया जाए, उसकी क़ीमत क्या हो और उसका प्रचार कैसे हो, ताकि सही लोग उसे चाहें।",
       "work": [
         "Plan campaigns across social media, stores and ads",
         "Study what customers want",
@@ -2419,8 +2473,10 @@
     {
       "slug": "product-manager",
       "title": "Product manager",
+      "title_hi": "प्रोडक्ट मैनेजर",
       "cluster": "business",
       "summary": "Decides what a tech product should do next, and gets designers, engineers and business teams building it.",
+      "summary_hi": "तय करते हैं कि कोई टेक प्रोडक्ट आगे क्या करे, और डिज़ाइनर, इंजीनियर व बिज़नेस टीम से उसे बनवाते हैं।",
       "work": [
         "Talk to users and study data",
         "Write down what to build and why",
@@ -2497,8 +2553,10 @@
     {
       "slug": "entrepreneur",
       "title": "Entrepreneur",
+      "title_hi": "उद्यमी",
       "cluster": "business",
       "summary": "Spots a problem, builds a business that solves it, and takes on the risk of making it work.",
+      "summary_hi": "कोई समस्या पहचानते हैं, उसे हल करने वाला कारोबार खड़ा करते हैं, और उसे चलाने का जोखिम उठाते हैं।",
       "work": [
         "Test an idea with real customers",
         "Raise money or run on revenue",
@@ -2560,8 +2618,10 @@
     {
       "slug": "hotel-manager",
       "title": "Hotel manager",
+      "title_hi": "होटल मैनेजर",
       "cluster": "hospitality",
       "summary": "Runs a hotel or resort so guests are looked after and every department works together.",
+      "summary_hi": "होटल या रिसॉर्ट ऐसे चलाते हैं कि मेहमानों का ध्यान रखा जाए और हर विभाग मिलकर काम करे।",
       "work": [
         "Lead teams across front office, food and housekeeping",
         "Handle guest problems on the spot",
@@ -2626,8 +2686,10 @@
     {
       "slug": "chef",
       "title": "Chef",
+      "title_hi": "शेफ़",
       "cluster": "hospitality",
       "summary": "Creates and cooks food in restaurants, hotels and kitchens, and runs the kitchen team.",
+      "summary_hi": "रेस्टोरेंट, होटल और रसोई में खाना बनाते और नए व्यंजन सोचते हैं, और रसोई की टीम सँभालते हैं।",
       "work": [
         "Prepare dishes to a consistent standard",
         "Create new menus",
@@ -2712,8 +2774,10 @@
     {
       "slug": "lawyer",
       "title": "Lawyer",
+      "title_hi": "वकील",
       "cluster": "law-government",
       "summary": "Advises people and companies on the law, drafts agreements, and argues cases in court.",
+      "summary_hi": "लोगों और कंपनियों को क़ानून पर सलाह देते हैं, समझौते तैयार करते हैं और अदालत में केस लड़ते हैं।",
       "work": [
         "Research laws and past judgments",
         "Draft contracts and legal notices",
@@ -2808,8 +2872,10 @@
     {
       "slug": "civil-servant",
       "title": "Civil servant (IAS, IPS, IFS…)",
+      "title_hi": "सिविल सेवक (IAS, IPS, IFS…)",
       "cluster": "law-government",
       "summary": "Runs government at district, state or national level: law and order, development, diplomacy and policy.",
+      "summary_hi": "ज़िले, राज्य या देश के स्तर पर सरकार चलाते हैं: क़ानून-व्यवस्था, विकास, कूटनीति और नीतियाँ।",
       "work": [
         "Manage a district's administration or a ministry's programme",
         "Make decisions that affect thousands of people",
@@ -2889,8 +2955,10 @@
     {
       "slug": "armed-forces-officer",
       "title": "Armed forces officer",
+      "title_hi": "सशस्त्र सेना अधिकारी",
       "cluster": "defence-aviation",
       "summary": "Leads soldiers, sailors or air warriors, and trains to protect the country in peace and war.",
+      "summary_hi": "सैनिकों, नौसैनिकों या वायु सैनिकों का नेतृत्व करते हैं, और शांति व युद्ध में देश की रक्षा के लिए प्रशिक्षण लेते हैं।",
       "work": [
         "Lead and train a unit",
         "Plan operations and logistics",
@@ -2977,8 +3045,10 @@
     {
       "slug": "commercial-pilot",
       "title": "Commercial pilot",
+      "title_hi": "कमर्शियल पायलट",
       "cluster": "defence-aviation",
       "summary": "Flies passenger or cargo aircraft safely between cities and countries.",
+      "summary_hi": "यात्री या माल वाले विमान शहरों और देशों के बीच सुरक्षित उड़ाते हैं।",
       "work": [
         "Plan flights with weather and fuel data",
         "Fly and monitor the aircraft with a co-pilot",
@@ -3049,8 +3119,10 @@
     {
       "slug": "teacher",
       "title": "Teacher",
+      "title_hi": "शिक्षक",
       "cluster": "education-social",
       "summary": "Helps children and young people learn, think and grow, in schools, coaching centres or online.",
+      "summary_hi": "स्कूल, कोचिंग या ऑनलाइन, बच्चों और युवाओं को सीखने, सोचने और आगे बढ़ने में मदद करते हैं।",
       "work": [
         "Plan and teach lessons",
         "Check work and give feedback",
@@ -3150,8 +3222,10 @@
     {
       "slug": "journalist",
       "title": "Journalist",
+      "title_hi": "पत्रकार",
       "cluster": "media",
       "summary": "Finds out what's happening, checks the facts, and tells the story in print, on screen or online.",
+      "summary_hi": "पता लगाते हैं कि क्या हो रहा है, तथ्यों की जाँच करते हैं, और अख़बार, टीवी या ऑनलाइन कहानी बताते हैं।",
       "work": [
         "Report on events and interview people",
         "Check facts and sources",
@@ -3233,8 +3307,10 @@
     {
       "slug": "social-worker",
       "title": "Social worker",
+      "title_hi": "सामाजिक कार्यकर्ता",
       "cluster": "education-social",
       "summary": "Supports people and communities facing hardship, and works to fix the systems that cause it.",
+      "summary_hi": "मुश्किलों से जूझ रहे लोगों और समुदायों की मदद करते हैं, और उन व्यवस्थाओं को सुधारने पर काम करते हैं जिनसे ये मुश्किलें आती हैं।",
       "work": [
         "Work with families, children or patients",
         "Run community programmes for an NGO or CSR team",

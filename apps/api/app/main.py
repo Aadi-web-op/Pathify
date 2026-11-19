@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import Settings, get_settings
 from app.db import connect
-from app.routers import assessment, auth, careers, health, ksarth, oauth, tryouts, users
+from app.routers import assessment, auth, careers, health, ksarth, oauth, report, tryouts, users
 from app.security.origin import OriginCheckMiddleware, SecurityHeadersMiddleware
 from app.services.llm import build_provider
 
@@ -50,7 +50,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["content-type"],
     )
 
-    for module in (health, auth, oauth, users, ksarth, assessment, careers, tryouts):
+    for module in (health, auth, oauth, users, ksarth, assessment, careers, tryouts, report):
         app.include_router(module.router)
     return app
 

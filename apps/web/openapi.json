@@ -312,8 +312,16 @@
             "title": "Summary",
             "type": "string"
           },
+          "summary_hi": {
+            "title": "Summary Hi",
+            "type": "string"
+          },
           "title": {
             "title": "Title",
+            "type": "string"
+          },
+          "title_hi": {
+            "title": "Title Hi",
             "type": "string"
           },
           "work": {
@@ -328,8 +336,10 @@
         "required": [
           "slug",
           "title",
+          "title_hi",
           "cluster",
           "summary",
+          "summary_hi",
           "work",
           "riasec",
           "similar_onet",
@@ -1166,6 +1176,276 @@
         "title": "RegisterIn",
         "type": "object"
       },
+      "ReportCareer": {
+        "properties": {
+          "check_with": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Check With",
+            "type": "array"
+          },
+          "fit_label": {
+            "title": "Fit Label",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reasons",
+            "type": "array"
+          },
+          "route_label": {
+            "title": "Route Label",
+            "type": "string"
+          },
+          "route_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route Note"
+          },
+          "route_open": {
+            "title": "Route Open",
+            "type": "boolean"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/ReportStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tryout": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "How the student's tryout for this career went, in words",
+            "title": "Tryout"
+          },
+          "watch_outs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Watch Outs",
+            "type": "array"
+          },
+          "years_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Years Text"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "summary",
+          "fit_label",
+          "reasons",
+          "watch_outs",
+          "route_label",
+          "route_open",
+          "route_note",
+          "steps",
+          "years_text",
+          "check_with",
+          "tryout"
+        ],
+        "title": "ReportCareer",
+        "type": "object"
+      },
+      "ReportInterest": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "description",
+          "score"
+        ],
+        "title": "ReportInterest",
+        "type": "object"
+      },
+      "ReportOut": {
+        "properties": {
+          "careers": {
+            "items": {
+              "$ref": "#/components/schemas/ReportCareer"
+            },
+            "title": "Careers",
+            "type": "array"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "interests": {
+            "items": {
+              "$ref": "#/components/schemas/ReportInterest"
+            },
+            "title": "Interests",
+            "type": "array"
+          },
+          "language": {
+            "enum": [
+              "en",
+              "hi"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Questions",
+            "type": "array"
+          },
+          "stage": {
+            "title": "Stage",
+            "type": "string"
+          },
+          "student_name": {
+            "description": "First name only",
+            "title": "Student Name",
+            "type": "string"
+          },
+          "text": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Headings and fixed sentences, already in the report's language",
+            "title": "Text",
+            "type": "object"
+          },
+          "tryouts": {
+            "items": {
+              "$ref": "#/components/schemas/ReportTryout"
+            },
+            "title": "Tryouts",
+            "type": "array"
+          }
+        },
+        "required": [
+          "language",
+          "student_name",
+          "stage",
+          "generated_at",
+          "text",
+          "interests",
+          "confidence",
+          "careers",
+          "tryouts",
+          "questions"
+        ],
+        "title": "ReportOut",
+        "type": "object"
+      },
+      "ReportStep": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "years": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Years"
+          }
+        },
+        "required": [
+          "label",
+          "years"
+        ],
+        "title": "ReportStep",
+        "type": "object"
+      },
+      "ReportTryout": {
+        "properties": {
+          "career_title": {
+            "title": "Career Title",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "career_title",
+          "summary"
+        ],
+        "title": "ReportTryout",
+        "type": "object"
+      },
       "ResultOut": {
         "properties": {
           "answered": {
@@ -1439,6 +1719,49 @@
           "result"
         ],
         "title": "SessionOut",
+        "type": "object"
+      },
+      "ShareIn": {
+        "properties": {
+          "language": {
+            "default": "en",
+            "enum": [
+              "en",
+              "hi"
+            ],
+            "title": "Language",
+            "type": "string"
+          }
+        },
+        "title": "ShareIn",
+        "type": "object"
+      },
+      "ShareOut": {
+        "properties": {
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "language": {
+            "enum": [
+              "en",
+              "hi"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "language",
+          "expires_at"
+        ],
+        "title": "ShareOut",
         "type": "object"
       },
       "SourceOut": {
@@ -3101,6 +3424,287 @@
         "summary": "Ksarth Status",
         "tags": [
           "ksarth"
+        ]
+      }
+    },
+    "/api/report": {
+      "get": {
+        "operationId": "my_report_api_report_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "lang",
+            "required": false,
+            "schema": {
+              "default": "en",
+              "enum": [
+                "en",
+                "hi"
+              ],
+              "title": "Lang",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Report",
+        "tags": [
+          "report"
+        ]
+      }
+    },
+    "/api/report/share": {
+      "delete": {
+        "operationId": "revoke_share_api_report_share_delete",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revoke Share",
+        "tags": [
+          "report"
+        ]
+      },
+      "get": {
+        "operationId": "current_share_api_report_share_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ShareOut"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Current Share Api Report Share Get"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Current Share",
+        "tags": [
+          "report"
+        ]
+      },
+      "post": {
+        "description": "Create a new private link. Any earlier link stops working.",
+        "operationId": "create_share_api_report_share_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShareIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Share",
+        "tags": [
+          "report"
+        ]
+      }
+    },
+    "/api/report/shared/{token}": {
+      "get": {
+        "description": "Public, read-only report for whoever has the link. No sign-in needed.",
+        "operationId": "shared_report_api_report_shared__token__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lang",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "en",
+                    "hi"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lang"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Shared Report",
+        "tags": [
+          "report"
         ]
       }
     },

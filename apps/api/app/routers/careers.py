@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 
 from app.catalog import Career, catalog, tryout_bank
 from app.models.assessment import latest_result
-from app.routers.tryouts import latest_attempts
+from app.models.tryout import latest_attempts
 from app.schemas.assessment import ResultOut
 from app.schemas.careers import CareerSummary, MatchesOut, MatchOut, TryoutLink
 from app.security.deps import CurrentUser

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
-from app.models import AssessmentSession, KsarthMessage, TryoutAttempt
+from app.models import AssessmentSession, KsarthMessage, ReportShare, TryoutAttempt
 from app.models.user import StudentProfile, utcnow
 from app.schemas.user import DeleteAccount, UserOut, UserUpdate
 from app.security.cookies import clear_auth_cookies
@@ -43,6 +43,7 @@ async def delete_me(body: DeleteAccount, user: CurrentUser, settings: SettingsDe
     await KsarthMessage.find(KsarthMessage.user_id == user.id).delete()
     await AssessmentSession.find(AssessmentSession.user_id == user.id).delete()
     await TryoutAttempt.find(TryoutAttempt.user_id == user.id).delete()
+    await ReportShare.find(ReportShare.user_id == user.id).delete()
     await revoke_all_for_user(user.id)
     await user.delete()
     done = Response(status_code=status.HTTP_204_NO_CONTENT)

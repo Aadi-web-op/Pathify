@@ -62,8 +62,10 @@ class OfficialBody(BaseModel):
 class Career(BaseModel):
     slug: str = Field(pattern=r"^[a-z0-9-]+$")
     title: str
+    title_hi: str
     cluster: str
     summary: str
+    summary_hi: str
     work: list[str] = Field(min_length=2)
     riasec: dict[Dimension, int]
     similar_onet: str

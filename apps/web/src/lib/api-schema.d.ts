@@ -301,6 +301,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Report */
+        get: operations["my_report_api_report_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/report/share": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Current Share */
+        get: operations["current_share_api_report_share_get"];
+        put?: never;
+        /**
+         * Create Share
+         * @description Create a new private link. Any earlier link stops working.
+         */
+        post: operations["create_share_api_report_share_post"];
+        /** Revoke Share */
+        delete: operations["revoke_share_api_report_share_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/report/shared/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Shared Report
+         * @description Public, read-only report for whoever has the link. No sign-in needed.
+         */
+        get: operations["shared_report_api_report_shared__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tryouts": {
         parameters: {
             query?: never;
@@ -546,8 +605,12 @@ export interface components {
             subjects: string[];
             /** Summary */
             summary: string;
+            /** Summary Hi */
+            summary_hi: string;
             /** Title */
             title: string;
+            /** Title Hi */
+            title_hi: string;
             /** Work */
             work: string[];
         };
@@ -876,6 +939,102 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** ReportCareer */
+        ReportCareer: {
+            /** Check With */
+            check_with: string[];
+            /** Fit Label */
+            fit_label: string;
+            /** Reasons */
+            reasons: string[];
+            /** Route Label */
+            route_label: string;
+            /** Route Note */
+            route_note: string | null;
+            /** Route Open */
+            route_open: boolean;
+            /** Slug */
+            slug: string;
+            /** Steps */
+            steps: components["schemas"]["ReportStep"][];
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+            /**
+             * Tryout
+             * @description How the student's tryout for this career went, in words
+             */
+            tryout: string | null;
+            /** Watch Outs */
+            watch_outs: string[];
+            /** Years Text */
+            years_text: string | null;
+        };
+        /** ReportInterest */
+        ReportInterest: {
+            /** Description */
+            description: string;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+            /** Score */
+            score: number;
+        };
+        /** ReportOut */
+        ReportOut: {
+            /** Careers */
+            careers: components["schemas"]["ReportCareer"][];
+            /** Confidence */
+            confidence: string | null;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Interests */
+            interests: components["schemas"]["ReportInterest"][];
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "hi";
+            /** Questions */
+            questions: string[];
+            /** Stage */
+            stage: string;
+            /**
+             * Student Name
+             * @description First name only
+             */
+            student_name: string;
+            /**
+             * Text
+             * @description Headings and fixed sentences, already in the report's language
+             */
+            text: {
+                [key: string]: string;
+            };
+            /** Tryouts */
+            tryouts: components["schemas"]["ReportTryout"][];
+        };
+        /** ReportStep */
+        ReportStep: {
+            /** Label */
+            label: string;
+            /** Years */
+            years: number | null;
+        };
+        /** ReportTryout */
+        ReportTryout: {
+            /** Career Title */
+            career_title: string;
+            /** Summary */
+            summary: string;
+            /** Title */
+            title: string;
+        };
         /** ResultOut */
         ResultOut: {
             /** Answered */
@@ -969,6 +1128,30 @@ export interface components {
             target: number;
             /** Total Items */
             total_items: number;
+        };
+        /** ShareIn */
+        ShareIn: {
+            /**
+             * Language
+             * @default en
+             * @enum {string}
+             */
+            language: "en" | "hi";
+        };
+        /** ShareOut */
+        ShareOut: {
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "hi";
+            /** Token */
+            token: string;
         };
         /** SourceOut */
         SourceOut: {
@@ -1810,6 +1993,167 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["KsarthStatus"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_report_api_report_get: {
+        parameters: {
+            query?: {
+                lang?: "en" | "hi";
+            };
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    current_share_api_report_share_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareOut"] | null;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_share_api_report_share_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShareIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_share_api_report_share_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    shared_report_api_report_shared__token__get: {
+        parameters: {
+            query?: {
+                lang?: ("en" | "hi") | null;
+            };
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportOut"];
                 };
             };
             /** @description Validation Error */
