@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 export const controlClass =
   "w-full rounded-2xl border border-rule-strong bg-surface px-4 h-13 text-ink placeholder:text-muted/70 " +
-  "focus:border-sign focus:shadow-[0_0_0_4px_color-mix(in_oklab,var(--sign)_22%,transparent)] focus:outline-none focus-visible:outline-none " +
+  "focus:border-sign focus:shadow-[0_0_0_3px_color-mix(in_oklab,var(--sign)_15%,transparent)] focus:outline-none focus-visible:outline-none " +
   "transition-[border-color,box-shadow] " +
   "aria-[invalid=true]:border-danger";
 

@@ -22,7 +22,7 @@ export function Choice({ name, value, label, detail, checked, onChange, type = "
         "transition-[transform,border-color,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.97]",
         "has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--focus)]",
         checked
-          ? "border-sign bg-sign-tint shadow-[0_10px_30px_-14px_color-mix(in_oklab,var(--sign)_80%,transparent)]"
+          ? "border-sign bg-sign-tint"
           : "border-rule hover:-translate-y-0.5 hover:border-rule-strong",
         disabled && !checked && "cursor-not-allowed opacity-50",
       )}

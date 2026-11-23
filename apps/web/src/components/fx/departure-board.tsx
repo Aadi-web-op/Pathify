@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { CAREERS } from "@/lib/careers";
 
 /**
- * A split-flap departures board: careers as destinations, the entrance exam as
+ * A departures card: careers as destinations, the entrance exam as
  * "via", when you board, and how many years the ride takes. Every value is read
  * from the career library, so nothing on the board is made up.
  */
@@ -27,7 +27,7 @@ const SLUGS = [
 
 type Row = { dest: string; via: string; board: string; years: string; color: string };
 
-const COLORS = ["var(--route-violet)", "var(--route-pink)", "var(--route-blue)", "var(--route-saffron)", "var(--pop)"];
+const COLORS = ["var(--route-violet)", "var(--route-pink)", "var(--route-blue)", "var(--route-saffron)"];
 
 function shortExam(label: string) {
   return label.split(/,| or /)[0].replace(/\(.*?\)/g, "").trim();
@@ -50,64 +50,13 @@ export const DEPARTURES: Row[] = SLUGS.flatMap((slug, i) => {
   ];
 });
 
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-/";
-
-/** One line of flaps. When `text` changes, each cell spins through letters, then lands, left to right. */
-function Flaps({ text, cells }: { text: string; cells: number }) {
-  const target = text.toUpperCase().padEnd(cells, " ").slice(0, cells);
-  const [shown, setShown] = useState(target);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setShown(target);
-      return;
-    }
-    const start = performance.now();
-    let raf = 0;
-    let lastStep = 0;
-    const step = (now: number) => {
-      if (now - lastStep > 45) {
-        lastStep = now;
-        const elapsed = now - start;
-        let done = true;
-        const next = target
-          .split("")
-          .map((ch, i) => {
-            if (elapsed > 180 + i * 38) return ch;
-            done = false;
-            return ch === " " && elapsed > i * 38 ? " " : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-          })
-          .join("");
-        setShown(next);
-        if (done) return;
-      }
-      raf = requestAnimationFrame(step);
-    };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [target]);
-
-  return (
-    <span className="flex gap-[2px]">
-      {shown.split("").map((ch, i) => (
-        <span
-          key={i}
-          className="relative grid h-[1.7em] w-[0.98em] place-items-center overflow-hidden rounded-[3px] bg-[#16161f] text-[#f3f1ff] shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)] after:absolute after:inset-x-0 after:top-1/2 after:h-px after:bg-black/70"
-        >
-          {ch === " " ? " " : ch}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 export function DepartureBoard() {
   const [offset, setOffset] = useState(0);
   const visible = 4;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(() => setOffset((o) => (o + 1) % DEPARTURES.length), 3200);
+    const id = window.setInterval(() => setOffset((o) => (o + 1) % DEPARTURES.length), 3400);
     return () => window.clearInterval(id);
   }, []);
 
@@ -116,40 +65,33 @@ export function DepartureBoard() {
   return (
     <div
       role="img"
-      aria-label={`Departures board of example routes, such as ${DEPARTURES.slice(0, 3)
+      aria-label={`Example routes from the career library, such as ${DEPARTURES.slice(0, 3)
         .map((r) => `${r.dest} via ${r.via}, after ${r.board}, about ${r.years.replace("yr", "years")}`)
         .join("; ")}.`}
-      className="overflow-hidden rounded-2xl border border-white/10 bg-[#0b0b11] p-3 font-mono text-[0.7rem] text-[#f3f1ff] shadow-[0_30px_80px_-30px_rgba(164,141,255,0.45)] sm:p-4 sm:text-[0.8rem]">
-      <div className="mb-3 flex items-center justify-between gap-3 px-1">
-        <span className="flex items-center gap-2 tracking-[0.18em] text-[#d7ff3c]">
-          <span className="relative flex size-2">
-            <span className="absolute inset-0 animate-pulse-ring rounded-full bg-[#d7ff3c]" />
-            <span className="relative size-2 rounded-full bg-[#d7ff3c]" />
-          </span>
-          DEPARTURES
+      className="overflow-hidden rounded-3xl border border-rule bg-surface p-2 shadow-[0_30px_60px_-40px_rgba(20,18,40,0.35)]"
+    >
+      <div className="flex items-center justify-between gap-3 px-4 pb-2 pt-3">
+        <span className="label-mono flex items-center gap-2 text-ink">
+          <span className="size-2 rounded-full bg-pop" />
+          Next departures
         </span>
-        <span className="tracking-[0.18em] text-white/45">FROM: YOU</span>
+        <span className="label-mono text-muted">From: you</span>
       </div>
-      <div className="flex justify-between gap-3 px-1 pb-1 pl-4 text-[0.62rem] tracking-[0.18em] text-white/40">
-        <span>DESTINATION{" "}<span className="max-sm:hidden">/ VIA</span></span>
-        <span>AFTER / RIDE</span>
-      </div>
-      <ul className="grid gap-1.5">
+      <ul className="grid">
         {rows.map((row, i) => (
-          <li key={i} className="flex items-center gap-2 overflow-hidden">
-            <span className="h-[1.65em] w-1 shrink-0 rounded-full" style={{ background: row.color }} />
-            <span className="flex min-w-0 flex-1 items-center justify-between gap-3">
-              <span className="flex items-center gap-2">
-                <Flaps text={row.dest} cells={13} />
-                <span className="max-sm:hidden">
-                  <Flaps text={row.via} cells={8} />
-                </span>
-              </span>
-              <span className="grid shrink-0 justify-items-end whitespace-nowrap leading-tight">
-                <span className="text-[0.85em] tracking-[0.12em] text-white/50">{row.board}</span>
-                <span className="tracking-[0.1em] text-[#d7ff3c]">{row.years}</span>
+          <li
+            key={`${offset}-${i}`}
+            className="rise grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl px-4 py-3 odd:bg-paper"
+            style={{ ["--rise-delay" as string]: `${i * 0.06}s` }}
+          >
+            <span className="h-8 w-1 rounded-full" style={{ background: row.color }} />
+            <span className="grid min-w-0">
+              <span className="truncate font-display text-[1.05rem] font-semibold tracking-[-0.02em]">{row.dest}</span>
+              <span className="truncate font-mono text-xs text-muted">
+                via {row.via} · after {row.board}
               </span>
             </span>
+            <span className="font-mono text-sm tabular text-ink">{row.years}</span>
           </li>
         ))}
       </ul>

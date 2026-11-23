@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * A night transit map drawn on canvas: neon routes that draw themselves in,
- * then light "trains" that run along them. The map leans with the pointer.
+ * A quiet transit map drawn on canvas: thin routes that draw themselves in,
+ * then one slow "train" per line. The map leans a little with the pointer.
  *
  * Purely decorative (aria-hidden). It pauses off-screen and in background tabs,
  * and with reduced motion it draws the finished map once and stops.
@@ -26,7 +26,7 @@ function buildLines(w: number, h: number, colors: string[]): Line[] {
   // A hidden canvas has no size; with nothing to span, the route builder below would never finish.
   if (w < 40 || h < 40) return [];
   const rnd = seeded(20251123);
-  const count = w < 640 ? 6 : 9;
+  const count = w < 640 ? 4 : 6;
   const lines: Line[] = [];
   for (let i = 0; i < count; i++) {
     const depth = 0.35 + rnd() * 0.65;
@@ -57,7 +57,7 @@ function buildLines(w: number, h: number, colors: string[]): Line[] {
       total: lens[lens.length - 1],
       color: colors[i % colors.length],
       depth,
-      width: 2 + depth * 3.5,
+      width: 1.5 + depth * 1.5,
       delay: i * 0.12,
       stations,
     });
@@ -88,7 +88,7 @@ function tracePath(ctx: CanvasRenderingContext2D, line: Line, from: number, to: 
   ctx.lineTo(end.x, end.y);
 }
 
-export function NeonMetro({ className }: { className?: string }) {
+export function RouteField({ className }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export function NeonMetro({ className }: { className?: string }) {
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
     const css = getComputedStyle(canvas);
-    const colors = ["--route-violet", "--route-pink", "--route-blue", "--route-saffron", "--pop"].map(
+    const colors = ["--route-violet", "--route-pink", "--route-blue", "--route-saffron"].map(
       (v) => css.getPropertyValue(v).trim() || "#a48dff",
     );
     const paper = css.getPropertyValue("--paper").trim() || "#08080d";
@@ -133,73 +133,43 @@ export function NeonMetro({ className }: { className?: string }) {
       ctx.lineJoin = "round";
 
       for (const line of lines) {
-        const ox = pointer.x * 26 * line.depth;
-        const oy = pointer.y * 18 * line.depth;
+        const ox = pointer.x * 12 * line.depth;
+        const oy = pointer.y * 8 * line.depth;
         ctx.save();
         ctx.translate(ox, oy);
         const grow = Math.min(Math.max((t - line.delay) / 2.2, 0), 1);
         const eased = 1 - Math.pow(1 - grow, 3);
         const drawn = line.total * eased;
-        const alpha = 0.18 + line.depth * 0.5;
+        const alpha = 0.22 + line.depth * 0.38;
 
-        // Glow, then the line itself.
-        ctx.globalAlpha = alpha * 0.25;
-        ctx.strokeStyle = line.color;
-        ctx.lineWidth = line.width * 4;
-        tracePath(ctx, line, 0, drawn);
-        ctx.stroke();
         ctx.globalAlpha = alpha;
+        ctx.strokeStyle = line.color;
         ctx.lineWidth = line.width;
         tracePath(ctx, line, 0, drawn);
         ctx.stroke();
 
-        // Stations: hollow rings once the line has reached them.
+        // Stations: small hollow rings once the line has reached them.
         for (const s of line.stations) {
           if (line.lens[s] > drawn) continue;
           const p = line.pts[s];
-          ctx.globalAlpha = Math.min(alpha + 0.2, 1);
           ctx.fillStyle = paper;
-          ctx.strokeStyle = line.color;
-          ctx.lineWidth = Math.max(line.width * 0.7, 2);
+          ctx.lineWidth = Math.max(line.width * 0.8, 1.5);
           ctx.beginPath();
-          ctx.arc(p.x, p.y, line.width * 1.4 + 2, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, line.width + 2.5, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
         }
 
-        // Trains: a bright head with a fading tail, once the line is drawn.
+        // One slow train per line: a small dot in the line's own colour.
         if (!reduce && grow >= 1) {
-          const speed = 90 + line.depth * 160;
-          const tail = 120 + line.depth * 120;
-          for (let k = 0; k < 2; k++) {
-            const head = ((t * speed + k * line.total * 0.5 + line.delay * 900) % (line.total + tail)) - 0;
-            const from = Math.max(head - tail, 0);
-            const to = Math.min(head, line.total);
-            if (to <= from) continue;
-            const a = pointAt(line, from);
-            const b = pointAt(line, to);
-            const grad = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-            grad.addColorStop(0, "rgba(255,255,255,0)");
-            grad.addColorStop(1, "rgba(255,255,255,0.95)");
-            ctx.globalAlpha = 0.35 + line.depth * 0.65;
-            ctx.strokeStyle = grad;
-            ctx.lineWidth = line.width * 0.9;
-            tracePath(ctx, line, from, to);
-            ctx.stroke();
-            if (head <= line.total) {
-              // A soft halo, then the bright head (cheaper than canvas shadows).
-              ctx.fillStyle = line.color;
-              ctx.globalAlpha = 0.35;
-              ctx.beginPath();
-              ctx.arc(b.x, b.y, line.width * 2.6 + 3, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.globalAlpha = 1;
-              ctx.fillStyle = "#ffffff";
-              ctx.beginPath();
-              ctx.arc(b.x, b.y, line.width * 0.9 + 1, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
+          const speed = 30 + line.depth * 50;
+          const head = (t * speed + line.delay * 700) % line.total;
+          const p = pointAt(line, head);
+          ctx.globalAlpha = Math.min(alpha + 0.35, 1);
+          ctx.fillStyle = line.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, line.width + 1.5, 0, Math.PI * 2);
+          ctx.fill();
         }
         ctx.restore();
       }

@@ -73,16 +73,16 @@ Every heading, reason, question and note exists in English and Hindi, and a test
 
 **Where the career data comes from.** `data/careers.json` is written by hand: routes, entrance exams, degrees and typical durations in India, plus the official body to check with. Interest profiles are Pathify's estimates on a 1–7 scale, guided by O*NET's ratings for the similar U.S. occupation named on each career. The catalog deliberately has no salaries or cut-offs, because we can't source and date them yet. A test fails if one slips in. Replacing the estimates with O*NET's published interest data (CC BY 4.0) is a planned improvement.
 
-## Design: Night Metro
+## Design: Metro
 
-The interface is drawn like a transit map after dark. Careers are destinations, exams are the lines you ride, and your class is the station you start from.
+The interface is drawn like a quiet transit map. Careers are destinations, exams are the lines you ride, and your class is the station you start from.
 
-- **Palette.** An ink-black or warm-paper base, electric violet for actions, acid lime as the highlighter, and neon route colours (violet, pink, cyan, orange) that only ever mark routes and data. Light and dark themes share the same tokens (`apps/web/src/app/globals.css`).
-- **Type.** Bricolage Grotesque for display, Geist for text, JetBrains Mono for labels, Instrument Serif italic for the one accent word in a headline. Noto Sans Devanagari covers Hindi.
-- **Moments.** The landing hero is a live canvas metro map: routes draw in, light "trains" run along them, and the map leans with the pointer. A split-flap departures board shows real routes from the career library. The three big decisions are a scroll-pinned story. The bento tiles are working demos, and the results reveal and finished tryouts get an impact burst.
-- **Restraint.** Every effect pauses off-screen and in background tabs. With `prefers-reduced-motion` they show their finished state instead. Decorative canvases are hidden from screen readers, and the departures board is a labelled image.
+- **Palette.** Warm paper in light mode (soft charcoal in dark), one indigo action colour, and marigold used only for the small "you are here" dot. Muted route colours (indigo, coral, teal, amber) only ever mark routes and data. Tokens live in `apps/web/src/app/globals.css`.
+- **Type.** Bricolage Grotesque for display, Geist for text, JetBrains Mono for small labels, and Instrument Serif italic for the one accent word in a headline. Noto Sans Devanagari covers Hindi.
+- **Moments, used sparingly.** The landing hero has a thin-line metro map that draws itself in, with one slow train per line. A departures card shows real routes from the career library, and the three big decisions are a scroll-pinned story. The feature tiles are small working demos. A light confetti burst marks your first look at your results and a finished tryout.
+- **Restraint.** Effects pause off-screen and in background tabs. With `prefers-reduced-motion` they show their finished state instead. Decorative canvases are hidden from screen readers.
 
-The impact bursts (`apps/web/src/lib/burst.ts`) are an original implementation of an idea from [sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) by Justin Finkelman (MIT): springy controls that throw drawn effects on confirm.
+The confetti burst (`apps/web/src/lib/burst.ts`) is an original implementation of an idea from [sakuga-vfx](https://github.com/finktheartist/sakuga-vfx) by Justin Finkelman (MIT).
 
 ## Architecture
 

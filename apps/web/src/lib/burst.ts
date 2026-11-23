@@ -48,7 +48,7 @@ function palette(): string[] {
     read("--route-pink", "#ff5ad9"),
     read("--route-saffron", "#ff9450"),
     read("--route-blue", "#3fd8ff"),
-    read("--pop", "#d7ff3c"),
+    read("--pop", "#f2a93b"),
   ];
 }
 
@@ -88,34 +88,14 @@ export function burst(x: number, y: number, options: BurstOptions = {}) {
   const colors = palette();
   const pick = () => colors[Math.floor(Math.random() * colors.length)];
 
-  particles.push({ kind: "flash", x, y, vx: 0, vy: 0, angle: 0, spin: 0, size: 22 * power, life: 0.12, age: 0, color: "#ffffff" });
-  particles.push({ kind: "ring", x, y, vx: 0, vy: 0, angle: 0, spin: 0, size: 90 * power, life: 0.55, age: 0, color: colors[0] });
-  particles.push({ kind: "ring", x, y, vx: 0, vy: 0, angle: 0, spin: 0, size: 60 * power, life: 0.42, age: -0.06, color: colors[4] });
-
-  const wedges = Math.round(12 * power);
-  for (let i = 0; i < wedges; i++) {
-    const a = (i / wedges) * Math.PI * 2 + rand(-0.12, 0.12);
-    const speed = rand(420, 720) * power;
-    particles.push({
-      kind: "wedge", x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, angle: a, spin: 0,
-      size: rand(14, 26) * power, life: rand(0.28, 0.42), age: 0, color: i % 2 ? colors[1] : colors[0],
-    });
-  }
-  for (let i = 0; i < 5; i++) {
-    const a = rand(0, Math.PI * 2);
-    const speed = rand(60, 150) * power;
-    particles.push({
-      kind: "puff", x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed - 30, angle: 0, spin: 0,
-      size: rand(14, 26) * power, life: rand(0.55, 0.8), age: 0, color: colors[3],
-    });
-  }
+  particles.push({ kind: "ring", x, y, vx: 0, vy: 0, angle: 0, spin: 0, size: 70 * power, life: 0.6, age: 0, color: colors[0] });
   if (options.confetti) {
-    for (let i = 0; i < Math.round(34 * power); i++) {
+    for (let i = 0; i < Math.round(22 * power); i++) {
       const a = rand(-Math.PI * 0.95, -Math.PI * 0.05);
       const speed = rand(320, 760) * power;
       particles.push({
         kind: "chip", x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, angle: rand(0, 6), spin: rand(-12, 12),
-        size: rand(5, 10), life: rand(1.1, 1.8), age: 0, color: pick(),
+        size: rand(5, 8), life: rand(1.1, 1.6), age: 0, color: pick(),
       });
     }
   }

@@ -1,67 +1,67 @@
 @import "tailwindcss";
 
 /*
-  Night Metro design system.
-  A transit map after dark: ink-black or warm paper base, electric violet as the
-  action colour, acid lime as the highlighter, and neon route colours that only
-  ever mark routes and data. Type: Bricolage Grotesque for display, Geist for
+  Metro design system.
+  A quiet transit map: warm paper (or soft charcoal) base, one indigo action
+  colour, marigold used sparingly as the "you are here" dot, and muted route
+  colours that only ever mark routes and data. Type: Bricolage Grotesque for display, Geist for
   text, JetBrains Mono for labels, Instrument Serif italic for the accent word.
 */
 
 :root {
-  --paper: #f4f2ec;
+  --paper: #f7f5f0;
   --surface: #ffffff;
-  --surface-sunk: #ebe8df;
-  --ink: #0e0d14;
-  --muted: #5c5a6b;
-  --rule: #dcd8cd;
-  --rule-strong: #bdb8aa;
-  --sign: #5a36f5;
-  --sign-hover: #4724e0;
+  --surface-sunk: #efece5;
+  --ink: #15141a;
+  --muted: #5f5d6b;
+  --rule: #e4e0d6;
+  --rule-strong: #cfcabd;
+  --sign: #4b3fd8;
+  --sign-hover: #3f33c4;
   --sign-ink: #ffffff;
-  --sign-tint: #ebe6ff;
-  --pop: #d7ff3c;
-  --pop-ink: #0e0d14;
-  --route-saffron: #e8620c;
-  --route-blue: #0f8fc4;
-  --route-pink: #e0299f;
-  --route-violet: #5a36f5;
+  --sign-tint: #edebfc;
+  --pop: #f2a93b;
+  --pop-ink: #15141a;
+  --route-saffron: #d4932a;
+  --route-blue: #2f9c95;
+  --route-pink: #dd6f58;
+  --route-violet: #6a5ae0;
   --glow: 0 0 0 transparent;
   --danger: #c0261b;
   --danger-tint: #fde8e6;
   --warn: #8a5a00;
   --warn-tint: #fcf1d9;
-  --focus: #e0299f;
-  --grain-opacity: 0.05;
+  --focus: #4b3fd8;
+  --grain-opacity: 0;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #08080d;
-    --surface: #111119;
-    --surface-sunk: #191924;
-    --ink: #f3f1ff;
-    --muted: #a09db8;
-    --rule: #24243a;
-    --rule-strong: #3a3a5c;
-    --sign: #a48dff;
-    --sign-hover: #b9a8ff;
-    --sign-ink: #0b0a12;
-    --sign-tint: #1f1940;
-    --pop: #d7ff3c;
-    --pop-ink: #0b0a12;
-    --route-saffron: #ff9450;
-    --route-blue: #3fd8ff;
-    --route-pink: #ff5ad9;
-    --route-violet: #a48dff;
-    --glow: 0 0 24px color-mix(in oklab, var(--sign) 45%, transparent);
+    --paper: #0f0f12;
+    --surface: #17171c;
+    --surface-sunk: #1e1e24;
+    --ink: #ecebf1;
+    --muted: #9a98a8;
+    --rule: #27272f;
+    --rule-strong: #3a3a46;
+    --sign: #968bf2;
+    --sign-hover: #aaa1f5;
+    --sign-ink: #0f0f12;
+    --sign-tint: #221f3a;
+    --pop: #f2b24f;
+    --pop-ink: #15141a;
+    --route-saffron: #e5ac4c;
+    --route-blue: #5bbcb4;
+    --route-pink: #eb8a74;
+    --route-violet: #968bf2;
+    --glow: 0 0 0 transparent;
     --danger: #ff8a80;
     --danger-tint: #3a1a1c;
     --warn: #f0c050;
     --warn-tint: #33290f;
-    --focus: #ff5ad9;
-    --grain-opacity: 0.07;
+    --focus: #968bf2;
+    --grain-opacity: 0;
     color-scheme: dark;
   }
 }
@@ -69,30 +69,30 @@
 /* Forced night palette: the theme option, and brand moments such as the landing hero. */
 :root[data-theme="dark"],
 .night {
-  --paper: #08080d;
-  --surface: #111119;
-  --surface-sunk: #191924;
-  --ink: #f3f1ff;
-  --muted: #a09db8;
-  --rule: #24243a;
-  --rule-strong: #3a3a5c;
-  --sign: #a48dff;
-  --sign-hover: #b9a8ff;
-  --sign-ink: #0b0a12;
-  --sign-tint: #1f1940;
-  --pop: #d7ff3c;
-  --pop-ink: #0b0a12;
-  --route-saffron: #ff9450;
-  --route-blue: #3fd8ff;
-  --route-pink: #ff5ad9;
-  --route-violet: #a48dff;
-  --glow: 0 0 24px color-mix(in oklab, var(--sign) 45%, transparent);
+  --paper: #0f0f12;
+  --surface: #17171c;
+  --surface-sunk: #1e1e24;
+  --ink: #ecebf1;
+  --muted: #9a98a8;
+  --rule: #27272f;
+  --rule-strong: #3a3a46;
+  --sign: #968bf2;
+  --sign-hover: #aaa1f5;
+  --sign-ink: #0f0f12;
+  --sign-tint: #221f3a;
+  --pop: #f2b24f;
+  --pop-ink: #15141a;
+  --route-saffron: #e5ac4c;
+  --route-blue: #5bbcb4;
+  --route-pink: #eb8a74;
+  --route-violet: #968bf2;
+  --glow: 0 0 0 transparent;
   --danger: #ff8a80;
   --danger-tint: #3a1a1c;
   --warn: #f0c050;
   --warn-tint: #33290f;
-  --focus: #ff5ad9;
-  --grain-opacity: 0.07;
+  --focus: #968bf2;
+  --grain-opacity: 0;
   color-scheme: dark;
 }
 .night {
@@ -148,17 +148,6 @@
     -webkit-font-smoothing: antialiased;
     font-feature-settings: "ss01", "cv11";
   }
-  /* Film grain over everything: texture without images. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: var(--grain-opacity);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-  }
   h1,
   h2,
   h3,
@@ -166,16 +155,15 @@
     font-family: var(--font-display);
     text-wrap: balance;
     line-height: 1.08;
-    letter-spacing: -0.025em;
-    font-weight: 750;
+    letter-spacing: -0.03em;
+    font-weight: 650;
   }
   :focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
   ::selection {
-    background: var(--pop);
-    color: var(--pop-ink);
+    background: var(--sign-tint);
   }
 }
 
@@ -207,16 +195,15 @@
 
 /* Highlighter swipe behind a word. */
 @utility highlight {
-  background: linear-gradient(transparent 12%, var(--pop) 12%, var(--pop) 88%, transparent 88%);
-  color: var(--pop-ink);
-  padding: 0 0.12em;
+  background: linear-gradient(transparent 60%, color-mix(in oklab, var(--pop) 55%, transparent) 60%, color-mix(in oklab, var(--pop) 55%, transparent) 92%, transparent 92%);
+  padding: 0 0.06em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 
 /* Text filled with the aurora gradient. */
 @utility text-aurora {
-  background: linear-gradient(100deg, var(--route-violet), var(--route-pink) 45%, var(--route-saffron) 80%);
+  background: linear-gradient(100deg, var(--sign), var(--route-pink));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -234,7 +221,7 @@
     padding: 1px;
     background: radial-gradient(
       320px circle at var(--mx, 50%) var(--my, -200px),
-      color-mix(in oklab, var(--sign) 85%, transparent),
+      color-mix(in oklab, var(--sign) 40%, transparent),
       transparent 60%
     );
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -250,7 +237,7 @@
     border-radius: inherit;
     background: radial-gradient(
       420px circle at var(--mx, 50%) var(--my, -300px),
-      color-mix(in oklab, var(--sign) 9%, transparent),
+      color-mix(in oklab, var(--sign) 4%, transparent),
       transparent 55%
     );
     pointer-events: none;

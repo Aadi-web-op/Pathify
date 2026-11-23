@@ -9,14 +9,14 @@ type Size = "md" | "lg" | "sm";
 const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-display font-semibold tracking-[-0.005em] " +
   "transition-[transform,background-color,color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] " +
-  "active:scale-[0.94] active:duration-100 disabled:cursor-not-allowed disabled:opacity-55 disabled:active:scale-100 " +
+  "active:scale-[0.97] active:duration-100 disabled:cursor-not-allowed disabled:opacity-55 disabled:active:scale-100 " +
   "select-none whitespace-nowrap";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-sign text-sign-ink shadow-[0_8px_30px_-8px_color-mix(in_oklab,var(--sign)_70%,transparent)] hover:bg-sign-hover hover:-translate-y-0.5",
-  pop: "bg-pop text-pop-ink shadow-[0_8px_30px_-8px_color-mix(in_oklab,var(--pop)_70%,transparent)] hover:-translate-y-0.5 hover:rotate-[-1deg]",
-  secondary: "border border-rule-strong bg-surface/40 text-ink backdrop-blur hover:border-ink hover:-translate-y-0.5",
+  primary: "bg-sign text-sign-ink hover:bg-sign-hover hover:-translate-y-px",
+  // Ink on paper: the quiet, confident call to action.
+  pop: "bg-ink text-paper hover:-translate-y-px hover:opacity-90",
+  secondary: "border border-rule-strong bg-surface text-ink hover:border-ink hover:-translate-y-px",
   ghost: "text-ink hover:bg-sunk",
   danger: "bg-danger text-paper hover:opacity-90",
 };

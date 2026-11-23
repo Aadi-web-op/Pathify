@@ -1,8 +1,7 @@
 import { PublicFooter, PublicHeader } from "@/components/app/public-header";
-import { BurstLink } from "@/components/fx/burst-link";
-import { CountUp, Magnetic, Marquee, Reveal, ScrollRuler, SpotlightGroup } from "@/components/fx/bits";
+import { CountUp, Marquee, Reveal, SpotlightGroup } from "@/components/fx/bits";
 import { DepartureBoard } from "@/components/fx/departure-board";
-import { NeonMetro } from "@/components/fx/neon-metro";
+import { RouteField } from "@/components/fx/route-field";
 import { ChatDemo, MiniMap, ReportDemo, RiasecDemo, TryoutDemo } from "@/components/landing/demos";
 import { Journey, type Stop } from "@/components/landing/journey";
 import { ButtonLink } from "@/components/ui/button";
@@ -39,21 +38,19 @@ const RULES = [
   { title: "Families included", body: "Students under 18 confirm that a parent or guardian knows they use Pathify." },
 ];
 
-const ROUTE_DOTS = ["bg-route-violet", "bg-route-pink", "bg-route-blue", "bg-saffron", "bg-pop"];
+const ROUTE_DOTS = ["bg-route-violet", "bg-route-pink", "bg-route-blue", "bg-saffron"];
 
 export default function LandingPage() {
   const titles = CAREERS.map((c) => c.title.replace(/\s*\(.*\)$/, ""));
-  const half = Math.ceil(titles.length / 2);
 
   return (
-    <div className="night min-h-dvh overflow-x-clip">
-      <ScrollRuler />
+    <div className="min-h-dvh overflow-x-clip">
       <PublicHeader />
 
       <main id="main">
         {/* Hero: the night map, the headline, the departures board. */}
         <section className="relative -mt-[4.5rem] flex min-h-[100svh] items-center pb-16 pt-28">
-          <NeonMetro className="absolute inset-0 size-full" />
+          <RouteField className="absolute inset-0 size-full" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_30%_45%,var(--paper)_20%,transparent_75%)] opacity-90"
@@ -67,24 +64,22 @@ export default function LandingPage() {
                 Class 9 → college · free for students
               </p>
               <h1
-                className="rise font-display text-[clamp(3rem,10.5vw,6.4rem)] font-bold leading-[0.9] tracking-[-0.055em]"
+                className="rise font-display text-[clamp(2.9rem,9.5vw,5.8rem)] font-semibold leading-[0.95] tracking-[-0.045em]"
                 style={{ ["--rise-delay" as string]: "0.08s" }}
               >
                 Don&apos;t guess your future.{" "}
-                <span className="serif-accent whitespace-nowrap pr-2 text-[1.08em] text-pop">Map it.</span>
+                <span className="serif-accent whitespace-nowrap pr-2 text-[1.08em] text-sign">Map it.</span>
               </h1>
               <p className="rise max-w-[46ch] text-lg text-muted sm:text-xl" style={{ ["--rise-delay" as string]: "0.16s" }}>
                 Pick a stream, crack the right exams, land your first role. Pathify turns what you enjoy into routes you
                 can actually explain to your parents.
               </p>
               <div className="rise flex flex-wrap items-center gap-3" style={{ ["--rise-delay" as string]: "0.24s" }}>
-                <Magnetic>
-                  <BurstLink href="/signup" variant="pop" size="lg">
+                                  <ButtonLink href="/signup" variant="pop" size="lg">
                     Start free, takes 2 min
                     <span aria-hidden="true">→</span>
-                  </BurstLink>
-                </Magnetic>
-                <ButtonLink href="/careers" variant="secondary" size="lg">
+                  </ButtonLink>
+                                <ButtonLink href="/careers" variant="secondary" size="lg">
                   Browse {CAREERS.length} careers
                 </ButtonLink>
               </div>
@@ -96,7 +91,7 @@ export default function LandingPage() {
                 ].map((s) => (
                   <div key={s.label} className="grid gap-0.5">
                     <dt className="label-mono order-2 text-muted">{s.label}</dt>
-                    <dd className="order-1 font-display text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+                    <dd className="order-1 font-display text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
                       <CountUp value={s.n} />
                     </dd>
                   </div>
@@ -104,11 +99,9 @@ export default function LandingPage() {
               </dl>
             </div>
 
-            <div className="rise relative lg:rotate-[2deg]" style={{ ["--rise-delay" as string]: "0.4s" }}>
-              <div className="animate-float" style={{ ["--tilt" as string]: "0deg" }}>
-                <DepartureBoard />
-              </div>
-              <p className="label-mono mt-3 text-center text-muted">Real routes from the Pathify career library</p>
+            <div className="rise relative" style={{ ["--rise-delay" as string]: "0.4s" }}>
+              <DepartureBoard />
+              <p className="label-mono mt-3 text-center text-muted">Real routes from the career library</p>
             </div>
           </div>
 
@@ -121,23 +114,12 @@ export default function LandingPage() {
         </section>
 
         {/* Ticker: every career in the library. */}
-        <section id="careers-ticker" aria-label="Careers in the library" className="grid gap-3 border-y border-rule py-8">
+        <section id="careers-ticker" aria-label="Careers in the library" className="border-y border-rule py-6">
           <Marquee duration={55}>
-            {titles.slice(0, half).map((t, i) => (
-              <span key={t} className="flex items-center gap-5 pr-5 font-display text-[clamp(1.8rem,5vw,3.4rem)] font-bold tracking-[-0.04em]">
+            {titles.map((t, i) => (
+              <span key={t} className="flex items-center gap-5 pr-5 font-display text-[clamp(1.3rem,3vw,1.9rem)] font-medium tracking-[-0.03em] text-muted">
                 {t}
-                <span className={`size-3 rounded-full ${ROUTE_DOTS[i % ROUTE_DOTS.length]}`} aria-hidden="true" />
-              </span>
-            ))}
-          </Marquee>
-          <Marquee duration={60} reverse>
-            {titles.slice(half).map((t, i) => (
-              <span
-                key={t}
-                className="flex items-center gap-5 pr-5 font-display text-[clamp(1.8rem,5vw,3.4rem)] font-bold tracking-[-0.04em] text-transparent [-webkit-text-stroke:1.5px_var(--muted)]"
-              >
-                {t}
-                <span className={`size-3 rounded-full ${ROUTE_DOTS[(i + 2) % ROUTE_DOTS.length]}`} aria-hidden="true" />
+                <span className={`size-2 rounded-full ${ROUTE_DOTS[i % ROUTE_DOTS.length]}`} aria-hidden="true" />
               </span>
             ))}
           </Marquee>
@@ -152,8 +134,8 @@ export default function LandingPage() {
               <p className="label-mono text-muted">
                 <span className="text-ink">02</span> / What&apos;s inside
               </p>
-              <h2 id="inside" className="max-w-3xl text-[clamp(2.4rem,6vw,4.4rem)] font-bold leading-[0.95] tracking-[-0.045em]">
-                Everything you need to pick a path, <span className="serif-accent text-aurora pr-1">none of the noise.</span>
+              <h2 id="inside" className="max-w-3xl text-[clamp(2.4rem,6vw,4.4rem)] font-semibold leading-[1] tracking-[-0.04em]">
+                Everything you need to pick a path, <span className="serif-accent text-sign pr-1">none of the noise.</span>
               </h2>
             </Reveal>
 
@@ -178,7 +160,7 @@ export default function LandingPage() {
             <Reveal>
               <div className="flex flex-wrap items-end justify-between gap-6 rounded-3xl border border-rule bg-surface p-6 sm:p-8">
                 <div className="grid gap-1">
-                  <p className="font-display text-[clamp(3.5rem,10vw,7rem)] font-bold leading-none tracking-[-0.06em]">
+                  <p className="font-display text-[clamp(3.2rem,9vw,6rem)] font-semibold leading-none tracking-[-0.05em]">
                     <CountUp value={CAREERS.length} />
                     <span className="text-sign">+</span>
                   </p>
@@ -193,25 +175,25 @@ export default function LandingPage() {
         </section>
 
         {/* House rules on a lime band. */}
-        <section aria-labelledby="rules" className="gutter bg-pop py-20 text-pop-ink">
+        <section aria-labelledby="rules" className="gutter border-y border-rule bg-surface py-20">
           <div className="mx-auto grid max-w-6xl gap-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 id="rules" className="text-[clamp(2.4rem,6vw,4.4rem)] font-bold leading-[0.95] tracking-[-0.045em]">
+              <h2 id="rules" className="text-[clamp(2.4rem,6vw,4.4rem)] font-semibold leading-[1] tracking-[-0.04em]">
                 Advice you can <span className="serif-accent">trust.</span>
               </h2>
-              <p className="label-mono rotate-[-3deg] rounded-full border-2 border-current px-4 py-1.5 font-bold">No paid rankings, ever</p>
+              <p className="label-mono rounded-full border border-rule-strong px-4 py-1.5 text-muted">No paid rankings, ever</p>
             </div>
-            <ol className="grid border-t-2 border-current md:grid-cols-4">
+            <ol className="grid border-t border-rule md:grid-cols-4">
               {RULES.map((rule, i) => (
                 <li
                   key={rule.title}
-                  className="group grid content-start gap-3 border-b-2 border-current py-6 md:border-b-0 md:border-r-2 md:px-5 md:first:pl-0 md:last:border-r-0"
+                  className="grid content-start gap-3 border-b border-rule py-6 md:border-b-0 md:border-r md:px-5 md:first:pl-0 md:last:border-r-0"
                 >
-                  <span className="font-mono text-sm font-bold">0{i + 1}</span>
-                  <h3 className="text-2xl font-bold tracking-[-0.03em] transition-transform duration-300 group-hover:translate-x-1">
+                  <span className="font-mono text-sm text-sign">0{i + 1}</span>
+                  <h3 className="text-xl font-semibold tracking-[-0.02em]">
                     {rule.title}
                   </h3>
-                  <p className="text-[0.98rem] opacity-80">{rule.body}</p>
+                  <p className="text-[0.98rem] text-muted">{rule.body}</p>
                 </li>
               ))}
             </ol>
@@ -222,19 +204,17 @@ export default function LandingPage() {
         <section aria-labelledby="start" className="gutter relative overflow-hidden pt-24">
           <div className="mx-auto grid max-w-6xl justify-items-center gap-8 text-center">
             <Reveal className="grid justify-items-center gap-6">
-              <h2 id="start" className="max-w-4xl text-[clamp(2.6rem,7vw,5.4rem)] font-bold leading-[0.92] tracking-[-0.05em]">
-                Start with where you are. <span className="serif-accent text-aurora pr-1">It takes two minutes.</span>
+              <h2 id="start" className="max-w-4xl text-[clamp(2.6rem,7vw,5.4rem)] font-semibold leading-[1] tracking-[-0.04em]">
+                Start with where you are. <span className="serif-accent text-sign pr-1">It takes two minutes.</span>
               </h2>
-              <Magnetic>
-                <BurstLink href="/signup" size="lg">
+                              <ButtonLink href="/signup" size="lg">
                   Create your free account <span aria-hidden="true">→</span>
-                </BurstLink>
-              </Magnetic>
-            </Reveal>
+                </ButtonLink>
+                          </Reveal>
           </div>
           <p
             aria-hidden="true"
-            className="pointer-events-none mt-16 select-none text-center font-display text-[clamp(5rem,27vw,24rem)] font-bold leading-[0.78] tracking-[-0.08em] text-transparent [-webkit-text-stroke:1.5px_var(--rule-strong)] [mask-image:linear-gradient(#000_40%,transparent)]"
+            className="pointer-events-none mt-16 select-none text-center font-display text-[clamp(5rem,27vw,24rem)] font-semibold leading-[0.78] tracking-[-0.08em] text-transparent [-webkit-text-stroke:1px_var(--rule-strong)] [mask-image:linear-gradient(#000_40%,transparent)]"
           >
             pathify
           </p>
@@ -265,7 +245,7 @@ function Tile({
     >
       <div className="grid gap-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-bold tracking-[-0.03em]">{title}</h3>
+          <h3 className="text-xl font-semibold tracking-[-0.02em]">{title}</h3>
           <span className="label-mono text-muted">{index}</span>
         </div>
         <p className="max-w-[44ch] text-muted">{body}</p>

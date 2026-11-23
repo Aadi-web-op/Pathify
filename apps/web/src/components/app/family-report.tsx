@@ -7,7 +7,7 @@ export function FamilyReport({ report }: { report: Report }) {
     <article lang={report.language} className="report grid gap-10">
       <header className="grid gap-3 border-b-2 border-ink pb-6">
         <p className="eyebrow">Pathify</p>
-        <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em] sm:text-[3.4rem]">{t.title}</h1>
+        <h1 className="text-[2.5rem] font-semibold leading-[1] tracking-[-0.045em] sm:text-[3.4rem]">{t.title}</h1>
         <p className="font-display font-bold">{report.stage}</p>
         <p className="max-w-[65ch] text-lg text-muted">{t.intro}</p>
         <p className="text-sm text-muted">{t.generated}</p>
@@ -117,7 +117,7 @@ export function FamilyReport({ report }: { report: Report }) {
         )}
       </section>
 
-      <section className="report-block grid gap-3 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] p-5 sm:p-6">
+      <section className="report-block grid gap-3 rounded-3xl border-2 border-sign p-5 sm:p-6">
         <h2 className="text-2xl font-bold">{t.questions}</h2>
         <ol className="grid list-decimal gap-2 pl-5 marker:font-display marker:font-bold marker:text-sign">
           {report.questions.map((q) => (

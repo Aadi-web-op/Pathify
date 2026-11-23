@@ -45,7 +45,7 @@ export default function HomePage() {
     <div className="grid gap-10">
       <section className="grid gap-2">
         <p className="eyebrow">{stageLabel(profile)}</p>
-        <h1 className="text-[2.6rem] font-bold leading-[0.95] tracking-[-0.05em] sm:text-[3.8rem]">
+        <h1 className="text-[2.4rem] font-semibold leading-[1] tracking-[-0.04em] sm:text-[3.2rem]">
           Hi <span className="serif-accent text-sign">{firstName}</span>, here&apos;s your road ahead
         </h1>
       </section>
@@ -61,7 +61,7 @@ export default function HomePage() {
       </section>
 
       <div className="grid gap-6 md:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="ask" className="grid content-start gap-4 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-7">
+        <section aria-labelledby="ask" className="grid content-start gap-4 rounded-3xl border-2 border-sign bg-surface p-5 sm:p-7">
           <p className="eyebrow">Next step</p>
           <h2 id="ask" className="text-2xl font-bold">
             Talk it through with Ksarth

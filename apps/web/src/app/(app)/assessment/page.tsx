@@ -8,7 +8,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button, ButtonLink, Spinner } from "@/components/ui/button";
 import { Notice } from "@/components/ui/notice";
-import { burstFrom } from "@/lib/burst";
 import { ApiError } from "@/lib/api";
 import {
   answerQuestion,
@@ -21,8 +20,6 @@ import {
   useOverview,
 } from "@/lib/assessment";
 
-// From "really dislike" to "love it": cool to hot.
-const SCALE_COLORS = ["var(--route-blue)", "var(--route-violet)", "var(--rule-strong)", "var(--route-pink)", "var(--pop)"];
 
 export default function AssessmentPage() {
   const overview = useOverview();
@@ -204,13 +201,13 @@ function Questions({ session, onChange }: { session: Session; onChange: (s: Sess
           aria-valuenow={done}
           className="relative h-6"
         >
-          <span className="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-sunk" />
+          <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-sunk" />
           <span
-            className="absolute left-0 top-1/2 h-2 -translate-y-1/2 rounded-full bg-[linear-gradient(90deg,var(--route-violet),var(--route-pink),var(--route-saffron))] shadow-[0_0_18px_color-mix(in_oklab,var(--route-pink)_55%,transparent)] transition-[width] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none"
+            className="absolute left-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-sign transition-[width] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none"
             style={{ width: `${progress * 100}%` }}
           />
           <span
-            className="absolute top-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-paper bg-pop shadow-[0_0_0_2px_var(--route-pink)] transition-[left] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none"
+            className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-sign bg-surface transition-[left] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none"
             style={{ left: `${progress * 100}%` }}
           />
         </div>
@@ -223,7 +220,7 @@ function Questions({ session, onChange }: { session: Session; onChange: (s: Sess
             id="statement"
             ref={heading}
             tabIndex={-1}
-            className="min-h-[2.4em] text-[2rem] font-bold leading-[1.05] tracking-[-0.045em] focus:outline-none sm:text-[2.9rem]"
+            className="min-h-[2.4em] text-[2rem] font-semibold leading-[1.08] tracking-[-0.04em] focus:outline-none sm:text-[2.6rem]"
           >
             <span key={question.id} className="rise block">
               {question.text}
@@ -237,26 +234,23 @@ function Questions({ session, onChange }: { session: Session; onChange: (s: Sess
             <button
               key={point.value}
               type="button"
-              onClick={(e) => {
-                // A small celebration at every tenth answer: a checkpoint, not every click.
-                if ((done + 1) % 10 === 0) burstFrom(e.currentTarget, { confetti: true });
+              onClick={() => {
                 void answer(point.value);
               }}
               aria-pressed={chosen === point.value}
-              style={{ ["--scale-color" as string]: SCALE_COLORS[index] ?? "var(--sign)" }}
               className={clsx(
                 "flex items-center gap-3 rounded-2xl border-2 px-4 py-3.5 text-left font-display font-semibold sm:flex-col sm:gap-2.5 sm:px-2 sm:py-5 sm:text-center",
                 "transition-[transform,border-color,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.94]",
                 chosen === point.value
-                  ? "border-sign bg-sign text-sign-ink shadow-[0_14px_40px_-16px_var(--sign)]"
-                  : "border-rule bg-surface hover:-translate-y-1 hover:border-[var(--scale-color)] hover:shadow-[0_14px_40px_-22px_var(--scale-color)] disabled:hover:translate-y-0 disabled:hover:border-rule",
+                  ? "border-sign bg-sign text-sign-ink"
+                  : "border-rule bg-surface hover:-translate-y-0.5 hover:border-sign disabled:hover:translate-y-0 disabled:hover:border-rule",
               )}
             >
               <span
                 aria-hidden="true"
                 className={clsx(
                   "grid size-8 shrink-0 place-items-center rounded-full font-mono text-sm font-bold",
-                  chosen === point.value ? "bg-sign-ink text-sign" : "bg-[var(--scale-color)] text-[#0b0a12]",
+                  chosen === point.value ? "bg-sign-ink text-sign" : "bg-sunk text-muted",
                 )}
               >
                 {index + 1}

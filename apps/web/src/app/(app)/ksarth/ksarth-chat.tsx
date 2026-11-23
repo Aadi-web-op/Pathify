@@ -122,7 +122,7 @@ export function KsarthChat() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid gap-1">
           <p className="eyebrow">Your guide</p>
-          <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em]">Ksarth</h1>
+          <h1 className="text-[2.5rem] font-semibold leading-[1] tracking-[-0.045em]">Ksarth</h1>
         </div>
         {messages.length > 0 &&
           (confirmClear ? (

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { CareerMap } from "@/components/brand/career-map";
-import { NeonMetro } from "@/components/fx/neon-metro";
+import { RouteField } from "@/components/fx/route-field";
 import { InterestBars } from "@/components/brand/interest-bars";
 import { RouteLine } from "@/components/brand/route-line";
 import { Button, ButtonLink, Spinner } from "@/components/ui/button";
@@ -49,7 +49,7 @@ export default function ResultsPage() {
   if (matches.error?.status === 404) {
     return (
       <div className="grid max-w-xl gap-4">
-        <h1 className="text-[2.5rem] font-bold leading-[0.98]">No results yet</h1>
+        <h1 className="text-[2.5rem] font-semibold leading-[1]">No results yet</h1>
         <p className="text-muted">Take the interest assessment and your career map appears here. It takes about 5 minutes.</p>
         <ButtonLink href="/assessment" className="justify-self-start">
           Start the assessment
@@ -158,7 +158,7 @@ export default function ResultsPage() {
         </section>
       )}
 
-      <section aria-labelledby="family" className="grid gap-3 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:flex sm:items-center sm:justify-between sm:p-6">
+      <section aria-labelledby="family" className="grid gap-3 rounded-3xl border-2 border-sign bg-surface p-5 sm:flex sm:items-center sm:justify-between sm:p-6">
         <div className="grid gap-1">
           <h2 id="family" className="text-xl font-bold">
             Talk it through at home
@@ -366,19 +366,19 @@ function ResultsHero({ title, totalCareers, top, celebrateKey }: { title: string
     } catch {
       // Storage can be unavailable (private mode); celebrating twice is fine.
     }
-    const id = window.setTimeout(() => burstFrom(ref.current?.querySelector("h1"), { power: 1.5, confetti: true }), 450);
+    const id = window.setTimeout(() => burstFrom(ref.current?.querySelector("h1"), { power: 1, confetti: true }), 450);
     return () => window.clearTimeout(id);
   }, [celebrateKey]);
 
   return (
-    <section ref={ref} className="night relative isolate overflow-hidden rounded-[28px] border border-rule p-6 sm:p-10">
-      <NeonMetro className="absolute inset-0 -z-10 size-full opacity-60" />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_90%_at_20%_40%,var(--paper)_30%,transparent_80%)]" />
+    <section ref={ref} className="relative isolate overflow-hidden rounded-[28px] border border-rule bg-surface p-6 sm:p-10">
+      <RouteField className="absolute inset-0 -z-10 size-full opacity-50" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_90%_at_20%_40%,var(--surface)_35%,transparent_85%)]" />
       <div className="grid gap-5">
-        <p className="label-mono flex w-fit items-center gap-2 rounded-full border border-rule-strong bg-paper/60 px-3 py-1.5 text-pop backdrop-blur">
+        <p className="label-mono flex w-fit items-center gap-2 rounded-full border border-rule-strong bg-surface px-3 py-1.5 text-ink">
           <span className="size-1.5 rounded-full bg-pop" /> Your results are in
         </p>
-        <h1 className="rise max-w-3xl text-[2.5rem] font-bold leading-[0.95] tracking-[-0.05em] sm:text-[3.8rem]">{title}</h1>
+        <h1 className="rise max-w-3xl text-[2.4rem] font-semibold leading-[1] tracking-[-0.04em] sm:text-[3.1rem]">{title}</h1>
         <p className="max-w-[62ch] text-muted">
           These are the careers whose day-to-day best matches what you enjoy, out of {totalCareers}, drawn as routes from
           where you are now. They&apos;re places to start exploring, not a verdict.
@@ -387,10 +387,10 @@ function ResultsHero({ title, totalCareers, top, celebrateKey }: { title: string
           {top.map((m, i) => (
             <li
               key={m.slug}
-              className="rise flex items-center gap-2 rounded-full border border-rule-strong bg-paper/70 py-1.5 pl-1.5 pr-4 backdrop-blur"
+              className="rise flex items-center gap-2 rounded-full border border-rule bg-surface py-1.5 pl-1.5 pr-4"
               style={{ ["--rise-delay" as string]: `${0.3 + i * 0.12}s` }}
             >
-              <span className="grid size-7 place-items-center rounded-full font-mono text-xs font-bold text-[#0b0a12]" style={{ background: LINE_COLORS[i] }}>
+              <span className="grid size-7 place-items-center rounded-full font-mono text-xs font-bold text-white" style={{ background: LINE_COLORS[i] }}>
                 {i + 1}
               </span>
               <span className="font-display font-semibold">{m.title}</span>

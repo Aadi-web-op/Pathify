@@ -48,8 +48,8 @@ export function RiasecDemo() {
       <svg viewBox="0 0 220 220" className="w-full max-w-[260px] overflow-visible" aria-hidden="true">
         <defs>
           <linearGradient id="hex-fill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="var(--route-violet)" stopOpacity="0.75" />
-            <stop offset="1" stopColor="var(--route-pink)" stopOpacity="0.55" />
+            <stop offset="0" stopColor="var(--sign)" stopOpacity="0.28" />
+            <stop offset="1" stopColor="var(--route-pink)" stopOpacity="0.18" />
           </linearGradient>
         </defs>
         {[1, 0.66, 0.33].map((s) => (
@@ -76,7 +76,7 @@ export function RiasecDemo() {
           animate={{ d: hexPath(profile.values, r, c) }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
           fill="url(#hex-fill)"
-          stroke="var(--pop)"
+          stroke="var(--sign)"
           strokeWidth="2"
           strokeLinejoin="round"
         />
@@ -192,10 +192,10 @@ export function TryoutDemo() {
         <div className="h-7">
           {progress >= 1 && (
             <motion.span
-              initial={{ scale: 2.2, rotate: -14, opacity: 0 }}
-              animate={{ scale: 1, rotate: -4, opacity: 1 }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 420, damping: 14 }}
-              className="label-mono inline-block rounded-md border-2 border-pop bg-pop px-2 py-0.5 font-bold text-pop-ink"
+              className="label-mono inline-block rounded-full bg-sign-tint px-2.5 py-1 text-sign"
             >
               Feedback ready
             </motion.span>
@@ -265,7 +265,7 @@ export function MiniMap() {
           d={r.d}
           fill="none"
           stroke={r.color}
-          strokeWidth="6"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
           initial={{ pathLength: 0 }}
@@ -286,7 +286,7 @@ export function MiniMap() {
           cy={y}
           r={i === 0 || i === 4 ? 8 : 6}
           fill="var(--surface)"
-          stroke={i === 0 ? "var(--pop)" : "var(--ink)"}
+          stroke={i === 0 ? "var(--sign)" : "var(--ink)"}
           strokeWidth="3"
           initial={{ scale: 0 }}
           animate={inView ? { scale: 1 } : undefined}

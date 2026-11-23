@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Ambient light at the top of every app page. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(60%_80%_at_15%_0%,color-mix(in_oklab,var(--route-violet)_22%,transparent),transparent_70%),radial-gradient(45%_70%_at_90%_0%,color-mix(in_oklab,var(--route-pink)_14%,transparent),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(60%_80%_at_15%_0%,color-mix(in_oklab,var(--route-violet)_9%,transparent),transparent_70%),radial-gradient(45%_70%_at_90%_0%,color-mix(in_oklab,var(--route-pink)_6%,transparent),transparent_70%)]"
       />
       <header className="gutter sticky top-0 z-20 pt-3 [top:env(safe-area-inset-top,0px)]">
         <div className="mx-auto flex h-15 max-w-5xl items-center justify-between gap-4 rounded-full border border-rule bg-paper/75 pl-4 pr-2 shadow-[0_10px_40px_-24px_rgba(0,0,0,0.45)] backdrop-blur-xl">

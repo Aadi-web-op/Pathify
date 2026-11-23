@@ -58,7 +58,7 @@ export default function TryoutPage() {
         <p className="eyebrow">
           {tryout.data.career_title}, about {tryout.data.minutes} minutes
         </p>
-        <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em] sm:text-[3.4rem]">{tryout.data.title}</h1>
+        <h1 className="text-[2.5rem] font-semibold leading-[1] tracking-[-0.045em] sm:text-[3.1rem]">{tryout.data.title}</h1>
         <p className="text-lg">{tryout.data.role}</p>
         <p className="text-muted">{tryout.data.brief}</p>
       </header>
@@ -293,7 +293,7 @@ function formatAnswer(task: Attempt["reviews"][number], tryout: Tryout, value: u
 function Review({ attempt, onRetry }: { attempt: Attempt; onRetry: () => void }) {
   return (
     <section aria-labelledby="review-title" className="grid gap-8">
-      <div className="grid gap-2 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-6">
+      <div className="grid gap-2 rounded-3xl border-2 border-sign bg-surface p-5 sm:p-6">
         <p className="eyebrow">Your result</p>
         <h2 id="review-title" className="text-2xl font-bold">
           {scoreText(attempt.points, attempt.max_points, attempt.ungraded)}
@@ -407,7 +407,7 @@ function ReflectionForm({ attempt }: { attempt: Attempt }) {
   }
 
   return (
-    <form onSubmit={save} className="grid gap-5 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-6">
+    <form onSubmit={save} className="grid gap-5 rounded-3xl border-2 border-sign bg-surface p-5 sm:p-6">
       <h2 className="text-xl font-bold">How did that feel?</h2>
       <fieldset className="grid gap-2">
         <legend className="mb-2 font-display font-bold">How much did you enjoy the work?</legend>

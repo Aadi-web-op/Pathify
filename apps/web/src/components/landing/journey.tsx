@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring, useTransform } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "motion/react";
 import { useRef, useState } from "react";
 
 export type Stop = { when: string; question: string; body: string; exams: string[] };
@@ -25,17 +25,11 @@ export function Journey({ stops }: { stops: Stop[] }) {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.3 });
   const [active, setActive] = useState(0);
   useMotionValueEvent(scrollYProgress, "change", (v) => setActive(v < 0.36 ? 0 : v < 0.7 ? 1 : 2));
-  const glowY = useTransform(progress, [0, 1], ["10%", "90%"]);
   const stop = stops[active];
 
   return (
     <section ref={ref} aria-labelledby="journey" className="relative h-[300vh]">
       <div className="sticky top-0 flex h-svh items-center overflow-hidden">
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-35 transition-[background] duration-700 [mask-image:linear-gradient(transparent,#000_20%,#000_80%,transparent)]"
-          style={{ ["--gy" as string]: glowY, background: `radial-gradient(60vmax 45vmax at 50% var(--gy), ${COLORS[active]}, transparent 70%)` }}
-        />
         <div className="gutter relative mx-auto grid w-full max-w-6xl items-center gap-8 md:grid-cols-[1.1fr_1fr] [&>*]:min-w-0">
           <div className="grid gap-4 md:gap-6">
             <p className="label-mono text-muted">
@@ -53,13 +47,11 @@ export function Journey({ stops }: { stops: Stop[] }) {
                 transition={{ duration: 0.45, ease: [0.2, 0.7, 0.2, 1] }}
                 className="grid gap-4 md:gap-5"
               >
-                <span
-                  className="label-mono w-fit rounded-full px-3 py-1 font-semibold text-[#0b0a12]"
-                  style={{ background: COLORS[active] }}
-                >
+                <span className="label-mono flex w-fit items-center gap-2 rounded-full border border-rule-strong px-3 py-1 text-ink">
+                  <span className="size-2 rounded-full" style={{ background: COLORS[active] }} />
                   Stop {active + 1}: {stop.when}
                 </span>
-                <p className="font-display text-[clamp(2rem,6vw,4.6rem)] font-bold leading-[0.95] tracking-[-0.04em]">
+                <p className="font-display text-[clamp(2rem,5.5vw,4rem)] font-semibold leading-[1] tracking-[-0.04em]">
                   {stop.question}
                 </p>
                 <p className="max-w-[48ch] text-muted md:text-lg">{stop.body}</p>
@@ -83,12 +75,12 @@ export function Journey({ stops }: { stops: Stop[] }) {
           </div>
 
           <svg viewBox="0 0 400 600" className="h-[26svh] w-full max-md:order-first md:h-[72svh]" aria-hidden="true">
-            <path d={PATH} fill="none" stroke="var(--rule)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={PATH} fill="none" stroke="var(--rule)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
             <motion.path
               d={PATH}
               fill="none"
               stroke="url(#journey-grad)"
-              strokeWidth="14"
+              strokeWidth="8"
               strokeLinecap="round"
               strokeLinejoin="round"
               style={{ pathLength: progress }}
@@ -105,16 +97,16 @@ export function Journey({ stops }: { stops: Stop[] }) {
                 <circle
                   cx={s.x}
                   cy={s.y}
-                  r={i <= active ? 22 : 16}
+                  r={i <= active ? 16 : 12}
                   fill="var(--paper)"
                   stroke={i <= active ? COLORS[i] : "var(--rule-strong)"}
-                  strokeWidth="6"
+                  strokeWidth="4"
                   className="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                 />
                 <circle
                   cx={s.x}
                   cy={s.y}
-                  r={i === active ? 9 : 0}
+                  r={i === active ? 6 : 0}
                   fill="var(--pop)"
                   className="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                 />
