@@ -122,7 +122,7 @@ export function KsarthChat() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="grid gap-1">
           <p className="eyebrow">Your guide</p>
-          <h1 className="text-[2.2rem] font-extrabold tracking-[-0.015em]">Ksarth</h1>
+          <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em]">Ksarth</h1>
         </div>
         {messages.length > 0 &&
           (confirmClear ? (
@@ -156,7 +156,7 @@ export function KsarthChat() {
           </p>
         )}
         {history.isSuccess && messages.length === 0 && !pending && (
-          <div className="rounded-[14px] border border-dashed border-rule-strong p-6 text-muted">
+          <div className="rounded-3xl border border-dashed border-rule-strong p-6 text-muted">
             <p className="font-display text-lg font-bold text-ink">Ask about streams, exams, degrees or jobs.</p>
             <p className="mt-1">
               Ksarth knows your class and goals from your profile. It will tell you when it isn&apos;t sure, and point you
@@ -193,7 +193,7 @@ export function KsarthChat() {
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={onKey}
             placeholder="Ask Ksarth anything about your next step"
-            className="max-h-48 min-h-14 w-full resize-y rounded-lg border-2 border-rule-strong bg-surface px-3.5 py-3 focus:border-sign focus:outline-none"
+            className="max-h-48 min-h-14 w-full resize-y rounded-2xl border-2 border-rule-strong bg-surface px-3.5 py-3 focus:border-sign focus:outline-none"
           />
           <Button type="submit" disabled={!draft.trim() || Boolean(pending)} className="h-14 shrink-0">
             Send
@@ -228,7 +228,7 @@ function Bubble({
   if (role === "user") {
     return (
       <div className="flex justify-end">
-        <p className="max-w-[85%] whitespace-pre-wrap rounded-[14px] rounded-br-[4px] bg-ink px-4 py-3 text-paper">{content}</p>
+        <p className="max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-br-[4px] bg-ink px-4 py-3 text-paper">{content}</p>
       </div>
     );
   }
@@ -236,11 +236,11 @@ function Bubble({
     <div className="grid grid-cols-[2rem_1fr] gap-3">
       <span
         aria-hidden="true"
-        className="grid size-8 place-items-center rounded-full bg-sign font-display text-sm font-extrabold text-sign-ink"
+        className="grid size-8 place-items-center rounded-full bg-sign font-display text-sm font-bold text-sign-ink"
       >
         K
       </span>
-      <div className={clsx("min-w-0 rounded-[14px] rounded-tl-[4px] border border-rule bg-surface px-4 py-3", streaming && "border-sign/40")}>
+      <div className={clsx("min-w-0 rounded-3xl rounded-tl-[4px] border border-rule bg-surface px-4 py-3", streaming && "border-sign/40")}>
         <span className="sr-only">Ksarth said:</span>
         {thinking ? (
           <span className="flex items-center gap-2 text-muted">

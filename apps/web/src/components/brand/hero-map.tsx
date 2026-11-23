@@ -93,16 +93,16 @@ export function HeroMap() {
         {/* Start: the student */}
         <circle cx={70} cy={200} r={19} fill="var(--surface)" stroke="var(--ink)" strokeWidth={4} />
         <circle cx={70} cy={200} r={6} fill="var(--ink)" />
-        <text x={70} y={246} textAnchor="middle" className="fill-ink font-display text-[15px] font-extrabold">
+        <text x={70} y={246} textAnchor="middle" className="fill-ink font-display text-[15px] font-bold">
           You, Class 10
         </text>
 
         {/* Interchange: where the routes meet */}
         <rect x={668} y={176} width={64} height={48} rx={24} fill="var(--surface)" stroke="var(--ink)" strokeWidth={4} />
-        <text x={700} y={250} textAnchor="middle" className="fill-ink font-display text-[15px] font-extrabold">
+        <text x={700} y={250} textAnchor="middle" className="fill-ink font-display text-[15px] font-bold">
           Product, data,
         </text>
-        <text x={700} y={268} textAnchor="middle" className="fill-ink font-display text-[15px] font-extrabold">
+        <text x={700} y={268} textAnchor="middle" className="fill-ink font-display text-[15px] font-bold">
           research roles
         </text>
       </svg>

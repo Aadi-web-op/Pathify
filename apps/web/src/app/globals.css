@@ -1,77 +1,103 @@
 @import "tailwindcss";
 
 /*
-  Route Map design system.
-  Paper-light base, ink text, Indian highway-sign green as the single accent.
-  Saffron and blue are route colours: they only ever mark career routes.
+  Night Metro design system.
+  A transit map after dark: ink-black or warm paper base, electric violet as the
+  action colour, acid lime as the highlighter, and neon route colours that only
+  ever mark routes and data. Type: Bricolage Grotesque for display, Geist for
+  text, JetBrains Mono for labels, Instrument Serif italic for the accent word.
 */
 
 :root {
-  --paper: #f3f5f1;
+  --paper: #f4f2ec;
   --surface: #ffffff;
-  --surface-sunk: #e9ede7;
-  --ink: #16201b;
-  --muted: #56625c;
-  --rule: #d6dcd5;
-  --rule-strong: #b9c2ba;
-  --sign: #0d6b4e;
-  --sign-hover: #0a5940;
+  --surface-sunk: #ebe8df;
+  --ink: #0e0d14;
+  --muted: #5c5a6b;
+  --rule: #dcd8cd;
+  --rule-strong: #bdb8aa;
+  --sign: #5a36f5;
+  --sign-hover: #4724e0;
   --sign-ink: #ffffff;
-  --sign-tint: #e1efe8;
-  --route-saffron: #c46a12;
-  --route-blue: #2d58c8;
-  --danger: #a8261d;
-  --danger-tint: #fbe9e7;
+  --sign-tint: #ebe6ff;
+  --pop: #d7ff3c;
+  --pop-ink: #0e0d14;
+  --route-saffron: #e8620c;
+  --route-blue: #0f8fc4;
+  --route-pink: #e0299f;
+  --route-violet: #5a36f5;
+  --glow: 0 0 0 transparent;
+  --danger: #c0261b;
+  --danger-tint: #fde8e6;
   --warn: #8a5a00;
   --warn-tint: #fcf1d9;
-  --focus: #c46a12;
+  --focus: #e0299f;
+  --grain-opacity: 0.05;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #111613;
-    --surface: #182019;
-    --surface-sunk: #212923;
-    --ink: #e4e9e4;
-    --muted: #9ba79f;
-    --rule: #2b3430;
-    --rule-strong: #3d4842;
-    --sign: #2fa57b;
-    --sign-hover: #3cb98c;
-    --sign-ink: #08130e;
-    --sign-tint: #17332a;
-    --route-saffron: #f0a04b;
-    --route-blue: #84a2f5;
-    --danger: #f28a80;
-    --danger-tint: #3a1e1b;
-    --warn: #e8b54a;
+    --paper: #08080d;
+    --surface: #111119;
+    --surface-sunk: #191924;
+    --ink: #f3f1ff;
+    --muted: #a09db8;
+    --rule: #24243a;
+    --rule-strong: #3a3a5c;
+    --sign: #a48dff;
+    --sign-hover: #b9a8ff;
+    --sign-ink: #0b0a12;
+    --sign-tint: #1f1940;
+    --pop: #d7ff3c;
+    --pop-ink: #0b0a12;
+    --route-saffron: #ff9450;
+    --route-blue: #3fd8ff;
+    --route-pink: #ff5ad9;
+    --route-violet: #a48dff;
+    --glow: 0 0 24px color-mix(in oklab, var(--sign) 45%, transparent);
+    --danger: #ff8a80;
+    --danger-tint: #3a1a1c;
+    --warn: #f0c050;
     --warn-tint: #33290f;
-    --focus: #f0a04b;
+    --focus: #ff5ad9;
+    --grain-opacity: 0.07;
     color-scheme: dark;
   }
 }
 
-:root[data-theme="dark"] {
-  --paper: #111613;
-  --surface: #182019;
-  --surface-sunk: #212923;
-  --ink: #e4e9e4;
-  --muted: #9ba79f;
-  --rule: #2b3430;
-  --rule-strong: #3d4842;
-  --sign: #2fa57b;
-  --sign-hover: #3cb98c;
-  --sign-ink: #08130e;
-  --sign-tint: #17332a;
-  --route-saffron: #f0a04b;
-  --route-blue: #84a2f5;
-  --danger: #f28a80;
-  --danger-tint: #3a1e1b;
-  --warn: #e8b54a;
+/* Forced night palette: the theme option, and brand moments such as the landing hero. */
+:root[data-theme="dark"],
+.night {
+  --paper: #08080d;
+  --surface: #111119;
+  --surface-sunk: #191924;
+  --ink: #f3f1ff;
+  --muted: #a09db8;
+  --rule: #24243a;
+  --rule-strong: #3a3a5c;
+  --sign: #a48dff;
+  --sign-hover: #b9a8ff;
+  --sign-ink: #0b0a12;
+  --sign-tint: #1f1940;
+  --pop: #d7ff3c;
+  --pop-ink: #0b0a12;
+  --route-saffron: #ff9450;
+  --route-blue: #3fd8ff;
+  --route-pink: #ff5ad9;
+  --route-violet: #a48dff;
+  --glow: 0 0 24px color-mix(in oklab, var(--sign) 45%, transparent);
+  --danger: #ff8a80;
+  --danger-tint: #3a1a1c;
+  --warn: #f0c050;
   --warn-tint: #33290f;
-  --focus: #f0a04b;
+  --focus: #ff5ad9;
+  --grain-opacity: 0.07;
   color-scheme: dark;
+}
+.night {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 @theme inline {
@@ -88,16 +114,25 @@
   --color-sign-tint: var(--sign-tint);
   --color-saffron: var(--route-saffron);
   --color-route-blue: var(--route-blue);
+  --color-route-pink: var(--route-pink);
+  --color-route-violet: var(--route-violet);
+  --color-pop: var(--pop);
+  --color-pop-ink: var(--pop-ink);
   --color-danger: var(--danger);
   --color-danger-tint: var(--danger-tint);
   --color-warn: var(--warn);
   --color-warn-tint: var(--warn-tint);
 
-  --font-display: "Overpass", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
-  --font-sans: "Source Sans 3", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "Overpass Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display: "Bricolage Grotesque Variable", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Geist Variable", "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
 
-  --radius-sign: 10px;
+  --radius-sign: 14px;
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
 }
 
 @layer base {
@@ -111,6 +146,18 @@
     font-size: 1.0625rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  /* Film grain over everything: texture without images. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
   }
   h1,
   h2,
@@ -118,24 +165,97 @@
   h4 {
     font-family: var(--font-display);
     text-wrap: balance;
-    line-height: 1.15;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    font-weight: 750;
   }
   :focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 2px;
   }
   ::selection {
-    background: var(--sign-tint);
+    background: var(--pop);
+    color: var(--pop-ink);
   }
 }
 
 @utility eyebrow {
-  font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--sign);
+}
+
+/* Mono label: the small uppercase captions of the transit-map system. */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* The accent word in a headline: serif italic, slightly larger. */
+@utility serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Highlighter swipe behind a word. */
+@utility highlight {
+  background: linear-gradient(transparent 12%, var(--pop) 12%, var(--pop) 88%, transparent 88%);
+  color: var(--pop-ink);
+  padding: 0 0.12em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Text filled with the aurora gradient. */
+@utility text-aurora {
+  background: linear-gradient(100deg, var(--route-violet), var(--route-pink) 45%, var(--route-saffron) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* A card that lights up under the pointer (needs --mx/--my, set by the Spotlight component). */
+@utility spotlight {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, -200px),
+      color-mix(in oklab, var(--sign) 85%, transparent),
+      transparent 60%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, -300px),
+      color-mix(in oklab, var(--sign) 9%, transparent),
+      transparent 55%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
 }
 
 @utility tabular {
@@ -145,6 +265,58 @@
 @utility gutter {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--tilt, 0deg));
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.rise {
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .animate-marquee,
+  .animate-float,
+  .animate-pulse-ring {
+    animation: none !important;
+  }
 }
 
 /* Routes draw themselves once when a map first appears. Paths set pathLength="1". */
@@ -233,7 +405,8 @@
 @media print {
   :root,
   :root:not([data-theme="light"]),
-  :root[data-theme="dark"] {
+  :root[data-theme="dark"],
+  .night {
     --paper: #ffffff;
     --surface: #ffffff;
     --surface-sunk: #f1f3ef;
@@ -246,6 +419,9 @@
   }
   body {
     font-size: 11pt;
+  }
+  body::after {
+    display: none;
   }
   header.sticky,
   nav[aria-label="Main"] {

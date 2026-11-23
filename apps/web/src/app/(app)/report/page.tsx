@@ -98,7 +98,7 @@ function SharePanel({ lang }: { lang: Lang }) {
   }
 
   return (
-    <section aria-labelledby="share-title" className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5">
+    <section aria-labelledby="share-title" className="grid gap-3 spotlight rounded-3xl border border-rule bg-surface p-5">
       <h2 id="share-title" className="font-display text-lg font-bold">
         Send a private link
       </h2>
@@ -119,7 +119,7 @@ function SharePanel({ lang }: { lang: Lang }) {
               readOnly
               value={url}
               onFocus={(e) => e.currentTarget.select()}
-              className="h-11 min-w-0 flex-1 rounded-lg border-2 border-rule-strong bg-paper px-3 font-mono text-sm"
+              className="h-11 min-w-0 flex-1 rounded-2xl border-2 border-rule-strong bg-paper px-3 font-mono text-sm"
             />
             <Button onClick={copy}>{copied ? "Copied" : "Copy link"}</Button>
             <Button variant="ghost" onClick={revoke} busy={busy}>

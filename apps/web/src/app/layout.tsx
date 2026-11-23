@@ -1,13 +1,7 @@
-import "@fontsource/overpass/400.css";
-import "@fontsource/overpass/600.css";
-import "@fontsource/overpass/700.css";
-import "@fontsource/overpass/800.css";
-import "@fontsource/overpass-mono/400.css";
-import "@fontsource/overpass-mono/600.css";
-import "@fontsource/source-sans-3/400.css";
-import "@fontsource/source-sans-3/400-italic.css";
-import "@fontsource/source-sans-3/600.css";
-import "@fontsource/source-sans-3/700.css";
+import "@fontsource-variable/bricolage-grotesque/wdth.css";
+import "@fontsource-variable/geist/index.css";
+import "@fontsource-variable/jetbrains-mono/index.css";
+import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource/noto-sans-devanagari/devanagari-400.css";
 import "@fontsource/noto-sans-devanagari/devanagari-700.css";
 import "./globals.css";
@@ -30,8 +24,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f5f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#111613" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f2ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#08080d" },
   ],
 };
 

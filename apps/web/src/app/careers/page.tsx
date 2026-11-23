@@ -27,7 +27,7 @@ export default function CareersPage() {
         <div className="mx-auto grid max-w-6xl gap-10">
           <div className="grid max-w-3xl gap-3">
             <p className="eyebrow">Career library</p>
-            <h1 className="text-[2.4rem] font-extrabold leading-[1.05] tracking-[-0.015em] sm:text-[3rem]">
+            <h1 className="text-[2.6rem] font-bold tracking-[-0.045em] sm:text-[3rem]">
               Careers in India, route by route
             </h1>
             <p className="text-lg text-muted">

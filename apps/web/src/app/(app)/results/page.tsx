@@ -4,9 +4,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CareerMap } from "@/components/brand/career-map";
+import { NeonMetro } from "@/components/fx/neon-metro";
 import { InterestBars } from "@/components/brand/interest-bars";
 import { RouteLine } from "@/components/brand/route-line";
 import { Button, ButtonLink, Spinner } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import { ApiError, type StudentProfile } from "@/lib/api";
 import { extendAssessment, OVERVIEW_KEY, startAssessment, useMatches, useOverview } from "@/lib/assessment";
 import { chosenRoute, LINE_COLORS, mapLine, startStation } from "@/lib/career-map-data";
 import { clusterLabel, type Match, type Result, withArticle, yearsText } from "@/lib/careers";
+import { burstFrom } from "@/lib/burst";
 import { useMe } from "@/lib/session";
 
 const CONFIDENCE: Record<Result["confidence"], { title: string; body: string }> = {
@@ -47,7 +49,7 @@ export default function ResultsPage() {
   if (matches.error?.status === 404) {
     return (
       <div className="grid max-w-xl gap-4">
-        <h1 className="text-[2.2rem] font-extrabold">No results yet</h1>
+        <h1 className="text-[2.5rem] font-bold leading-[0.98]">No results yet</h1>
         <p className="text-muted">Take the interest assessment and your career map appears here. It takes about 5 minutes.</p>
         <ButtonLink href="/assessment" className="justify-self-start">
           Start the assessment
@@ -65,18 +67,14 @@ export default function ResultsPage() {
 
   return (
     <div className="grid gap-12">
-      <section className="grid gap-3">
-        <p className="eyebrow">Your results</p>
-        <h1 className="max-w-3xl text-[2.2rem] font-extrabold leading-[1.08] tracking-[-0.015em] sm:text-[2.6rem]">
-          You&apos;re most drawn to {names[0]}, {names[1]} and {names[2]} work
-        </h1>
-        <p className="max-w-[62ch] text-muted">
-          Here are the careers whose day-to-day best matches what you enjoy, out of {total_careers}, drawn as routes from
-          where you are now. They&apos;re places to start exploring, not a verdict.
-        </p>
-      </section>
+      <ResultsHero
+        title={`You're most drawn to ${names[0]}, ${names[1]} and ${names[2]} work`}
+        totalCareers={total_careers}
+        top={top}
+        celebrateKey={`${result.answered}:${result.ranked.join("")}`}
+      />
 
-      <section aria-labelledby="map-title" className="grid gap-4 rounded-[14px] border border-rule bg-surface p-4 sm:p-6">
+      <section aria-labelledby="map-title" className="grid gap-4 spotlight rounded-3xl border border-rule bg-surface p-4 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="map-title" className="text-xl font-bold">
             Your career map
@@ -92,7 +90,7 @@ export default function ResultsPage() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="interests" className="grid content-start gap-5 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+        <section aria-labelledby="interests" className="grid content-start gap-5 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
           <div className="grid gap-1">
             <h2 id="interests" className="text-xl font-bold">
               Your interests
@@ -106,7 +104,7 @@ export default function ResultsPage() {
             rows={result.dimensions.map((d) => ({ key: d.key, name: d.name, short: d.short, score: d.score, margin: d.margin }))}
           />
         </section>
-        <section aria-labelledby="sure" className="grid content-start gap-3 rounded-[14px] border border-rule p-5 sm:p-6">
+        <section aria-labelledby="sure" className="grid content-start gap-3 rounded-3xl border border-rule p-5 sm:p-6">
           <h2 id="sure" className="text-xl font-bold">
             How sure is this?
           </h2>
@@ -124,7 +122,7 @@ export default function ResultsPage() {
       </div>
 
       <section aria-labelledby="top" className="grid gap-6">
-        <h2 id="top" className="text-2xl font-extrabold">
+        <h2 id="top" className="text-2xl font-bold">
           Your top three, up close
         </h2>
         {top.map((match, index) => (
@@ -134,7 +132,7 @@ export default function ResultsPage() {
 
       {rest.length > 0 && (
         <section aria-labelledby="more" className="grid gap-4">
-          <h2 id="more" className="text-2xl font-extrabold">
+          <h2 id="more" className="text-2xl font-bold">
             More to explore
           </h2>
           <ol className="grid border-t border-rule" start={4}>
@@ -160,9 +158,9 @@ export default function ResultsPage() {
         </section>
       )}
 
-      <section aria-labelledby="family" className="grid gap-3 rounded-[14px] border-2 border-sign bg-surface p-5 sm:flex sm:items-center sm:justify-between sm:p-6">
+      <section aria-labelledby="family" className="grid gap-3 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:flex sm:items-center sm:justify-between sm:p-6">
         <div className="grid gap-1">
-          <h2 id="family" className="text-xl font-extrabold">
+          <h2 id="family" className="text-xl font-bold">
             Talk it through at home
           </h2>
           <p className="text-muted">A one-page report for your parents or guardian, in English or Hindi, with questions to discuss.</p>
@@ -172,7 +170,7 @@ export default function ResultsPage() {
         </ButtonLink>
       </section>
 
-      <details className="group rounded-[14px] border border-rule p-5 sm:p-6">
+      <details className="group rounded-3xl border border-rule p-5 sm:p-6">
         <summary className="cursor-pointer font-display text-lg font-bold">How we work this out</summary>
         <div className="mt-4 grid max-w-[68ch] gap-3 text-muted">
           <p>
@@ -255,18 +253,18 @@ function MatchCard({ match, index, profile }: { match: Match; index: number; pro
   const others = match.routes.filter((r) => r.id !== route.id && r.open);
   const ask = `What is it really like to become ${withArticle(match.title)}, starting from where I am?`;
   return (
-    <article id={`match-${match.slug}`} className="grid scroll-mt-24 gap-5 rounded-[14px] border border-rule bg-surface p-5 sm:p-7">
+    <article id={`match-${match.slug}`} className="grid scroll-mt-24 gap-5 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-7">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <span
             aria-hidden="true"
-            className="grid h-8 min-w-11 place-items-center rounded-md font-display font-extrabold text-[var(--surface)]"
+            className="grid h-8 min-w-11 place-items-center rounded-md font-display font-bold text-[var(--surface)]"
             style={{ background: LINE_COLORS[index] }}
           >
             {index + 1}
           </span>
           <div>
-            <h3 className="text-2xl font-extrabold">{match.title}</h3>
+            <h3 className="text-2xl font-bold">{match.title}</h3>
             <p className="text-sm text-muted">{clusterLabel(match.cluster)}</p>
           </div>
         </div>
@@ -354,5 +352,52 @@ function MatchCard({ match, index, profile }: { match: Match; index: number; pro
         </Link>
       </footer>
     </article>
+  );
+}
+
+/** The reveal: a night card with the live map behind it, and one burst of confetti the first time you see these results. */
+function ResultsHero({ title, totalCareers, top, celebrateKey }: { title: string; totalCareers: number; top: Match[]; celebrateKey: string }) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const key = `pathify:celebrated:${celebrateKey}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // Storage can be unavailable (private mode); celebrating twice is fine.
+    }
+    const id = window.setTimeout(() => burstFrom(ref.current?.querySelector("h1"), { power: 1.5, confetti: true }), 450);
+    return () => window.clearTimeout(id);
+  }, [celebrateKey]);
+
+  return (
+    <section ref={ref} className="night relative isolate overflow-hidden rounded-[28px] border border-rule p-6 sm:p-10">
+      <NeonMetro className="absolute inset-0 -z-10 size-full opacity-60" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_90%_at_20%_40%,var(--paper)_30%,transparent_80%)]" />
+      <div className="grid gap-5">
+        <p className="label-mono flex w-fit items-center gap-2 rounded-full border border-rule-strong bg-paper/60 px-3 py-1.5 text-pop backdrop-blur">
+          <span className="size-1.5 rounded-full bg-pop" /> Your results are in
+        </p>
+        <h1 className="rise max-w-3xl text-[2.5rem] font-bold leading-[0.95] tracking-[-0.05em] sm:text-[3.8rem]">{title}</h1>
+        <p className="max-w-[62ch] text-muted">
+          These are the careers whose day-to-day best matches what you enjoy, out of {totalCareers}, drawn as routes from
+          where you are now. They&apos;re places to start exploring, not a verdict.
+        </p>
+        <ol className="flex flex-wrap gap-2" aria-label="Your top three matches">
+          {top.map((m, i) => (
+            <li
+              key={m.slug}
+              className="rise flex items-center gap-2 rounded-full border border-rule-strong bg-paper/70 py-1.5 pl-1.5 pr-4 backdrop-blur"
+              style={{ ["--rise-delay" as string]: `${0.3 + i * 0.12}s` }}
+            >
+              <span className="grid size-7 place-items-center rounded-full font-mono text-xs font-bold text-[#0b0a12]" style={{ background: LINE_COLORS[i] }}>
+                {i + 1}
+              </span>
+              <span className="font-display font-semibold">{m.title}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
   );
 }

@@ -18,9 +18,12 @@ export function Choice({ name, value, label, detail, checked, onChange, type = "
     <label
       htmlFor={id}
       className={clsx(
-        "group relative flex cursor-pointer items-start gap-3 rounded-lg border-2 bg-surface px-4 py-3.5 transition-colors",
+        "group relative flex cursor-pointer items-start gap-3 rounded-2xl border-2 bg-surface px-4 py-3.5 select-none",
+        "transition-[transform,border-color,background-color,box-shadow] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.97]",
         "has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--focus)]",
-        checked ? "border-sign bg-sign-tint" : "border-rule hover:border-rule-strong",
+        checked
+          ? "border-sign bg-sign-tint shadow-[0_10px_30px_-14px_color-mix(in_oklab,var(--sign)_80%,transparent)]"
+          : "border-rule hover:-translate-y-0.5 hover:border-rule-strong",
         disabled && !checked && "cursor-not-allowed opacity-50",
       )}
     >
@@ -37,9 +40,9 @@ export function Choice({ name, value, label, detail, checked, onChange, type = "
       <span
         aria-hidden="true"
         className={clsx(
-          "mt-0.5 grid size-5 shrink-0 place-items-center border-2 transition-colors",
+          "mt-0.5 grid size-5 shrink-0 place-items-center border-2 transition-[transform,background-color,border-color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
           type === "radio" ? "rounded-full" : "rounded-[5px]",
-          checked ? "border-sign bg-sign" : "border-rule-strong bg-surface",
+          checked ? "scale-110 border-sign bg-sign" : "border-rule-strong bg-surface",
         )}
       >
         {checked &&
@@ -52,7 +55,7 @@ export function Choice({ name, value, label, detail, checked, onChange, type = "
           ))}
       </span>
       <span className="grid gap-0.5">
-        <span className="font-display font-bold leading-tight">{label}</span>
+        <span className="font-display font-semibold leading-tight">{label}</span>
         {detail && <span className="text-sm leading-snug text-muted">{detail}</span>}
       </span>
     </label>

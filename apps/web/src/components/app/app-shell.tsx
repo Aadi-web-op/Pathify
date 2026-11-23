@@ -1,11 +1,13 @@
 "use client";
 
 import clsx from "clsx";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 
 import { Logo } from "@/components/brand/logo";
+import { SpotlightGroup } from "@/components/fx/bits";
 import { Button, Spinner } from "@/components/ui/button";
 import { Notice } from "@/components/ui/notice";
 import { applyTheme } from "@/lib/theme";
@@ -58,10 +60,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [me]);
 
   return (
-    <div className="grid min-h-dvh grid-rows-[auto_1fr]">
-      <header className="gutter sticky top-0 z-20 border-b border-rule bg-paper/95 backdrop-blur-[2px] [top:env(safe-area-inset-top,0px)]">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4">
-          <Logo href="/home" compactOnPhone />
+    <div className="relative grid min-h-dvh grid-rows-[auto_1fr]">
+      {/* Ambient light at the top of every app page. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(60%_80%_at_15%_0%,color-mix(in_oklab,var(--route-violet)_22%,transparent),transparent_70%),radial-gradient(45%_70%_at_90%_0%,color-mix(in_oklab,var(--route-pink)_14%,transparent),transparent_70%)]"
+      />
+      <header className="gutter sticky top-0 z-20 pt-3 [top:env(safe-area-inset-top,0px)]">
+        <div className="mx-auto flex h-15 max-w-5xl items-center justify-between gap-4 rounded-full border border-rule bg-paper/75 pl-4 pr-2 shadow-[0_10px_40px_-24px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+          <Logo href="/home" />
           <nav aria-label="Main" className="flex items-center gap-1 max-sm:hidden">
             {NAV.map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -71,25 +78,31 @@ export function AppShell({ children }: { children: ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={clsx(
-                    "relative rounded-md px-2 py-2 font-display text-[0.95rem] font-bold sm:px-3",
-                    active ? "text-ink" : "text-muted hover:text-ink",
+                    "relative isolate rounded-full px-3 py-2 font-display text-[0.95rem] font-semibold transition-colors",
+                    active ? "text-sign-ink" : "text-muted hover:text-ink",
                   )}
                 >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 -z-10 rounded-full bg-sign"
+                      transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    />
+                  )}
                   {item.label}
-                  {active && <span className="absolute inset-x-2 -bottom-[13px] h-1 rounded-full bg-sign sm:inset-x-3" />}
                 </Link>
               );
             })}
-            <Button variant="ghost" size="sm" onClick={signOut} className="ml-1 text-muted max-sm:hidden">
+            <Button variant="ghost" size="sm" onClick={signOut} className="ml-1 text-muted">
               Sign out
             </Button>
           </nav>
         </div>
       </header>
-      {/* On phones the five sections live in a bottom tab bar, so they fit even 360px screens. */}
+      {/* On phones the five sections live in a floating dock, so they fit even 360px screens. */}
       <nav
         aria-label="Main"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-rule bg-paper/95 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-[2px] sm:hidden"
+        className="fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom,0px))] z-30 grid grid-cols-5 rounded-[22px] border border-rule bg-paper/80 p-1 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.55)] backdrop-blur-xl sm:hidden"
       >
         {NAV.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -99,12 +112,18 @@ export function AppShell({ children }: { children: ReactNode }) {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={clsx(
-                "relative grid justify-items-center gap-0.5 pb-2 pt-2.5 font-display text-[0.72rem] font-bold",
-                active ? "text-sign" : "text-muted",
+                "relative isolate grid justify-items-center gap-0.5 rounded-[18px] pb-1.5 pt-2 font-display text-[0.7rem] font-semibold transition-colors",
+                active ? "text-sign-ink" : "text-muted",
               )}
             >
-              {active && <span className="absolute inset-x-4 top-0 h-[3px] rounded-b-full bg-sign" />}
-              <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              {active && (
+                <motion.span
+                  layoutId="dock-pill"
+                  className="absolute inset-0 -z-10 rounded-[18px] bg-sign"
+                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                />
+              )}
+              <svg viewBox="0 0 24 24" className="size-[22px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 {ICONS[item.icon]}
               </svg>
               {item.label}
@@ -112,8 +131,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           );
         })}
       </nav>
-      <main id="main" className="gutter pb-16 pt-8 max-sm:pb-28">
-        <div className="mx-auto max-w-5xl">
+      <main id="main" className="gutter isolate pb-16 pt-10 max-sm:pb-32">
+        <SpotlightGroup className="mx-auto max-w-5xl">
           {isPending || (me && !me.onboarded) ? (
             <p className="flex items-center gap-2 text-muted">
               <Spinner /> Loading…
@@ -128,7 +147,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           ) : me ? (
             children
           ) : null}
-        </div>
+        </SpotlightGroup>
       </main>
     </div>
   );

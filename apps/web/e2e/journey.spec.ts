@@ -61,7 +61,7 @@ test("a new student signs up, sets up a profile, talks to Ksarth and deletes the
   const email = uniqueEmail(info.project.name);
 
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Find your route from school to your first job.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Don't guess your future. Map it.");
   await expectNoSideScroll(page);
 
   await signUp(page, email);

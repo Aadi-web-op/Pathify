@@ -13,7 +13,7 @@ export function Notice({ tone = "info", children, className }: { tone?: Tone; ch
   return (
     <div
       role={tone === "error" ? "alert" : "status"}
-      className={clsx("rounded-lg border px-4 py-3 text-[0.95rem] leading-snug", tones[tone], className)}
+      className={clsx("rounded-2xl border px-4 py-3 text-[0.95rem] leading-snug", tones[tone], className)}
     >
       {children}
     </div>

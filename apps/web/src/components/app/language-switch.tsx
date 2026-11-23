@@ -6,7 +6,7 @@ export type Lang = "en" | "hi";
 
 export function LanguageSwitch({ value, onChange }: { value: Lang; onChange: (lang: Lang) => void }) {
   return (
-    <div role="radiogroup" aria-label="Report language" className="inline-flex rounded-lg border-2 border-ink p-0.5">
+    <div role="radiogroup" aria-label="Report language" className="inline-flex rounded-2xl border-2 border-ink p-0.5">
       {(
         [
           ["en", "English"],

@@ -45,10 +45,12 @@ export default function HomePage() {
     <div className="grid gap-10">
       <section className="grid gap-2">
         <p className="eyebrow">{stageLabel(profile)}</p>
-        <h1 className="text-[2.2rem] font-extrabold tracking-[-0.015em] sm:text-[2.6rem]">Hi {firstName}, here&apos;s your road ahead</h1>
+        <h1 className="text-[2.6rem] font-bold leading-[0.95] tracking-[-0.05em] sm:text-[3.8rem]">
+          Hi <span className="serif-accent text-sign">{firstName}</span>, here&apos;s your road ahead
+        </h1>
       </section>
 
-      <section aria-labelledby="route" className="grid gap-5 rounded-[14px] border border-rule bg-surface p-5 sm:p-7">
+      <section aria-labelledby="route" className="grid gap-5 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 id="route" className="text-xl font-bold">
             Your route
@@ -59,9 +61,9 @@ export default function HomePage() {
       </section>
 
       <div className="grid gap-6 md:grid-cols-[3fr_2fr]">
-        <section aria-labelledby="ask" className="grid content-start gap-4 rounded-[14px] border-2 border-sign bg-surface p-5 sm:p-7">
+        <section aria-labelledby="ask" className="grid content-start gap-4 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-7">
           <p className="eyebrow">Next step</p>
-          <h2 id="ask" className="text-2xl font-extrabold">
+          <h2 id="ask" className="text-2xl font-bold">
             Talk it through with Ksarth
           </h2>
           <p className="text-muted">
@@ -72,7 +74,7 @@ export default function HomePage() {
               <li key={question}>
                 <Link
                   href={`/ksarth?ask=${encodeURIComponent(question)}`}
-                  className="group flex items-center justify-between gap-3 rounded-lg border border-rule px-4 py-3 hover:border-sign"
+                  className="group flex items-center justify-between gap-3 rounded-2xl border border-rule px-4 py-3 hover:border-sign"
                 >
                   <span>{question}</span>
                   <span aria-hidden="true" className="font-display font-bold text-sign transition-transform group-hover:translate-x-0.5">
@@ -90,7 +92,7 @@ export default function HomePage() {
         <div className="grid content-start gap-6">
           <AssessmentCard />
 
-          <section aria-labelledby="profile" className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+          <section aria-labelledby="profile" className="grid gap-3 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
             <div className="flex items-baseline justify-between gap-2">
               <h2 id="profile" className="text-lg font-bold">
                 Your profile
@@ -129,7 +131,7 @@ function AssessmentCard() {
 
   if (overview.isPending || (hasResult && matches.isPending)) {
     return (
-      <section className="grid gap-3 rounded-[14px] border border-rule p-5 sm:p-6">
+      <section className="grid gap-3 rounded-3xl border border-rule p-5 sm:p-6">
         <p className="flex items-center gap-2 text-muted">
           <Spinner /> Loading your results…
         </p>
@@ -139,7 +141,7 @@ function AssessmentCard() {
 
   if (hasResult && matches.data) {
     return (
-      <section aria-labelledby="matches" className="grid gap-4 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+      <section aria-labelledby="matches" className="grid gap-4 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
         <div className="flex items-baseline justify-between gap-2">
           <h2 id="matches" className="text-lg font-bold">
             Your top matches
@@ -175,7 +177,7 @@ function AssessmentCard() {
 
   const inProgress = overview.data?.in_progress;
   return (
-    <section aria-labelledby="assessment" className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+    <section aria-labelledby="assessment" className="grid gap-3 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
       <p className="eyebrow">{inProgress ? "Halfway there" : "5 minutes"}</p>
       <h2 id="assessment" className="text-lg font-bold">
         Find careers that fit what you enjoy

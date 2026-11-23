@@ -75,7 +75,7 @@ export function CareerFinder({ careers, clusters }: { careers: Item[]; clusters:
         if (!items.length) return null;
         return (
           <section key={cluster.key} aria-labelledby={`cluster-${cluster.key}`} className="grid gap-4">
-            <h2 id={`cluster-${cluster.key}`} className="border-b-2 border-ink pb-2 text-xl font-extrabold">
+            <h2 id={`cluster-${cluster.key}`} className="border-b-2 border-ink pb-2 text-xl font-bold">
               {cluster.label}
             </h2>
             <ul className="grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">

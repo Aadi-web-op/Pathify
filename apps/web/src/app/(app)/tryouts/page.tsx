@@ -28,7 +28,7 @@ export default function TryoutsPage() {
     <div className="grid gap-10">
       <div className="grid max-w-3xl gap-3">
         <p className="eyebrow">Job tryouts</p>
-        <h1 className="text-[2.4rem] font-extrabold leading-[1.05] tracking-[-0.015em]">Try the work before you choose it</h1>
+        <h1 className="text-[2.6rem] font-bold tracking-[-0.045em]">Try the work before you choose it</h1>
         <p className="text-lg text-muted">
           Each tryout is a short, simplified version of a real task from the job. You&apos;ll get feedback, see how a
           professional would approach it, and then say how much you enjoyed it. That last part matters most.
@@ -43,7 +43,7 @@ export default function TryoutsPage() {
             <li key={t.slug}>
               <Link
                 href={`/tryouts/${t.slug}`}
-                className="group grid h-full content-start gap-3 rounded-[14px] border border-rule bg-surface p-5 transition-colors hover:border-sign sm:p-6"
+                className="group grid h-full content-start gap-3 spotlight rounded-3xl border border-rule bg-surface p-5 transition-[transform,border-color] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-1 hover:rotate-[-0.6deg] hover:border-sign sm:p-6"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="font-display text-sm font-bold text-muted">
@@ -55,7 +55,7 @@ export default function TryoutsPage() {
                     </span>
                   )}
                 </div>
-                <h2 className="text-xl font-extrabold group-hover:text-sign">{t.title}</h2>
+                <h2 className="text-xl font-bold group-hover:text-sign">{t.title}</h2>
                 <p className="text-[0.95rem] text-muted">{t.role}</p>
                 {attempt && (
                   <p className="border-t border-rule pt-3 text-sm">

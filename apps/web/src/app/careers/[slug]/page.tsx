@@ -63,13 +63,13 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
 
           <header className="grid gap-4">
             <p className="eyebrow">{clusterLabel(career.cluster)}</p>
-            <h1 className="text-[2.4rem] font-extrabold leading-[1.05] tracking-[-0.015em] sm:text-[3.2rem]">{career.title}</h1>
+            <h1 className="text-[2.6rem] font-bold tracking-[-0.045em] sm:text-[3.2rem]">{career.title}</h1>
             <p className="max-w-[60ch] text-xl text-muted">{career.summary}</p>
           </header>
 
           <section aria-labelledby="work" className="grid gap-6 md:grid-cols-[3fr_2fr]">
             <div className="grid content-start gap-3">
-              <h2 id="work" className="text-2xl font-extrabold">
+              <h2 id="work" className="text-2xl font-bold">
                 What the work is like
               </h2>
               <ul className="grid gap-2.5">
@@ -81,7 +81,7 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
                 ))}
               </ul>
             </div>
-            <dl className="grid content-start gap-4 rounded-[14px] border border-rule bg-surface p-5">
+            <dl className="grid content-start gap-4 spotlight rounded-3xl border border-rule bg-surface p-5">
               <div className="grid gap-1">
                 <dt className="font-display text-sm font-bold text-muted">Skills that help</dt>
                 <dd>{career.skills.join(", ")}</dd>
@@ -95,13 +95,13 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
 
           <section aria-labelledby="routes" className="grid gap-6">
             <div className="grid gap-1">
-              <h2 id="routes" className="text-2xl font-extrabold">
+              <h2 id="routes" className="text-2xl font-bold">
                 Routes in India
               </h2>
               <p className="text-muted">Durations are typical. Exams and rules change, so check with the official body each year.</p>
             </div>
             {career.routes.map((route) => (
-              <div key={route.id} className="grid gap-4 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+              <div key={route.id} className="grid gap-4 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h3 className="text-xl font-bold">{route.label}</h3>
                   <p className="flex flex-wrap gap-2 text-sm">
@@ -119,7 +119,7 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
               </div>
             ))}
             {career.graduate_route && (
-              <div className="grid gap-4 rounded-[14px] border border-dashed border-rule-strong p-5 sm:p-6">
+              <div className="grid gap-4 rounded-3xl border border-dashed border-rule-strong p-5 sm:p-6">
                 <h3 className="text-xl font-bold">{career.graduate_route.label}</h3>
                 <RouteLine stations={stations(career.graduate_route.steps)} current={-1} label={`${career.graduate_route.label}: steps`} />
               </div>
@@ -131,7 +131,7 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
 
           <section aria-labelledby="fit" className="grid gap-6 md:grid-cols-2">
             <div className="grid content-start gap-3">
-              <h2 id="fit" className="text-2xl font-extrabold">
+              <h2 id="fit" className="text-2xl font-bold">
                 Who tends to enjoy it
               </h2>
               <p className="text-muted">
@@ -151,7 +151,7 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
 
           {(career.check_with ?? []).length > 0 && (
             <section aria-labelledby="check" className="grid gap-3">
-              <h2 id="check" className="text-xl font-extrabold">
+              <h2 id="check" className="text-xl font-bold">
                 Check the latest rules with
               </h2>
               <ul className="grid gap-2">
@@ -172,7 +172,7 @@ export default async function CareerPage({ params }: { params: Promise<Params> }
 
           {related.length > 0 && (
             <section aria-labelledby="related" className="grid gap-4 border-t-2 border-ink pt-5">
-              <h2 id="related" className="text-xl font-extrabold">
+              <h2 id="related" className="text-xl font-bold">
                 Related careers
               </h2>
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

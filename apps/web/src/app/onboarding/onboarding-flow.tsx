@@ -256,7 +256,7 @@ export function OnboardingFlow() {
                 </div>
               </fieldset>
             )}
-            <div className="rounded-lg border border-rule bg-surface p-4">
+            <div className="rounded-2xl border border-rule bg-surface p-4">
               <Choice
                 type="checkbox"
                 name="guardian"
@@ -387,7 +387,7 @@ export function OnboardingFlow() {
 function StepTitle({ ref, title, intro }: { ref: React.Ref<HTMLHeadingElement>; title: string; intro: string }) {
   return (
     <div className="grid gap-1.5">
-      <h1 id="step-title" ref={ref} tabIndex={-1} className="text-[1.9rem] font-extrabold tracking-[-0.01em] focus:outline-none">
+      <h1 id="step-title" ref={ref} tabIndex={-1} className="text-[1.9rem] font-bold tracking-[-0.045em] focus:outline-none">
         {title}
       </h1>
       <p className="text-muted">{intro}</p>

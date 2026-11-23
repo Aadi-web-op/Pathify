@@ -106,7 +106,7 @@ export function CareerMap({ start, lines, label }: Props) {
               <circle cx={TERMINUS_X} cy={y} r={14} fill="var(--surface)" stroke={line.color} strokeWidth={5} />
               <circle cx={TERMINUS_X} cy={y} r={5} fill={line.color} />
               {titleLines.map((text, j) => (
-                <text key={j} x={TERMINUS_X + 26} y={y - (titleLines.length - 1) * 9 + j * 18 - 4} className="fill-ink font-display text-[15px] font-extrabold">
+                <text key={j} x={TERMINUS_X + 26} y={y - (titleLines.length - 1) * 9 + j * 18 - 4} className="fill-ink font-display text-[15px] font-bold">
                   {text}
                 </text>
               ))}
@@ -119,7 +119,7 @@ export function CareerMap({ start, lines, label }: Props) {
 
         <circle cx={START_X} cy={midY} r={18} fill="var(--surface)" stroke="var(--ink)" strokeWidth={4} />
         <circle cx={START_X} cy={midY} r={6} fill="var(--ink)" />
-        <text x={START_X} y={midY + 40} textAnchor="middle" className="fill-ink font-display text-[14px] font-extrabold">
+        <text x={START_X} y={midY + 40} textAnchor="middle" className="fill-ink font-display text-[14px] font-bold">
           {start.label}
         </text>
         {start.sub && (

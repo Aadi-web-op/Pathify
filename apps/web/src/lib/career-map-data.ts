@@ -4,7 +4,7 @@ import type { StudentProfile } from "./api";
 import { getCareer, type Match, STEP_LABEL, streamsText } from "./careers";
 import { stageLabel } from "./profile";
 
-export const LINE_COLORS = ["var(--sign)", "var(--route-saffron)", "var(--route-blue)"];
+export const LINE_COLORS = ["var(--route-violet)", "var(--route-pink)", "var(--route-blue)"];
 
 export function startStation(profile: StudentProfile): MapStation {
   return { label: "You", sub: stageLabel(profile) };

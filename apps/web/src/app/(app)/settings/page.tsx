@@ -76,7 +76,7 @@ export default function SettingsPage() {
 
   return (
     <div className="grid max-w-2xl gap-12">
-      <h1 className="text-[2.2rem] font-extrabold tracking-[-0.015em]">Settings</h1>
+      <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em]">Settings</h1>
 
       <Section title="Account">
         <form onSubmit={saveName} className="grid gap-4">

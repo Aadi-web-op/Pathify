@@ -44,7 +44,7 @@ export default function SharedReportPage() {
           </p>
         ) : report.error ? (
           <div className="grid max-w-xl gap-4 pt-10">
-            <h1 className="text-[2rem] font-extrabold">This link isn&apos;t working</h1>
+            <h1 className="text-[2rem] font-bold">This link isn&apos;t working</h1>
             <p className="text-muted">
               {report.error instanceof ApiError && report.error.status === 404
                 ? report.error.message

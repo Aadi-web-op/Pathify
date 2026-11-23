@@ -2,8 +2,9 @@ import clsx from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 
 export const controlClass =
-  "w-full rounded-lg border-2 border-rule-strong bg-surface px-3.5 h-12 text-ink placeholder:text-muted/70 " +
-  "focus:border-sign focus:outline-none focus-visible:outline-none transition-colors " +
+  "w-full rounded-2xl border border-rule-strong bg-surface px-4 h-13 text-ink placeholder:text-muted/70 " +
+  "focus:border-sign focus:shadow-[0_0_0_4px_color-mix(in_oklab,var(--sign)_22%,transparent)] focus:outline-none focus-visible:outline-none " +
+  "transition-[border-color,box-shadow] " +
   "aria-[invalid=true]:border-danger";
 
 type FieldProps = {
@@ -18,7 +19,7 @@ type FieldProps = {
 export function Field({ id, label, hint, error, children, className }: FieldProps) {
   return (
     <div className={clsx("grid min-w-0 gap-1.5", className)}>
-      <label htmlFor={id} className="font-display text-[0.95rem] font-bold [overflow-wrap:anywhere]">
+      <label htmlFor={id} className="font-display text-[0.95rem] font-semibold [overflow-wrap:anywhere]">
         {label}
       </label>
       {children}

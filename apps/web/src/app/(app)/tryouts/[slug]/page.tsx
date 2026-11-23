@@ -10,6 +10,7 @@ import { Button, ButtonLink, Spinner } from "@/components/ui/button";
 import { Choice } from "@/components/ui/choice";
 import { Input } from "@/components/ui/field";
 import { Notice } from "@/components/ui/notice";
+import { burst, burstFrom } from "@/lib/burst";
 import { ApiError } from "@/lib/api";
 import { MATCHES_KEY } from "@/lib/assessment";
 import {
@@ -57,7 +58,7 @@ export default function TryoutPage() {
         <p className="eyebrow">
           {tryout.data.career_title}, about {tryout.data.minutes} minutes
         </p>
-        <h1 className="text-[2.2rem] font-extrabold leading-[1.08] tracking-[-0.015em] sm:text-[2.6rem]">{tryout.data.title}</h1>
+        <h1 className="text-[2.5rem] font-bold leading-[0.98] tracking-[-0.045em] sm:text-[3.4rem]">{tryout.data.title}</h1>
         <p className="text-lg">{tryout.data.role}</p>
         <p className="text-muted">{tryout.data.brief}</p>
       </header>
@@ -90,7 +91,7 @@ function Materials({ tryout }: { tryout: Tryout }) {
   return (
     <section aria-label="Materials" className="grid gap-4">
       {tryout.materials.map((m) => (
-        <div key={m.title} className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5">
+        <div key={m.title} className="grid gap-3 spotlight rounded-3xl border border-rule bg-surface p-5">
           <h2 className="font-display text-lg font-bold">{m.title}</h2>
           {m.kind === "table" && (
             <div className="overflow-x-auto">
@@ -172,6 +173,8 @@ function Tasks({ tryout, onSubmitted }: { tryout: Tryout; onSubmitted: (a: Attem
       const attempt = await submitTryout(tryout.slug, answers);
       await queryClient.invalidateQueries({ queryKey: TRYOUTS_KEY });
       onSubmitted(attempt);
+      // Land the moment: a burst at the top of the screen as feedback appears.
+      burst(window.innerWidth / 2, 140, { power: 1.3, confetti: true });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Your answers didn't send. Try again.");
@@ -248,7 +251,7 @@ function Tasks({ tryout, onSubmitted }: { tryout: Tryout; onSubmitted: (a: Attem
                     maxLength={2000}
                     value={(answers[task.id] as string | undefined) ?? ""}
                     onChange={(e) => set(task.id, e.target.value)}
-                    className="w-full rounded-lg border-2 border-rule-strong bg-surface px-3.5 py-3 focus:border-sign focus:outline-none"
+                    className="w-full rounded-2xl border-2 border-rule-strong bg-surface px-3.5 py-3 focus:border-sign focus:outline-none"
                   />
                   <p className={clsx("text-sm", wordCount((answers[task.id] as string) ?? "") > (task.max_words ?? 150) ? "text-warn" : "text-muted")}>
                     {wordCount((answers[task.id] as string) ?? "")} words · aim for under {task.max_words}
@@ -290,9 +293,9 @@ function formatAnswer(task: Attempt["reviews"][number], tryout: Tryout, value: u
 function Review({ attempt, onRetry }: { attempt: Attempt; onRetry: () => void }) {
   return (
     <section aria-labelledby="review-title" className="grid gap-8">
-      <div className="grid gap-2 rounded-[14px] border-2 border-sign bg-surface p-5 sm:p-6">
+      <div className="grid gap-2 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-6">
         <p className="eyebrow">Your result</p>
-        <h2 id="review-title" className="text-2xl font-extrabold">
+        <h2 id="review-title" className="text-2xl font-bold">
           {scoreText(attempt.points, attempt.max_points, attempt.ungraded)}
         </h2>
         <p className="text-muted">
@@ -304,7 +307,7 @@ function Review({ attempt, onRetry }: { attempt: Attempt; onRetry: () => void })
         {attempt.reviews.map((review, index) => {
           const r = review.result;
           return (
-            <li key={r.task_id} className="grid gap-3 rounded-[14px] border border-rule bg-surface p-5 sm:p-6">
+            <li key={r.task_id} className="grid gap-3 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-6">
               <p className="font-mono text-sm text-muted">Task {index + 1}</p>
               <h3 className="font-display text-lg font-bold">{review.prompt}</h3>
               {r.kind !== "written" ? (
@@ -358,8 +361,8 @@ function Review({ attempt, onRetry }: { attempt: Attempt; onRetry: () => void })
         })}
       </ol>
 
-      <div className="grid gap-3 rounded-[14px] border border-rule p-5 sm:p-6">
-        <h2 className="text-xl font-extrabold">In the real job</h2>
+      <div className="grid gap-3 rounded-3xl border border-rule p-5 sm:p-6">
+        <h2 className="text-xl font-bold">In the real job</h2>
         <p>{attempt.debrief.real_work}</p>
         <p className="text-muted">You might enjoy this work if: {attempt.debrief.enjoy_if.charAt(0).toLowerCase() + attempt.debrief.enjoy_if.slice(1)}</p>
       </div>
@@ -396,6 +399,7 @@ function ReflectionForm({ attempt }: { attempt: Attempt }) {
       await queryClient.invalidateQueries({ queryKey: TRYOUTS_KEY });
       await queryClient.invalidateQueries({ queryKey: MATCHES_KEY });
       setState("saved");
+      burstFrom((event.target as HTMLFormElement).querySelector("button[type=submit]"));
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Couldn't save. Try again.");
       setState("idle");
@@ -403,8 +407,8 @@ function ReflectionForm({ attempt }: { attempt: Attempt }) {
   }
 
   return (
-    <form onSubmit={save} className="grid gap-5 rounded-[14px] border-2 border-sign bg-surface p-5 sm:p-6">
-      <h2 className="text-xl font-extrabold">How did that feel?</h2>
+    <form onSubmit={save} className="grid gap-5 rounded-3xl border-2 border-sign shadow-[0_24px_60px_-32px_color-mix(in_oklab,var(--sign)_75%,transparent)] bg-surface p-5 sm:p-6">
+      <h2 className="text-xl font-bold">How did that feel?</h2>
       <fieldset className="grid gap-2">
         <legend className="mb-2 font-display font-bold">How much did you enjoy the work?</legend>
         <div className="grid gap-2 sm:grid-cols-5">
