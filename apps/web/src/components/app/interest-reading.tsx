@@ -22,10 +22,10 @@ export function InterestReading({ items }: { items: string[] }) {
           .sort((a, b) => "RIASEC".indexOf(a) - "RIASEC".indexOf(b))
           .map((key) => (
             <li key={key} className="grid gap-1">
-              <span className="h-12 overflow-hidden rounded-md bg-surface">
+              <span className="flex h-12 flex-col justify-end overflow-hidden rounded-md bg-surface">
                 <span
                   className="block w-full rounded-md bg-sign transition-[height] duration-500"
-                  style={{ height: `${reading.data.scores[key]}%`, marginTop: `${100 - reading.data.scores[key]}%` }}
+                  style={{ height: `${Math.max(4, reading.data.scores[key])}%` }}
                 />
               </span>
               <span className="truncate text-center font-mono text-[0.65rem] text-muted">{name(key)}</span>

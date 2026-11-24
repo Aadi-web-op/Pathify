@@ -103,3 +103,21 @@ async def test_deleting_the_account_deletes_progress(signed_in):
     assert await Plan.find(Plan.user_id == user.id).count() == 0
     assert await XPEvent.find(XPEvent.user_id == user.id).count() == 0
     assert await ActiveDay.find(ActiveDay.user_id == user.id).count() == 0
+
+
+async def test_concurrent_ticks_are_not_lost(signed_in):
+    """Two ticks at once (a double tap on a slow connection) must both stick."""
+    import asyncio
+
+    plan = (await signed_in.put("/api/plan", json={"career_slug": "doctor", "route_id": "mbbs"})).json()
+    ids = [m["id"] for m in plan["milestones"][:4]]
+    responses = await asyncio.gather(*(signed_in.patch(f"/api/plan/milestones/{i}", json={"done": True}) for i in ids))
+    assert all(r.status_code == 200 for r in responses)
+    assert (await signed_in.get("/api/plan")).json()["done"] == 4
+
+
+async def test_custom_step_limit_holds(signed_in):
+    await signed_in.put("/api/plan", json={"career_slug": "doctor", "route_id": "mbbs"})
+    for n in range(10):
+        assert (await signed_in.post("/api/plan/milestones", json={"label": f"My step {n}"})).status_code == 201
+    assert (await signed_in.post("/api/plan/milestones", json={"label": "One too many"})).status_code == 400

@@ -146,40 +146,50 @@ async def choose_route(body: PlanIn, user: CurrentUser) -> PlanOut:
 
 @router.patch("/plan/milestones/{milestone_id}", response_model=PlanOut)
 async def tick(milestone_id: str, body: MilestoneUpdate, user: CurrentUser) -> PlanOut:
-    plan = await _plan(user)
-    milestone = next((m for m in plan.milestones if m.id == milestone_id), None)
-    if milestone is None:
+    # One atomic update on just this step. Loading the plan, editing it and saving it back would
+    # lose an update when two ticks arrive together (a double tap on a slow connection).
+    now = utcnow()
+    result = await Plan.get_pymongo_collection().update_one(
+        {"user_id": user.id, "milestones.id": milestone_id},
+        {"$set": {"milestones.$.done_at": now if body.done else None, "updated_at": now}},
+    )
+    if result.matched_count == 0:
+        await _plan(user)  # 404 if there's no plan at all
         raise HTTPException(status.HTTP_404_NOT_FOUND, "That step isn't in your plan.")
-    milestone.done_at = utcnow() if body.done else None
-    plan.updated_at = utcnow()
-    await plan.save()
+    plan = await _plan(user)
     if body.done:
         # Keyed by route and step, so unticking and ticking again earns nothing extra.
-        await award_quietly(user, "milestone", f"milestone:{plan.career_slug}:{plan.route_id}:{milestone.id}")
+        await award_quietly(user, "milestone", f"milestone:{plan.career_slug}:{plan.route_id}:{milestone_id}")
     return _out(user, plan)
 
 
 @router.post("/plan/milestones", response_model=PlanOut, status_code=status.HTTP_201_CREATED)
 async def add_step(body: CustomMilestoneIn, user: CurrentUser) -> PlanOut:
-    plan = await _plan(user)
-    if sum(1 for m in plan.milestones if m.custom) >= MAX_CUSTOM:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, f"You can add up to {MAX_CUSTOM} of your own steps.")
-    plan.milestones.append(
-        Milestone(id=f"custom-{secrets.token_hex(4)}", kind="custom", label=" ".join(body.label.split()), custom=True)
+    step = Milestone(
+        id=f"custom-{secrets.token_hex(4)}", kind="custom", label=" ".join(body.label.split()), custom=True
     )
-    plan.updated_at = utcnow()
-    await plan.save()
-    return _out(user, plan)
+    # The size check is part of the filter, so two concurrent adds can't exceed the limit.
+    result = await Plan.get_pymongo_collection().update_one(
+        {
+            "user_id": user.id,
+            "$expr": {"$lt": [{"$size": {"$filter": {"input": "$milestones", "cond": "$$this.custom"}}}, MAX_CUSTOM]},
+        },
+        {"$push": {"milestones": step.model_dump()}, "$set": {"updated_at": utcnow()}},
+    )
+    if result.matched_count == 0:
+        await _plan(user)
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, f"You can add up to {MAX_CUSTOM} of your own steps.")
+    return _out(user, await _plan(user))
 
 
 @router.delete("/plan/milestones/{milestone_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_step(milestone_id: str, user: CurrentUser) -> Response:
-    plan = await _plan(user)
-    before = len(plan.milestones)
-    plan.milestones = [m for m in plan.milestones if not (m.custom and m.id == milestone_id)]
-    if len(plan.milestones) == before:
+    result = await Plan.get_pymongo_collection().update_one(
+        {"user_id": user.id, "milestones": {"$elemMatch": {"id": milestone_id, "custom": True}}},
+        {"$pull": {"milestones": {"id": milestone_id, "custom": True}}, "$set": {"updated_at": utcnow()}},
+    )
+    if result.matched_count == 0:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Only your own steps can be removed.")
-    await plan.save()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

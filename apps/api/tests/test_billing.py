@@ -121,4 +121,3 @@ async def test_free_counsellors_get_one_class_and_school_plan_lifts_it(signed_in
         json={"order_id": order["order_id"], "payment_id": "p", "signature": sign(order["order_id"], "p")},
     )
     assert (await signed_in.post("/api/classes", json={"name": "Class 9 B", "school": "KV"})).status_code == 201
-

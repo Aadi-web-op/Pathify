@@ -180,7 +180,7 @@ function Checklist({ plan, onSwitch }: { plan: Plan; onSwitch: () => void }) {
                 <div className="grid min-w-0 flex-1 gap-0.5">
                   <p className="label-mono text-muted">
                     {KIND_LABEL[m.kind] ?? m.kind}
-                    {m.years ? ` · about ${yearsText(m.years)}` : ""}
+                    {m.years ? ` · ${yearsText(m.years)}` : ""}
                     {i === nextIndex && (
                       <span className="text-sign"> · next up</span>
                     )}
