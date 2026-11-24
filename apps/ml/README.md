@@ -24,11 +24,28 @@ python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m scripts.export_models           # prune, ONNX, int8, re-evaluate
 ```
 
+The Interest Reader, retriever and Pathfinder train on a 4-core CPU. Only the optional LLM
+distillation below needs a GPU, and it runs on Kaggle's free tier.
+
 Training uses PyTorch; serving does not. `export_models` writes to
 `apps/api/models/`, where the API loads the files with ONNX Runtime and the
 `tokenizers` library. To share the encoders, `publish_models` uploads them with
 this card to a Hugging Face model repo, and the API's `scripts/fetch_models.py`
 downloads them.
+
+## Phase two: Ksarth's own LLM (teacher → student distillation)
+
+Ksarth answers with Gemini today. To run it on Pathify's own model:
+
+1. **Teacher data.** `scripts/build_ksarth_dataset.py` runs Ksarth's real prompt and retrieval for
+   2,000 (student, question) pairs in three languages, has Gemini answer, and keeps an answer only
+   if its citations are valid, every number in it appears in the notes, a Hindi question gets a
+   Hindi answer, and the length is sensible. It needs `GEMINI_API_KEY` and is resumable.
+2. **QLoRA on a free GPU.** `notebooks/ksarth_distillation_kaggle.ipynb` fine-tunes
+   Qwen2.5-1.5B-Instruct on Kaggle (T4), compares it with the base model on the same grounding
+   checks, merges the adapter, and exports a 4-bit GGUF to the Hugging Face Hub.
+3. **Serve it.** Run the GGUF with llama.cpp's server and start the API with `LLM_PROVIDER=local`
+   (`app/services/llm/openai_compat.py` speaks the OpenAI API, so vLLM or Ollama also work).
 
 ## How the evaluation is kept honest
 

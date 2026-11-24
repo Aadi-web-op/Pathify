@@ -18,6 +18,9 @@ services:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+      args:
+        # Hugging Face repo with Pathify's exported encoders (optional).
+        - PATHIFY_MODELS_REPO=${PATHIFY_MODELS_REPO:-}
     env_file:
       - path: .env
         required: false

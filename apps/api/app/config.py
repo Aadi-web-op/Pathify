@@ -34,7 +34,11 @@ class Settings(BaseSettings):
     web_origin: str = "http://localhost:3000"
     extra_allowed_origins: list[str] = Field(default_factory=list)
 
-    llm_provider: Literal["auto", "gemini", "stub"] = "auto"
+    llm_provider: Literal["auto", "gemini", "local", "stub"] = "auto"
+    # LLM_PROVIDER=local: an OpenAI-compatible server (llama.cpp, vLLM, Ollama) running Pathify's distilled model.
+    local_llm_url: str = "http://localhost:8080/v1"
+    local_llm_model: str = "pathify-ksarth"
+    local_llm_api_key: str = ""
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     llm_timeout_seconds: float = 45.0

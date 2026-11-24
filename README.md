@@ -2,6 +2,8 @@
 
 Career guidance for Indian students from Class 9 to college. Pathify helps a student choose a stream after Class 10, pick entrance exams and a degree after Class 12, and get ready for a first job, with reasons they can explain to their parents.
 
+**At a glance:** Next.js 15 + FastAPI + MongoDB · three of its own ML models trained on public data (O*NET, Open Psychometrics) and served with ONNX Runtime · a grounded, citing AI guide that works in English, Hinglish and Hindi · 196 API tests and 30 end-to-end runs on desktop and phones in CI.
+
 ![Landing page with a career metro map](docs/screenshots/landing.png)
 
 ![Results: a Class 10 student's top three careers drawn as metro lines from where they are now](docs/screenshots/results.png)
@@ -25,9 +27,27 @@ Career guidance for Indian students from Class 9 to college. Pathify helps a stu
 - **Job tryouts**: six 10-minute tasks taken from real jobs (data analyst, doctor, UX designer, lawyer, teacher, civil engineer), covering all six interest types. Students get feedback on each answer, see how a professional would approach it, then rate how much they enjoyed it. That rating shows up next to the career in their results and in the family report.
 - **Ksarth**, an AI guide that knows the student's stage, stream, goals, interest results and top matches. Its answers draw on Pathify's career guides and link to the ones they used. Replies stream in, history is saved, and Ksarth can answer in Hindi.
 - **Family report** in English or Hindi: what the student enjoys, their top three careers with reasons and routes, how their tryouts went, and questions to talk through at home. It can be printed or saved as a PDF, or shared through a private link that expires after 30 days and can be turned off.
-- **Settings**: name, light / dark / system theme, sign out, and full account deletion.
+- **Settings**: name, light / dark / system theme, plan and billing, joining a school class, sign out, and full account deletion.
+- **Pathify's own models** ([apps/ml](apps/ml), [model card](apps/ml/MODEL_CARD.md)):
+  - *Interest Reader*: a multilingual transformer fine-tuned to read "what I enjoy" in English, Hinglish or Hindi; shown live during onboarding.
+  - *Pathfinder*: trained on 58,554 real people's interests and fields of study; "What people like you studied" on the results page.
+  - *Ksarth Retriever*: a fine-tuned search model that finds the right career guide for a question (92% first-hit vs 76% for keyword search, and it reads Hindi).
+- **My plan**: pick a career route and Pathify turns its real steps into a checklist, plus your own steps. XP, levels, streaks and badges are earned on the server from real actions and can't be farmed.
+- **School counsellors**: create a class, share a join code, and see a summary roster with "might need a conversation" flags. Students join only by entering the code and agreeing to share a summary; counsellors never see chats or answers.
+- **Account safety**: email verification and password reset with single-use, hashed, expiring links that never reveal whether an email is registered.
+- **Payments** with Razorpay: Pathify Plus for families and a school plan, priced on the server and verified by signature, with an idempotent webhook. Everything a student needs stays free.
 
-Coming next: a full Hindi interface, tryouts for every career in the library, progress tracking along a chosen route, and a class-level view for school counsellors.
+Coming next: a full Hindi interface, tryouts for every career in the library, and Ksarth running on Pathify's own distilled LLM ([plan](apps/ml/README.md#phase-two-ksarths-own-llm-teacher--student-distillation)).
+
+## Pathify's own models
+
+| Model | Job | Result on held-out data | Baseline |
+|---|---|---|---|
+| Interest Reader | Free text → six interest scores | r = 0.77 on unseen occupations; 84.7% top type on students' own words | linear probe 0.76 / 72.2%; zero-shot 0.42 / 80.6% |
+| Pathfinder | Interests → field studied | 63.0% top-3 of 12 fields, calibration error 0.007 | Holland congruence rule 43.0% |
+| Ksarth Retriever | Question → career guide | 92.0% hit@1, 100% on Hindi | BM25 keyword search 76.0%, 10% on Hindi |
+
+All three train on a laptop-class CPU from public data with one command each, are re-evaluated after export (vocabulary pruning and int8 quantization shrink the encoders from ~470 MB to 63-127 MB), and CI retrains Pathfinder from the raw data on every push. The [model card](apps/ml/MODEL_CARD.md) covers the data, the negative results (equal-weight hybrid search made retrieval worse; freezing embeddings didn't fix Hinglish) and the limits.
 
 ## How matching works, and how well
 
