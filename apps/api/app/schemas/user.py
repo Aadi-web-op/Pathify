@@ -12,6 +12,8 @@ class UserOut(BaseModel):
     email: EmailStr
     auth_providers: list[str]
     has_password: bool
+    email_verified: bool
+    role: str
     profile: StudentProfile | None
     onboarded: bool
     preferences: Preferences
@@ -26,6 +28,8 @@ class UserOut(BaseModel):
             email=user.email,
             auth_providers=user.auth_providers,
             has_password=user.hashed_password is not None,
+            email_verified=user.email_verified_at is not None,
+            role=user.role,
             profile=user.profile,
             onboarded=user.onboarded_at is not None,
             preferences=user.preferences,

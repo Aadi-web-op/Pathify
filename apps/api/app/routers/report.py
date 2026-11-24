@@ -9,6 +9,7 @@ from app.models.report import ReportShare
 from app.models.user import utcnow
 from app.schemas.report import ReportOut, ShareIn, ShareOut
 from app.security.deps import CurrentUser, client_ip
+from app.services.progress import award_quietly
 from app.services.rate_limit import Limit, limiter
 from app.services.report import build_report
 from app.services.report_text import Lang
@@ -54,6 +55,7 @@ async def create_share(body: ShareIn, user: CurrentUser) -> ShareOut:
         expires_at=utcnow() + timedelta(days=SHARE_DAYS),
     )
     await share.insert()
+    await award_quietly(user, "report_shared", "report_shared")
     return _share_out(share)
 
 

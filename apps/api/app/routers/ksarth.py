@@ -1,6 +1,7 @@
 import json
 import logging
 from collections.abc import AsyncIterator
+from datetime import UTC, datetime, time
 from typing import Annotated
 
 from fastapi import APIRouter, Query, Response, status
@@ -10,14 +11,16 @@ from app.catalog import catalog
 from app.models import KsarthMessage
 from app.models.assessment import latest_result
 from app.models.ksarth import Source
+from app.models.user import utcnow
 from app.schemas.ksarth import KsarthMessageIn, KsarthMessageOut, KsarthStatus, SourceOut
 from app.security.deps import CurrentUser, SettingsDep
 from app.services.ksarth import recent_history, system_prompt
 from app.services.llm import ChatMessage, LLMError, Usage
 from app.services.llm.dependency import LLMDep
 from app.services.matching import career_index
+from app.services.progress import award_quietly
 from app.services.rate_limit import Limit, limiter
-from app.services.retrieval import career_search, clean_citations
+from app.services.retrieval import clean_citations, search_careers
 
 log = logging.getLogger("pathify.ksarth")
 router = APIRouter(prefix="/api/ksarth", tags=["ksarth"])
@@ -84,12 +87,21 @@ async def send_message(
     conversation = [*await recent_history(user), ChatMessage(role="user", content=body.content)]
     question = KsarthMessage(user_id=user.id, role="user", content=body.content)
     await question.insert()
+    # A little XP for the first three questions each day: enough to reward curiosity, not to farm.
+    today = utcnow().date()
+    asked_today = await KsarthMessage.find(
+        KsarthMessage.user_id == user.id,
+        KsarthMessage.role == "user",
+        KsarthMessage.created_at >= datetime.combine(today, time(), UTC),
+    ).count()
+    if asked_today <= 3:
+        await award_quietly(user, "ksarth", f"ksarth:{today.isoformat()}:{asked_today}")
     result = await latest_result(user.id)
     match_slugs: list[str] = []
     if result:
         match_slugs = career_index().top({d: float(v) for d, v in result.scores.items()}, 3)
     top_careers = [catalog().get(slug).title for slug in match_slugs]
-    notes = [hit.career for hit in career_search().search(body.content, k=MAX_NOTES)]
+    notes = [hit.career for hit in search_careers(body.content, k=MAX_NOTES)]
     # A question that names no career ("which exams fit me?") is usually about the student's own matches.
     for slug in match_slugs:
         if len(notes) >= MIN_NOTES:

@@ -120,8 +120,12 @@ class User(Document):
     # None for accounts created through Google, GitHub or LinkedIn.
     hashed_password: str | None = None
     auth_providers: list[str] = Field(default_factory=list)
+    # Counsellors are students' accounts that have created a class; nothing else changes for them.
+    role: Literal["student", "counsellor"] = "student"
     profile: StudentProfile | None = None
     onboarded_at: datetime | None = None
+    # Set when the student clicks the emailed link, or signs in with a provider that verifies emails.
+    email_verified_at: datetime | None = None
     preferences: Preferences = Field(default_factory=Preferences)
     progress: Progress = Field(default_factory=Progress)
     created_at: datetime = Field(default_factory=utcnow)

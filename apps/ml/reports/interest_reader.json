@@ -1,0 +1,150 @@
+{
+  "base_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "data": {
+    "train": 19690,
+    "val": 2378,
+    "test": 2384
+  },
+  "args": {
+    "epochs": 2,
+    "per_occupation": 10,
+    "batch": 32,
+    "seed": 13
+  },
+  "zero_shot": {
+    "onet_test": {
+      "pearson_mean": 0.4154,
+      "pearson_by_type": {
+        "R": 0.4956,
+        "I": 0.4123,
+        "A": 0.492,
+        "S": 0.5265,
+        "E": 0.3813,
+        "C": 0.1845
+      },
+      "top_type_accuracy": 0.5076,
+      "n": 2384
+    },
+    "students": {
+      "top1": 0.8056,
+      "top2": 0.9306,
+      "by_language": {
+        "en": {
+          "top1": 0.8095,
+          "n": 42
+        },
+        "hi": {
+          "top1": 1.0,
+          "n": 12
+        },
+        "hinglish": {
+          "top1": 0.6667,
+          "n": 18
+        }
+      },
+      "n": 72
+    }
+  },
+  "linear_probe": {
+    "onet_test": {
+      "pearson_mean": 0.7566,
+      "pearson_by_type": {
+        "R": 0.819,
+        "I": 0.7723,
+        "A": 0.7008,
+        "S": 0.8204,
+        "E": 0.7539,
+        "C": 0.6734
+      },
+      "top_type_accuracy": 0.6653,
+      "n": 2384
+    },
+    "students": {
+      "top1": 0.7222,
+      "top2": 0.875,
+      "by_language": {
+        "en": {
+          "top1": 0.8571,
+          "n": 42
+        },
+        "hi": {
+          "top1": 0.8333,
+          "n": 12
+        },
+        "hinglish": {
+          "top1": 0.3333,
+          "n": 18
+        }
+      },
+      "n": 72
+    }
+  },
+  "fine_tuned": {
+    "onet_test": {
+      "pearson_mean": 0.7696,
+      "pearson_by_type": {
+        "R": 0.8436,
+        "I": 0.782,
+        "A": 0.6855,
+        "S": 0.8495,
+        "E": 0.7662,
+        "C": 0.6905
+      },
+      "top_type_accuracy": 0.6971,
+      "n": 2384
+    },
+    "students": {
+      "top1": 0.8472,
+      "top2": 0.9444,
+      "by_language": {
+        "en": {
+          "top1": 0.9286,
+          "n": 42
+        },
+        "hi": {
+          "top1": 0.9167,
+          "n": 12
+        },
+        "hinglish": {
+          "top1": 0.6111,
+          "n": 18
+        }
+      },
+      "n": 72
+    },
+    "history": [
+      {
+        "epoch": 0,
+        "val": {
+          "pearson_mean": 0.7434,
+          "pearson_by_type": {
+            "R": 0.8221,
+            "I": 0.7648,
+            "A": 0.6982,
+            "S": 0.8691,
+            "E": 0.6993,
+            "C": 0.6071
+          },
+          "top_type_accuracy": 0.6728,
+          "n": 2378
+        }
+      },
+      {
+        "epoch": 1,
+        "val": {
+          "pearson_mean": 0.7533,
+          "pearson_by_type": {
+            "R": 0.8251,
+            "I": 0.7616,
+            "A": 0.6973,
+            "S": 0.8773,
+            "E": 0.709,
+            "C": 0.6497
+          },
+          "top_type_accuracy": 0.7002,
+          "n": 2378
+        }
+      }
+    ]
+  }
+}

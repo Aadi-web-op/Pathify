@@ -32,7 +32,13 @@ async def test_security_headers(client):
 
 async def test_health(client):
     response = await client.get("/api/health")
-    assert response.json() == {"status": "ok", "database": True, "llm_provider": "stub"}
+    body = response.json()
+    assert {k: body[k] for k in ("status", "database", "llm_provider")} == {
+        "status": "ok",
+        "database": True,
+        "llm_provider": "stub",
+    }
+    assert set(body["models"]) == {"interest_reader", "retriever", "pathfinder"}
 
 
 def test_production_refuses_default_secret_and_http():

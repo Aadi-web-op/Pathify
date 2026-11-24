@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
@@ -11,8 +12,10 @@ import { api, ApiError, unwrap } from "@/lib/api";
 import { useSignedIn } from "@/lib/session";
 
 const PROVIDER_ERRORS: Record<string, string> = {
-  github: "GitHub sign-in didn't finish. Try again, or use your email and password.",
-  linkedin: "LinkedIn sign-in didn't finish. Try again, or use your email and password.",
+  github:
+    "GitHub sign-in didn't finish. Try again, or use your email and password.",
+  linkedin:
+    "LinkedIn sign-in didn't finish. Try again, or use your email and password.",
 };
 
 export function SignInForm() {
@@ -21,17 +24,23 @@ export function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(PROVIDER_ERRORS[params.get("error") ?? ""] ?? null);
+  const [error, setError] = useState<string | null>(
+    PROVIDER_ERRORS[params.get("error") ?? ""] ?? null,
+  );
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
     setError(null);
     try {
-      const user = await unwrap(api.POST("/api/auth/login", { body: { email, password } }));
+      const user = await unwrap(
+        api.POST("/api/auth/login", { body: { email, password } }),
+      );
       signedIn(user, params.get("next"));
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Sign-in didn't work. Try again.");
+      setError(
+        e instanceof ApiError ? e.message : "Sign-in didn't work. Try again.",
+      );
       setBusy(false);
     }
   }
@@ -61,7 +70,18 @@ export function SignInForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Field>
-        <Button type="submit" busy={busy} disabled={!email || !password} className="mt-1 w-full">
+        <Link
+          href="/forgot-password"
+          className="-mt-1 justify-self-end text-sm text-muted underline underline-offset-4 hover:text-ink"
+        >
+          Forgot your password?
+        </Link>
+        <Button
+          type="submit"
+          busy={busy}
+          disabled={!email || !password}
+          className="mt-1 w-full"
+        >
           {busy ? "Signing in…" : "Sign in"}
         </Button>
       </form>

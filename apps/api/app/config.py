@@ -45,6 +45,16 @@ class Settings(BaseSettings):
     linkedin_client_id: str = ""
     linkedin_client_secret: str = ""
 
+    # Transactional email. Without a Resend key, mail goes to an in-memory outbox and the log.
+    resend_api_key: str = ""
+    email_from: str = "Pathify <onboarding@resend.dev>"
+    password_resets_per_hour: int = 5
+
+    # Exported ML models (ONNX + JSON). Missing files switch the matching feature off; nothing else breaks.
+    models_dir: Path = API_DIR / "models"
+    # Threads per model session. Small on purpose: requests are tiny and the web server runs several.
+    ml_threads: int = 2
+
     ksarth_messages_per_hour: int = 30
     login_attempts_per_minute: int = 10
     # Per network, not per person: a school lab can put a whole class behind one IP.

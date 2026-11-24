@@ -1,0 +1,4 @@
+# The ONNX encoders are published on the Hugging Face Hub (scripts/fetch_models.py).
+# Pathfinder's weights are small JSON and live in git.
+interest_reader/
+retriever/

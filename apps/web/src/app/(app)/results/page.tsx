@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { FieldOddsSection } from "@/components/app/field-odds";
 import { CareerMap } from "@/components/brand/career-map";
 import { RouteField } from "@/components/fx/route-field";
 import { InterestBars } from "@/components/brand/interest-bars";
@@ -120,6 +121,8 @@ export default function ResultsPage() {
           <ResultActions canExtend={Boolean(overview.data?.can_extend)} sessionId={overview.data?.latest_session_id ?? null} />
         </section>
       </div>
+
+      <FieldOddsSection />
 
       <section aria-labelledby="top" className="grid gap-6">
         <h2 id="top" className="text-2xl font-bold">

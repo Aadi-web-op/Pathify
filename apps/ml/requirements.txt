@@ -1,0 +1,15 @@
+# Training only. The API serves exported ONNX models and never imports torch.
+torch>=2.5
+transformers>=4.46
+sentence-transformers>=3.2
+scikit-learn>=1.5
+pandas>=2.2
+numpy>=1.26
+onnx>=1.17
+onnxruntime>=1.20
+tokenizers>=0.20
+rank-bm25>=0.2.2
+pydantic>=2.9  # to reuse the API's catalog models and BM25 baseline
+pydantic-settings>=2.6
+datasets>=3.0
+accelerate>=1.1

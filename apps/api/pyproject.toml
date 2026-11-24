@@ -13,6 +13,8 @@ ignore = ["B008"]
 
 [tool.ruff.lint.per-file-ignores]
 "app/models/*" = ["UP007"]
+# Inline-styled HTML for email clients; splitting the markup would hurt more than help.
+"app/services/email.py" = ["E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

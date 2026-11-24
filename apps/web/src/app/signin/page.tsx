@@ -15,7 +15,10 @@ export default function SignInPage() {
       intro={
         <>
           New to Pathify?{" "}
-          <Link href="/signup" className="font-semibold text-sign underline underline-offset-4">
+          <Link
+            href="/signup"
+            className="font-semibold text-sign underline underline-offset-4"
+          >
             Create a free account
           </Link>
         </>

@@ -1,6 +1,12 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
+def password_has_variety(value: str) -> str:
+    if value.strip() == "" or len(set(value)) < 4:
+        raise ValueError("choose a password with more variety")
+    return value
+
+
 class RegisterIn(BaseModel):
     name: str = Field(min_length=1, max_length=80)
     email: EmailStr
@@ -17,9 +23,25 @@ class RegisterIn(BaseModel):
     @field_validator("password")
     @classmethod
     def not_trivial(cls, value: str) -> str:
-        if value.strip() == "" or len(set(value)) < 4:
-            raise ValueError("choose a password with more variety")
-        return value
+        return password_has_variety(value)
+
+
+class ForgotPasswordIn(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordIn(BaseModel):
+    token: str = Field(min_length=20, max_length=200)
+    password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("password")
+    @classmethod
+    def not_trivial(cls, value: str) -> str:
+        return password_has_variety(value)
+
+
+class TokenIn(BaseModel):
+    token: str = Field(min_length=20, max_length=200)
 
 
 class LoginIn(BaseModel):

@@ -16,6 +16,7 @@ from app.schemas.tryouts import (
 from app.security.deps import CurrentUser, SettingsDep
 from app.services.grading import grade_attempt
 from app.services.llm.dependency import LLMDep
+from app.services.progress import award_quietly
 from app.services.rate_limit import Limit, limiter
 
 router = APIRouter(prefix="/api/tryouts", tags=["tryouts"])
@@ -144,6 +145,7 @@ async def submit(slug: str, body: SubmitIn, user: CurrentUser, llm: LLMDep, sett
         graded_by=f"{llm.name}:{llm.model}",
     )
     await attempt.insert()
+    await award_quietly(user, "tryout", f"tryout:{attempt.tryout_slug}")
     return _out(attempt)
 
 
@@ -162,4 +164,5 @@ async def reflect(attempt_id: str, body: ReflectionIn, user: CurrentUser) -> Att
     attempt = await _owned(attempt_id, user)
     attempt.reflection = body
     await attempt.save()
+    await award_quietly(user, "reflection", f"reflection:{attempt.tryout_slug}")
     return _out(attempt)

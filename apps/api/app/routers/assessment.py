@@ -20,6 +20,7 @@ from app.schemas.assessment import (
 from app.security.deps import CurrentUser
 from app.services import assessment as engine
 from app.services.matching import career_index
+from app.services.progress import award_quietly
 
 router = APIRouter(prefix="/api/assessment", tags=["assessment"])
 
@@ -131,6 +132,8 @@ async def answer(session_id: str, body: AnswerIn, user: CurrentUser) -> SessionO
         )
         session.status = "completed"
     await session.save()
+    if session.status == "completed":
+        await award_quietly(user, "assessment", "assessment:done")
     return _out(session)
 
 

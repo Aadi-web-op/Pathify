@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 
+import { InterestReading } from "@/components/app/interest-reading";
 import { RouteLine } from "@/components/brand/route-line";
 import { Button, Spinner } from "@/components/ui/button";
 import { Choice } from "@/components/ui/choice";
@@ -462,6 +463,7 @@ function InterestPicker({ value, onChange }: { value: string[]; onChange: (next:
           </button>
         ))}
       </div>
+      <InterestReading items={value} />
     </div>
   );
 }

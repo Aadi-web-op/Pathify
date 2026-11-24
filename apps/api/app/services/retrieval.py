@@ -1,9 +1,10 @@
 """Find the career guides most relevant to a student's question, and cite them.
 
-Ranking is BM25 over each career's title, summary, day-to-day work, skills,
-subjects and routes (exams, degrees, steps). The title and the common names
-Indian students use (MBBS, CA, UPSC, coding...) count extra. Small corpus,
-no external services, fully deterministic, so it is easy to test.
+Two rankers. BM25 over each career's title, summary, day-to-day work, skills,
+subjects and routes, where the title and the names Indian students use (MBBS,
+CA, UPSC, coding...) count extra. And, when installed, Pathify's fine-tuned
+multilingual retriever (apps/ml), which understands paraphrase, Hinglish and
+Hindi. HybridSearch fuses the two; without the model, BM25 runs alone.
 """
 
 import math
@@ -134,6 +135,76 @@ class CareerSearch:
 @lru_cache
 def career_search() -> CareerSearch:
     return CareerSearch(catalog())
+
+
+def embedding_text(career: Career) -> str:
+    """What the fine-tuned retriever embeds for each career. Training (apps/ml) imports this same function."""
+    exams = [s.label for r in career.routes for s in r.steps if s.kind == "exam"]
+    degrees = [s.label for r in career.routes for s in r.steps if s.kind == "degree"]
+    parts = [
+        f"{career.title} ({career.title_hi}).",
+        career.summary,
+        "Work: " + "; ".join(career.work) + ".",
+        "Exams: " + "; ".join(dict.fromkeys(exams)) + "." if exams else "",
+        "Degrees: " + "; ".join(dict.fromkeys(degrees)) + "." if degrees else "",
+        "Also called: " + ALIASES.get(career.slug, "") + ".",
+    ]
+    return " ".join(p for p in parts if p)
+
+
+# Reciprocal rank fusion constant, and the cosine similarity a career needs to count as relevant
+# on meaning alone (tuned on the eval set and off-topic chatter; see apps/ml/reports/retriever.json).
+RRF_K = 20
+DENSE_MIN = 0.5
+
+
+class HybridSearch:
+    """Keyword (BM25) and fine-tuned dense search, fused with reciprocal rank fusion.
+
+    BM25 is precise on exact names (NEET, CLAT, MBBS); the encoder understands paraphrase,
+    Hinglish and Hindi ("janwaron ka doctor"). A career is returned only if at least one of
+    them finds it relevant on its own, so small talk still gets no citations.
+    """
+
+    def __init__(self, keyword: CareerSearch, encoder):
+        self.keyword = keyword
+        self.encoder = encoder
+        self.careers = keyword.careers
+        self.vectors = encoder([embedding_text(c) for c in self.careers], max_length=256)
+
+    def search(self, query: str, k: int = 3) -> list[Hit]:
+        keyword_hits = self.keyword.search(query, k=len(self.careers), min_score=0.0)
+        keyword_score = {h.career.slug: h.score for h in keyword_hits}
+        keyword_rank = {h.career.slug: i for i, h in enumerate(keyword_hits)}
+        similarity = self.encoder([query])[0] @ self.vectors.T
+        dense_order = similarity.argsort()[::-1]
+        dense_rank = {self.careers[j].slug: i for i, j in enumerate(dense_order)}
+
+        hits = []
+        for j, career in enumerate(self.careers):
+            relevant = keyword_score.get(career.slug, 0.0) >= MIN_SCORE or similarity[j] >= DENSE_MIN
+            if not relevant:
+                continue
+            fused = 1 / (RRF_K + dense_rank[career.slug] + 1)
+            if career.slug in keyword_rank:
+                fused += 1 / (RRF_K + keyword_rank[career.slug] + 1)
+            hits.append(Hit(career, fused))
+        hits.sort(key=lambda h: (-h.score, h.career.title))
+        return hits[:k]
+
+
+@lru_cache
+def hybrid_search() -> HybridSearch | None:
+    from app.ml.models import retriever_encoder
+
+    encoder = retriever_encoder()
+    return HybridSearch(career_search(), encoder) if encoder else None
+
+
+def search_careers(query: str, k: int = 3) -> list[Hit]:
+    """Hybrid search when the retriever model is installed, keyword search otherwise."""
+    hybrid = hybrid_search()
+    return hybrid.search(query, k) if hybrid else career_search().search(query, k)
 
 
 def career_note(career: Career) -> str:

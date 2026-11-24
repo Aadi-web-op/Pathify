@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { ProgressCard } from "@/components/app/progress-card";
+import { VerifyEmailBanner } from "@/components/app/verify-banner";
 import { RouteLine } from "@/components/brand/route-line";
 import { ButtonLink, Spinner } from "@/components/ui/button";
 import { useMatches, useOverview } from "@/lib/assessment";
@@ -43,12 +45,15 @@ export default function HomePage() {
 
   return (
     <div className="grid gap-10">
+      <VerifyEmailBanner />
       <section className="grid gap-2">
         <p className="eyebrow">{stageLabel(profile)}</p>
         <h1 className="text-[2.4rem] font-semibold leading-[1] tracking-[-0.04em] sm:text-[3.2rem]">
           Hi <span className="serif-accent text-sign">{firstName}</span>, here&apos;s your road ahead
         </h1>
       </section>
+
+      <ProgressCard />
 
       <section aria-labelledby="route" className="grid gap-5 spotlight rounded-3xl border border-rule bg-surface p-5 sm:p-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">

@@ -1,18 +1,20 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Cookie, HTTPException, Request, Response, status
+from fastapi import APIRouter, BackgroundTasks, Cookie, HTTPException, Request, Response, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 from pymongo.errors import DuplicateKeyError
 
 from app.models import User
-from app.schemas.auth import GoogleIn, LoginIn, ProvidersOut, RegisterIn
+from app.models.user import utcnow
+from app.schemas.auth import ForgotPasswordIn, GoogleIn, LoginIn, ProvidersOut, RegisterIn, ResetPasswordIn, TokenIn
 from app.schemas.user import UserOut
 from app.security.cookies import REFRESH_COOKIE, clear_auth_cookies
-from app.security.deps import SettingsDep, client_ip
+from app.security.deps import CurrentUser, SettingsDep, client_ip
 from app.security.passwords import hash_password, verify_password
+from app.services.account_links import redeem, send_password_reset, send_verification
 from app.services.rate_limit import Limit, limiter
-from app.services.sessions import SessionError, end_session, rotate_session, start_session
+from app.services.sessions import SessionError, end_session, revoke_all_for_user, rotate_session, start_session
 from app.services.social import upsert_social_user
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -31,7 +33,9 @@ async def providers(settings: SettingsDep) -> ProvidersOut:
 
 
 @router.post("/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterIn, request: Request, response: Response, settings: SettingsDep) -> UserOut:
+async def register(
+    body: RegisterIn, request: Request, response: Response, settings: SettingsDep, background: BackgroundTasks
+) -> UserOut:
     limiter.check(
         Limit("register", settings.signups_per_hour_per_network, 3600),
         client_ip(request),
@@ -48,6 +52,7 @@ async def register(body: RegisterIn, request: Request, response: Response, setti
             status.HTTP_409_CONFLICT, "An account with this email already exists. Sign in instead."
         ) from None
     await start_session(response, settings, user, request.headers.get("user-agent"))
+    background.add_task(send_verification, user, settings)
     return UserOut.from_user(user)
 
 
@@ -128,3 +133,63 @@ async def google(body: GoogleIn, request: Request, response: Response, settings:
     user = await upsert_social_user(claims["email"], claims.get("name"), "google")
     await start_session(response, settings, user, request.headers.get("user-agent"))
     return UserOut.from_user(user)
+
+
+# --- Password reset and email verification -------------------------------------------------
+
+RESET_SENT = "If an account uses that email, we've sent a link to reset its password."
+
+
+@router.post("/password/forgot", status_code=status.HTTP_202_ACCEPTED)
+async def forgot_password(
+    body: ForgotPasswordIn, request: Request, settings: SettingsDep, background: BackgroundTasks
+) -> dict[str, str]:
+    """Always answers the same way, so it can't be used to find out who has an account."""
+    email = body.email.lower()
+    limiter.check(
+        Limit("reset-ip", settings.password_resets_per_hour * 4, 3600), client_ip(request), "Too many requests."
+    )
+    if limiter.hit(Limit("reset-email", settings.password_resets_per_hour, 3600), email) is None:
+        user = await User.find_one(User.email == email)
+        if user is not None:
+            background.add_task(send_password_reset, user, settings)
+    return {"detail": RESET_SENT}
+
+
+@router.post("/password/reset", response_model=UserOut)
+async def reset_password(body: ResetPasswordIn, request: Request, response: Response, settings: SettingsDep) -> UserOut:
+    user = await redeem(body.token, "reset_password")
+    if user is None:
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "This link has expired or was already used. Ask for a new one."
+        )
+    user.hashed_password = hash_password(body.password)
+    if "password" not in user.auth_providers:
+        user.auth_providers.append("password")
+    # Following the emailed link proves the student owns this address.
+    user.email_verified_at = user.email_verified_at or utcnow()
+    await user.save()
+    # Sign out everywhere else: whoever knew the old password loses access.
+    await revoke_all_for_user(user.id)
+    await start_session(response, settings, user, request.headers.get("user-agent"))
+    return UserOut.from_user(user)
+
+
+@router.post("/email/verify", response_model=UserOut)
+async def verify_email(body: TokenIn) -> UserOut:
+    user = await redeem(body.token, "verify_email")
+    if user is None:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "This link has expired or was already used.")
+    if user.email_verified_at is None:
+        user.email_verified_at = utcnow()
+        await user.save()
+    return UserOut.from_user(user)
+
+
+@router.post("/email/resend", status_code=status.HTTP_202_ACCEPTED)
+async def resend_verification(user: CurrentUser, settings: SettingsDep, background: BackgroundTasks) -> dict[str, str]:
+    if user.email_verified_at is not None:
+        return {"detail": "Your email is already confirmed."}
+    limiter.check(Limit("verify-resend", 5, 3600), str(user.id), "You've asked for a few links already.")
+    background.add_task(send_verification, user, settings)
+    return {"detail": f"We've sent a new link to {user.email}."}

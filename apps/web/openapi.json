@@ -208,6 +208,34 @@
         "title": "AttemptSummary",
         "type": "object"
       },
+      "BadgeOut": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "earned": {
+            "title": "Earned",
+            "type": "boolean"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "description",
+          "earned"
+        ],
+        "title": "BadgeOut",
+        "type": "object"
+      },
       "Board": {
         "enum": [
           "cbse",
@@ -350,6 +378,24 @@
         "title": "Career",
         "type": "object"
       },
+      "CareerCount": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "count"
+        ],
+        "title": "CareerCount",
+        "type": "object"
+      },
       "CareerSummary": {
         "properties": {
           "cluster": {
@@ -376,6 +422,139 @@
           "summary"
         ],
         "title": "CareerSummary",
+        "type": "object"
+      },
+      "ClassDetail": {
+        "properties": {
+          "assessed_share": {
+            "title": "Assessed Share",
+            "type": "number"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "interest_averages": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Interest Averages",
+            "type": "object"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "popular_careers": {
+            "items": {
+              "$ref": "#/components/schemas/CareerCount"
+            },
+            "title": "Popular Careers",
+            "type": "array"
+          },
+          "roster": {
+            "items": {
+              "$ref": "#/components/schemas/StudentSummary"
+            },
+            "title": "Roster",
+            "type": "array"
+          },
+          "school": {
+            "title": "School",
+            "type": "string"
+          },
+          "students": {
+            "title": "Students",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "school",
+          "code",
+          "students",
+          "roster",
+          "assessed_share",
+          "interest_averages",
+          "popular_careers"
+        ],
+        "title": "ClassDetail",
+        "type": "object"
+      },
+      "ClassIn": {
+        "properties": {
+          "name": {
+            "description": "For example: Class 10 B",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "Name",
+            "type": "string"
+          },
+          "school": {
+            "maxLength": 100,
+            "minLength": 2,
+            "title": "School",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "school"
+        ],
+        "title": "ClassIn",
+        "type": "object"
+      },
+      "ClassOut": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "school": {
+            "title": "School",
+            "type": "string"
+          },
+          "students": {
+            "title": "Students",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "school",
+          "code",
+          "students"
+        ],
+        "title": "ClassOut",
+        "type": "object"
+      },
+      "CustomMilestoneIn": {
+        "properties": {
+          "label": {
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "title": "CustomMilestoneIn",
         "type": "object"
       },
       "Debrief": {
@@ -459,6 +638,97 @@
         "title": "DimensionScore",
         "type": "object"
       },
+      "FieldOddsOut": {
+        "properties": {
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/FieldOut"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "test_top3": {
+            "description": "How often the field a held-out person studied was in the model's top three",
+            "title": "Test Top3",
+            "type": "number"
+          },
+          "trained_on": {
+            "description": "People in the training data",
+            "title": "Trained On",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "fields",
+          "model",
+          "trained_on",
+          "test_top3"
+        ],
+        "title": "FieldOddsOut",
+        "type": "object"
+      },
+      "FieldOut": {
+        "properties": {
+          "base_rate": {
+            "description": "Share of everyone in the training data who studied this",
+            "title": "Base Rate",
+            "type": "number"
+          },
+          "clusters": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Clusters",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "lift": {
+            "description": "probability / base_rate: above 1 means more common among people like you",
+            "title": "Lift",
+            "type": "number"
+          },
+          "probability": {
+            "description": "Share of people with interests like yours who studied this",
+            "title": "Probability",
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "clusters",
+          "probability",
+          "base_rate",
+          "lift"
+        ],
+        "title": "FieldOut",
+        "type": "object"
+      },
+      "ForgotPasswordIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "ForgotPasswordIn",
+        "type": "object"
+      },
       "Goal": {
         "enum": [
           "choose_stream",
@@ -530,6 +800,13 @@
             "title": "Llm Provider",
             "type": "string"
           },
+          "models": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "title": "Models",
+            "type": "object"
+          },
           "status": {
             "title": "Status",
             "type": "string"
@@ -538,9 +815,59 @@
         "required": [
           "status",
           "database",
-          "llm_provider"
+          "llm_provider",
+          "models"
         ],
         "title": "Health",
+        "type": "object"
+      },
+      "JoinIn": {
+        "properties": {
+          "agree": {
+            "description": "The student agrees to share their summary with the counsellor",
+            "title": "Agree",
+            "type": "boolean"
+          },
+          "code": {
+            "maxLength": 6,
+            "minLength": 6,
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "agree"
+        ],
+        "title": "JoinIn",
+        "type": "object"
+      },
+      "JoinedOut": {
+        "properties": {
+          "counsellor": {
+            "title": "Counsellor",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "school": {
+            "title": "School",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "school",
+          "counsellor"
+        ],
+        "title": "JoinedOut",
         "type": "object"
       },
       "KsarthMessageIn": {
@@ -835,6 +1162,81 @@
         "title": "Material",
         "type": "object"
       },
+      "Milestone": {
+        "properties": {
+          "custom": {
+            "default": false,
+            "title": "Custom",
+            "type": "boolean"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          },
+          "done_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Done At"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "years": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Years"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "kind"
+        ],
+        "title": "Milestone",
+        "type": "object"
+      },
+      "MilestoneUpdate": {
+        "properties": {
+          "done": {
+            "title": "Done",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "done"
+        ],
+        "title": "MilestoneUpdate",
+        "type": "object"
+      },
       "OfficialBody": {
         "properties": {
           "name": {
@@ -878,6 +1280,88 @@
           "text"
         ],
         "title": "Option",
+        "type": "object"
+      },
+      "PlanIn": {
+        "properties": {
+          "career_slug": {
+            "title": "Career Slug",
+            "type": "string"
+          },
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "career_slug",
+          "route_id"
+        ],
+        "title": "PlanIn",
+        "type": "object"
+      },
+      "PlanOut": {
+        "properties": {
+          "career_slug": {
+            "title": "Career Slug",
+            "type": "string"
+          },
+          "career_title": {
+            "title": "Career Title",
+            "type": "string"
+          },
+          "done": {
+            "title": "Done",
+            "type": "integer"
+          },
+          "milestones": {
+            "items": {
+              "$ref": "#/components/schemas/Milestone"
+            },
+            "title": "Milestones",
+            "type": "array"
+          },
+          "requirement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirement"
+          },
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          },
+          "route_label": {
+            "title": "Route Label",
+            "type": "string"
+          },
+          "route_open": {
+            "description": "False if the student's current stream doesn't lead to this route",
+            "title": "Route Open",
+            "type": "boolean"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "career_slug",
+          "career_title",
+          "route_id",
+          "route_label",
+          "route_open",
+          "requirement",
+          "milestones",
+          "done",
+          "total"
+        ],
+        "title": "PlanOut",
         "type": "object"
       },
       "Preferences": {
@@ -925,6 +1409,47 @@
           }
         },
         "title": "Progress",
+        "type": "object"
+      },
+      "ProgressOut": {
+        "properties": {
+          "badges": {
+            "items": {
+              "$ref": "#/components/schemas/BadgeOut"
+            },
+            "title": "Badges",
+            "type": "array"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          },
+          "level_floor": {
+            "title": "Level Floor",
+            "type": "integer"
+          },
+          "next_level_at": {
+            "title": "Next Level At",
+            "type": "integer"
+          },
+          "streak_days": {
+            "title": "Streak Days",
+            "type": "integer"
+          },
+          "xp": {
+            "title": "Xp",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "xp",
+          "level",
+          "level_floor",
+          "next_level_at",
+          "streak_days",
+          "badges"
+        ],
+        "title": "ProgressOut",
         "type": "object"
       },
       "ProvidersOut": {
@@ -1044,6 +1569,53 @@
           "number"
         ],
         "title": "QuestionOut",
+        "type": "object"
+      },
+      "ReadIn": {
+        "properties": {
+          "text": {
+            "description": "What the student enjoys, in English, Hinglish or Hindi",
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "ReadIn",
+        "type": "object"
+      },
+      "ReadOut": {
+        "properties": {
+          "model": {
+            "default": "interest-reader-1",
+            "title": "Model",
+            "type": "string"
+          },
+          "scores": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "description": "0-100 per interest type (R I A S E C)",
+            "title": "Scores",
+            "type": "object"
+          },
+          "top": {
+            "description": "Interest types, strongest first",
+            "items": {
+              "type": "string"
+            },
+            "title": "Top",
+            "type": "array"
+          }
+        },
+        "required": [
+          "scores",
+          "top"
+        ],
+        "title": "ReadOut",
         "type": "object"
       },
       "ReasonOut": {
@@ -1444,6 +2016,28 @@
           "summary"
         ],
         "title": "ReportTryout",
+        "type": "object"
+      },
+      "ResetPasswordIn": {
+        "properties": {
+          "password": {
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password",
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 200,
+            "minLength": 20,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "ResetPasswordIn",
         "type": "object"
       },
       "ResultOut": {
@@ -2108,6 +2702,144 @@
         "title": "StudentProfile",
         "type": "object"
       },
+      "StudentSummary": {
+        "properties": {
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "flags": {
+            "description": "Reasons this student might need a conversation",
+            "items": {
+              "type": "string"
+            },
+            "title": "Flags",
+            "type": "array"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grade"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "interest_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Top three interest types, e.g. 'IAS'",
+            "title": "Interest Code"
+          },
+          "last_active": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Active"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "plan_career": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Career"
+          },
+          "plan_progress": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "0-1 share of plan steps done",
+            "title": "Plan Progress"
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stage"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "top_matches": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Top Matches",
+            "type": "array"
+          },
+          "tryouts_tried": {
+            "title": "Tryouts Tried",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "stage",
+          "grade",
+          "stream",
+          "interest_code",
+          "confidence",
+          "top_matches",
+          "tryouts_tried",
+          "plan_career",
+          "plan_progress",
+          "last_active",
+          "flags"
+        ],
+        "title": "StudentSummary",
+        "type": "object"
+      },
       "SubmitIn": {
         "properties": {
           "answers": {
@@ -2232,6 +2964,21 @@
           "unit"
         ],
         "title": "TaskReview",
+        "type": "object"
+      },
+      "TokenIn": {
+        "properties": {
+          "token": {
+            "maxLength": 200,
+            "minLength": 20,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "TokenIn",
         "type": "object"
       },
       "TryoutLink": {
@@ -2407,6 +3154,10 @@
             "title": "Email",
             "type": "string"
           },
+          "email_verified": {
+            "title": "Email Verified",
+            "type": "boolean"
+          },
           "has_password": {
             "title": "Has Password",
             "type": "boolean"
@@ -2438,6 +3189,10 @@
           },
           "progress": {
             "$ref": "#/components/schemas/Progress"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
           }
         },
         "required": [
@@ -2446,6 +3201,8 @@
           "email",
           "auth_providers",
           "has_password",
+          "email_verified",
+          "role",
           "profile",
           "onboarded",
           "preferences",
@@ -2832,6 +3589,100 @@
         ]
       }
     },
+    "/api/auth/email/resend": {
+      "post": {
+        "operationId": "resend_verification_api_auth_email_resend_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Resend Verification Api Auth Email Resend Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resend Verification",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/email/verify": {
+      "post": {
+        "operationId": "verify_email_api_auth_email_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Verify Email",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/auth/google": {
       "post": {
         "operationId": "google_api_auth_google_post",
@@ -2951,6 +3802,93 @@
           }
         },
         "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/password/forgot": {
+      "post": {
+        "description": "Always answers the same way, so it can't be used to find out who has an account.",
+        "operationId": "forgot_password_api_auth_password_forgot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Forgot Password Api Auth Password Forgot Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forgot Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/auth/password/reset": {
+      "post": {
+        "operationId": "reset_password_api_auth_password_reset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reset Password",
         "tags": [
           "auth"
         ]
@@ -3199,6 +4137,283 @@
         ]
       }
     },
+    "/api/classes": {
+      "get": {
+        "operationId": "my_classes_api_classes_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ClassOut"
+                  },
+                  "title": "Response My Classes Api Classes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Classes",
+        "tags": [
+          "classes"
+        ]
+      },
+      "post": {
+        "operationId": "create_class_api_classes_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Class",
+        "tags": [
+          "classes"
+        ]
+      }
+    },
+    "/api/classes/{class_id}": {
+      "delete": {
+        "operationId": "archive_class_api_classes__class_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "class_id",
+            "required": true,
+            "schema": {
+              "title": "Class Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Archive Class",
+        "tags": [
+          "classes"
+        ]
+      },
+      "get": {
+        "operationId": "class_detail_api_classes__class_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "class_id",
+            "required": true,
+            "schema": {
+              "title": "Class Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Class Detail",
+        "tags": [
+          "classes"
+        ]
+      }
+    },
+    "/api/classes/{class_id}/students/{student_id}": {
+      "delete": {
+        "operationId": "remove_student_api_classes__class_id__students__student_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "class_id",
+            "required": true,
+            "schema": {
+              "title": "Class Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "student_id",
+            "required": true,
+            "schema": {
+              "title": "Student Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Student",
+        "tags": [
+          "classes"
+        ]
+      }
+    },
     "/api/health": {
       "get": {
         "operationId": "health_api_health_get",
@@ -3217,6 +4432,116 @@
         "summary": "Health",
         "tags": [
           "health"
+        ]
+      }
+    },
+    "/api/insights/field-odds": {
+      "get": {
+        "description": "What people with interests like the student's went on to study (needs a finished assessment).",
+        "operationId": "field_odds_api_insights_field_odds_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldOddsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Field Odds",
+        "tags": [
+          "insights"
+        ]
+      }
+    },
+    "/api/insights/read-interests": {
+      "post": {
+        "description": "Estimate interest scores from free text, e.g. \"I love fixing bikes and drawing\".",
+        "operationId": "read_interests_api_insights_read_interests_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Interests",
+        "tags": [
+          "insights"
         ]
       }
     },
@@ -3424,6 +4749,499 @@
         "summary": "Ksarth Status",
         "tags": [
           "ksarth"
+        ]
+      }
+    },
+    "/api/me/classes": {
+      "get": {
+        "operationId": "joined_classes_api_me_classes_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/JoinedOut"
+                  },
+                  "title": "Response Joined Classes Api Me Classes Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Joined Classes",
+        "tags": [
+          "classes"
+        ]
+      },
+      "post": {
+        "operationId": "join_class_api_me_classes_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Join Class",
+        "tags": [
+          "classes"
+        ]
+      }
+    },
+    "/api/me/classes/{class_id}": {
+      "delete": {
+        "operationId": "leave_class_api_me_classes__class_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "class_id",
+            "required": true,
+            "schema": {
+              "title": "Class Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Leave Class",
+        "tags": [
+          "classes"
+        ]
+      }
+    },
+    "/api/plan": {
+      "get": {
+        "operationId": "get_plan_api_plan_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Plan",
+        "tags": [
+          "plan"
+        ]
+      },
+      "put": {
+        "description": "Start (or switch to) a plan. Switching keeps nothing from the old route except your custom steps.",
+        "operationId": "choose_route_api_plan_put",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Choose Route",
+        "tags": [
+          "plan"
+        ]
+      }
+    },
+    "/api/plan/milestones": {
+      "post": {
+        "operationId": "add_step_api_plan_milestones_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomMilestoneIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Step",
+        "tags": [
+          "plan"
+        ]
+      }
+    },
+    "/api/plan/milestones/{milestone_id}": {
+      "delete": {
+        "operationId": "remove_step_api_plan_milestones__milestone_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Step",
+        "tags": [
+          "plan"
+        ]
+      },
+      "patch": {
+        "operationId": "tick_api_plan_milestones__milestone_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "milestone_id",
+            "required": true,
+            "schema": {
+              "title": "Milestone Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MilestoneUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Tick",
+        "tags": [
+          "plan"
+        ]
+      }
+    },
+    "/api/progress": {
+      "get": {
+        "operationId": "progress_api_progress_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Progress",
+        "tags": [
+          "plan"
         ]
       }
     },

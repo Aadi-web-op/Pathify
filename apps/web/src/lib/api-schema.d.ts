@@ -92,6 +92,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/email/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resend Verification */
+        post: operations["resend_verification_api_auth_email_resend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/email/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Email */
+        post: operations["verify_email_api_auth_email_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/google": {
         parameters: {
             query?: never;
@@ -137,6 +171,43 @@ export interface paths {
         put?: never;
         /** Logout */
         post: operations["logout_api_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Forgot Password
+         * @description Always answers the same way, so it can't be used to find out who has an account.
+         */
+        post: operations["forgot_password_api_auth_password_forgot_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/password/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reset Password */
+        post: operations["reset_password_api_auth_password_reset_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -248,6 +319,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/classes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Classes */
+        get: operations["my_classes_api_classes_get"];
+        put?: never;
+        /** Create Class */
+        post: operations["create_class_api_classes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/classes/{class_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Class Detail */
+        get: operations["class_detail_api_classes__class_id__get"];
+        put?: never;
+        post?: never;
+        /** Archive Class */
+        delete: operations["archive_class_api_classes__class_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/classes/{class_id}/students/{student_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Student */
+        delete: operations["remove_student_api_classes__class_id__students__student_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -259,6 +383,46 @@ export interface paths {
         get: operations["health_api_health_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/insights/field-odds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Field Odds
+         * @description What people with interests like the student's went on to study (needs a finished assessment).
+         */
+        get: operations["field_odds_api_insights_field_odds_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/insights/read-interests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read Interests
+         * @description Estimate interest scores from free text, e.g. "I love fixing bikes and drawing".
+         */
+        post: operations["read_interests_api_insights_read_interests_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -293,6 +457,114 @@ export interface paths {
         };
         /** Ksarth Status */
         get: operations["ksarth_status_api_ksarth_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/classes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Joined Classes */
+        get: operations["joined_classes_api_me_classes_get"];
+        put?: never;
+        /** Join Class */
+        post: operations["join_class_api_me_classes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/classes/{class_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Leave Class */
+        delete: operations["leave_class_api_me_classes__class_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Plan */
+        get: operations["get_plan_api_plan_get"];
+        /**
+         * Choose Route
+         * @description Start (or switch to) a plan. Switching keeps nothing from the old route except your custom steps.
+         */
+        put: operations["choose_route_api_plan_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plan/milestones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Step */
+        post: operations["add_step_api_plan_milestones_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/plan/milestones/{milestone_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Step */
+        delete: operations["remove_step_api_plan_milestones__milestone_id__delete"];
+        options?: never;
+        head?: never;
+        /** Tick */
+        patch: operations["tick_api_plan_milestones__milestone_id__patch"];
+        trace?: never;
+    };
+    "/api/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Progress */
+        get: operations["progress_api_progress_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -573,6 +845,17 @@ export interface components {
             /** Ungraded */
             ungraded: number;
         };
+        /** BadgeOut */
+        BadgeOut: {
+            /** Description */
+            description: string;
+            /** Earned */
+            earned: boolean;
+            /** Key */
+            key: string;
+            /** Name */
+            name: string;
+        };
         /**
          * Board
          * @enum {string}
@@ -614,6 +897,13 @@ export interface components {
             /** Work */
             work: string[];
         };
+        /** CareerCount */
+        CareerCount: {
+            /** Count */
+            count: number;
+            /** Title */
+            title: string;
+        };
         /** CareerSummary */
         CareerSummary: {
             /** Cluster */
@@ -624,6 +914,57 @@ export interface components {
             summary: string;
             /** Title */
             title: string;
+        };
+        /** ClassDetail */
+        ClassDetail: {
+            /** Assessed Share */
+            assessed_share: number;
+            /** Code */
+            code: string;
+            /** Id */
+            id: string;
+            /** Interest Averages */
+            interest_averages: {
+                [key: string]: number;
+            };
+            /** Name */
+            name: string;
+            /** Popular Careers */
+            popular_careers: components["schemas"]["CareerCount"][];
+            /** Roster */
+            roster: components["schemas"]["StudentSummary"][];
+            /** School */
+            school: string;
+            /** Students */
+            students: number;
+        };
+        /** ClassIn */
+        ClassIn: {
+            /**
+             * Name
+             * @description For example: Class 10 B
+             */
+            name: string;
+            /** School */
+            school: string;
+        };
+        /** ClassOut */
+        ClassOut: {
+            /** Code */
+            code: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** School */
+            school: string;
+            /** Students */
+            students: number;
+        };
+        /** CustomMilestoneIn */
+        CustomMilestoneIn: {
+            /** Label */
+            label: string;
         };
         /** Debrief */
         Debrief: {
@@ -665,6 +1006,55 @@ export interface components {
             /** Short */
             short: string;
         };
+        /** FieldOddsOut */
+        FieldOddsOut: {
+            /** Fields */
+            fields: components["schemas"]["FieldOut"][];
+            /** Model */
+            model: string;
+            /**
+             * Test Top3
+             * @description How often the field a held-out person studied was in the model's top three
+             */
+            test_top3: number;
+            /**
+             * Trained On
+             * @description People in the training data
+             */
+            trained_on: number;
+        };
+        /** FieldOut */
+        FieldOut: {
+            /**
+             * Base Rate
+             * @description Share of everyone in the training data who studied this
+             */
+            base_rate: number;
+            /** Clusters */
+            clusters: string[];
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Lift
+             * @description probability / base_rate: above 1 means more common among people like you
+             */
+            lift: number;
+            /**
+             * Probability
+             * @description Share of people with interests like yours who studied this
+             */
+            probability: number;
+        };
+        /** ForgotPasswordIn */
+        ForgotPasswordIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+        };
         /**
          * Goal
          * @enum {string}
@@ -696,8 +1086,33 @@ export interface components {
             database: boolean;
             /** Llm Provider */
             llm_provider: string;
+            /** Models */
+            models: {
+                [key: string]: boolean;
+            };
             /** Status */
             status: string;
+        };
+        /** JoinIn */
+        JoinIn: {
+            /**
+             * Agree
+             * @description The student agrees to share their summary with the counsellor
+             */
+            agree: boolean;
+            /** Code */
+            code: string;
+        };
+        /** JoinedOut */
+        JoinedOut: {
+            /** Counsellor */
+            counsellor: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** School */
+            school: string;
         };
         /** KsarthMessageIn */
         KsarthMessageIn: {
@@ -797,6 +1212,31 @@ export interface components {
             /** Title */
             title: string;
         };
+        /** Milestone */
+        Milestone: {
+            /**
+             * Custom
+             * @default false
+             */
+            custom: boolean;
+            /** Detail */
+            detail?: string | null;
+            /** Done At */
+            done_at?: string | null;
+            /** Id */
+            id: string;
+            /** Kind */
+            kind: string;
+            /** Label */
+            label: string;
+            /** Years */
+            years?: number | null;
+        };
+        /** MilestoneUpdate */
+        MilestoneUpdate: {
+            /** Done */
+            done: boolean;
+        };
         /** OfficialBody */
         OfficialBody: {
             /** Name */
@@ -810,6 +1250,37 @@ export interface components {
             id: string;
             /** Text */
             text: string;
+        };
+        /** PlanIn */
+        PlanIn: {
+            /** Career Slug */
+            career_slug: string;
+            /** Route Id */
+            route_id: string;
+        };
+        /** PlanOut */
+        PlanOut: {
+            /** Career Slug */
+            career_slug: string;
+            /** Career Title */
+            career_title: string;
+            /** Done */
+            done: number;
+            /** Milestones */
+            milestones: components["schemas"]["Milestone"][];
+            /** Requirement */
+            requirement: string | null;
+            /** Route Id */
+            route_id: string;
+            /** Route Label */
+            route_label: string;
+            /**
+             * Route Open
+             * @description False if the student's current stream doesn't lead to this route
+             */
+            route_open: boolean;
+            /** Total */
+            total: number;
         };
         /** Preferences */
         Preferences: {
@@ -846,6 +1317,21 @@ export interface components {
              * Xp
              * @default 0
              */
+            xp: number;
+        };
+        /** ProgressOut */
+        ProgressOut: {
+            /** Badges */
+            badges: components["schemas"]["BadgeOut"][];
+            /** Level */
+            level: number;
+            /** Level Floor */
+            level_floor: number;
+            /** Next Level At */
+            next_level_at: number;
+            /** Streak Days */
+            streak_days: number;
+            /** Xp */
             xp: number;
         };
         /** ProvidersOut */
@@ -886,6 +1372,34 @@ export interface components {
             number: number;
             /** Text */
             text: string;
+        };
+        /** ReadIn */
+        ReadIn: {
+            /**
+             * Text
+             * @description What the student enjoys, in English, Hinglish or Hindi
+             */
+            text: string;
+        };
+        /** ReadOut */
+        ReadOut: {
+            /**
+             * Model
+             * @default interest-reader-1
+             */
+            model: string;
+            /**
+             * Scores
+             * @description 0-100 per interest type (R I A S E C)
+             */
+            scores: {
+                [key: string]: number;
+            };
+            /**
+             * Top
+             * @description Interest types, strongest first
+             */
+            top: string[];
         };
         /** ReasonOut */
         ReasonOut: {
@@ -1034,6 +1548,13 @@ export interface components {
             summary: string;
             /** Title */
             title: string;
+        };
+        /** ResetPasswordIn */
+        ResetPasswordIn: {
+            /** Password */
+            password: string;
+            /** Token */
+            token: string;
         };
         /** ResultOut */
         ResultOut: {
@@ -1282,6 +1803,44 @@ export interface components {
             /** Year Of Study */
             year_of_study?: number | null;
         };
+        /** StudentSummary */
+        StudentSummary: {
+            /** Confidence */
+            confidence: string | null;
+            /**
+             * Flags
+             * @description Reasons this student might need a conversation
+             */
+            flags: string[];
+            /** Grade */
+            grade: number | null;
+            /** Id */
+            id: string;
+            /**
+             * Interest Code
+             * @description Top three interest types, e.g. 'IAS'
+             */
+            interest_code: string | null;
+            /** Last Active */
+            last_active: string | null;
+            /** Name */
+            name: string;
+            /** Plan Career */
+            plan_career: string | null;
+            /**
+             * Plan Progress
+             * @description 0-1 share of plan steps done
+             */
+            plan_progress: number | null;
+            /** Stage */
+            stage: string | null;
+            /** Stream */
+            stream: string | null;
+            /** Top Matches */
+            top_matches: string[];
+            /** Tryouts Tried */
+            tryouts_tried: number;
+        };
         /** SubmitIn */
         SubmitIn: {
             /**
@@ -1310,6 +1869,11 @@ export interface components {
             unit: string | null;
             /** Your Answer */
             your_answer: string | number | string[] | null;
+        };
+        /** TokenIn */
+        TokenIn: {
+            /** Token */
+            token: string;
         };
         /** TryoutLink */
         TryoutLink: {
@@ -1378,6 +1942,8 @@ export interface components {
              * Format: email
              */
             email: string;
+            /** Email Verified */
+            email_verified: boolean;
             /** Has Password */
             has_password: boolean;
             /** Id */
@@ -1389,6 +1955,8 @@ export interface components {
             preferences: components["schemas"]["Preferences"];
             profile: components["schemas"]["StudentProfile"] | null;
             progress: components["schemas"]["Progress"];
+            /** Role */
+            role: string;
         };
         /** UserUpdate */
         UserUpdate: {
@@ -1588,6 +2156,72 @@ export interface operations {
             };
         };
     };
+    resend_verification_api_auth_email_resend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verify_email_api_auth_email_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     google_api_auth_google_post: {
         parameters: {
             query?: never;
@@ -1671,6 +2305,74 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    forgot_password_api_auth_password_forgot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_password_api_auth_password_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserOut"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -1858,6 +2560,168 @@ export interface operations {
             };
         };
     };
+    my_classes_api_classes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_class_api_classes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClassIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    class_detail_api_classes__class_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                class_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_class_api_classes__class_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                class_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_student_api_classes__class_id__students__student_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                class_id: string;
+                student_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     health_api_health_get: {
         parameters: {
             query?: never;
@@ -1874,6 +2738,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    field_odds_api_insights_field_odds_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FieldOddsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_interests_api_insights_read_interests_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -1993,6 +2923,303 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["KsarthStatus"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    joined_classes_api_me_classes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinedOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    join_class_api_me_classes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JoinIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JoinedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    leave_class_api_me_classes__class_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                class_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_plan_api_plan_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    choose_route_api_plan_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_step_api_plan_milestones_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomMilestoneIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_step_api_plan_milestones__milestone_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                milestone_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    tick_api_plan_milestones__milestone_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                milestone_id: string;
+            };
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MilestoneUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    progress_api_progress_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressOut"];
                 };
             };
             /** @description Validation Error */

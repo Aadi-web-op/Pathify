@@ -1,10 +1,22 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
-from app.models import AssessmentSession, KsarthMessage, ReportShare, TryoutAttempt
+from app.models import (
+    ActionToken,
+    ActiveDay,
+    AssessmentSession,
+    Classroom,
+    KsarthMessage,
+    Membership,
+    Plan,
+    ReportShare,
+    TryoutAttempt,
+    XPEvent,
+)
 from app.models.user import StudentProfile, utcnow
 from app.schemas.user import DeleteAccount, UserOut, UserUpdate
 from app.security.cookies import clear_auth_cookies
 from app.security.deps import CurrentUser, SettingsDep
+from app.services.progress import award_quietly
 from app.services.sessions import revoke_all_for_user
 
 router = APIRouter(prefix="/api/users", tags=["users"])
@@ -29,9 +41,12 @@ async def update_me(body: UserUpdate, user: CurrentUser) -> UserOut:
 async def save_profile(profile: StudentProfile, user: CurrentUser) -> UserOut:
     """Save onboarding answers. The first save marks onboarding as complete."""
     user.profile = profile
-    if user.onboarded_at is None:
+    first_time = user.onboarded_at is None
+    if first_time:
         user.onboarded_at = utcnow()
     await user.save()
+    if first_time:
+        await award_quietly(user, "onboarded", "onboarded")
     return UserOut.from_user(user)
 
 
@@ -44,6 +59,14 @@ async def delete_me(body: DeleteAccount, user: CurrentUser, settings: SettingsDe
     await AssessmentSession.find(AssessmentSession.user_id == user.id).delete()
     await TryoutAttempt.find(TryoutAttempt.user_id == user.id).delete()
     await ReportShare.find(ReportShare.user_id == user.id).delete()
+    await Plan.find(Plan.user_id == user.id).delete()
+    await XPEvent.find(XPEvent.user_id == user.id).delete()
+    await ActiveDay.find(ActiveDay.user_id == user.id).delete()
+    await ActionToken.find(ActionToken.user_id == user.id).delete()
+    await Membership.find(Membership.student_id == user.id).delete()
+    for room in await Classroom.find(Classroom.counsellor_id == user.id).to_list():
+        await Membership.find(Membership.classroom_id == room.id).delete()
+        await room.delete()
     await revoke_all_for_user(user.id)
     await user.delete()
     done = Response(status_code=status.HTTP_204_NO_CONTENT)
