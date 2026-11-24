@@ -36,7 +36,9 @@ def main() -> None:
         shutil.copy(SERVING / "pathfinder.json", staging / "pathfinder.json")
         shutil.copytree(REPORTS, staging / "reports")
         shutil.copy(ML_ROOT / "MODEL_CARD.md", staging / "README.md")
-        api.upload_folder(folder_path=str(staging), repo_id=args.repo, repo_type="model", commit_message="Publish Pathify models")
+        api.upload_folder(
+            folder_path=str(staging), repo_id=args.repo, repo_type="model", commit_message="Publish Pathify models"
+        )
     print(f"https://huggingface.co/{args.repo}")
 
 

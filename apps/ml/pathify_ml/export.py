@@ -61,7 +61,9 @@ def prune_vocab(tokenizer_json: Path, embeddings: torch.nn.Embedding, out_dir: P
     (out_dir / "tokenizer.json").write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
 
     index = torch.tensor(keep_ids + extra)
-    pruned = torch.nn.Embedding(len(index), embeddings.embedding_dim, padding_idx=old_to_new.get(embeddings.padding_idx))
+    pruned = torch.nn.Embedding(
+        len(index), embeddings.embedding_dim, padding_idx=old_to_new.get(embeddings.padding_idx)
+    )
     pruned.weight.data = embeddings.weight.data[index].clone()
     print(f"vocabulary {len(vocab) + len(extra)} -> {len(index)} pieces")
     return pruned
@@ -70,7 +72,11 @@ def prune_vocab(tokenizer_json: Path, embeddings: torch.nn.Embedding, out_dir: P
 def load_fast_tokenizer(directory: Path) -> PreTrainedTokenizerFast:
     return PreTrainedTokenizerFast(
         tokenizer_file=str(directory / "tokenizer.json"),
-        bos_token="<s>", eos_token="</s>", unk_token="<unk>", pad_token="<pad>", mask_token="<mask>",
+        bos_token="<s>",
+        eos_token="</s>",
+        unk_token="<unk>",
+        pad_token="<pad>",
+        mask_token="<mask>",
     )
 
 
@@ -83,14 +89,20 @@ def export_onnx(module: torch.nn.Module, tok, out_path: Path, output_name: str) 
         str(out_path),
         input_names=["input_ids", "attention_mask"],
         output_names=[output_name],
-        dynamic_axes={"input_ids": {0: "batch", 1: "seq"}, "attention_mask": {0: "batch", 1: "seq"}, output_name: {0: "batch"}},
+        dynamic_axes={
+            "input_ids": {0: "batch", 1: "seq"},
+            "attention_mask": {0: "batch", 1: "seq"},
+            output_name: {0: "batch"},
+        },
         opset_version=17,
         dynamo=False,
     )
 
 
-def quantize(src: Path, dst: Path) -> None:
-    quantize_dynamic(str(src), str(dst), weight_type=QuantType.QInt8)
+def quantize(src: Path, dst: Path, op_types: list[str] | None = None) -> None:
+    """Dynamic int8. `op_types=["Gather"]` quantizes only the embedding table, which is most of
+    the size, and keeps the transformer's matrix multiplications in fp32."""
+    quantize_dynamic(str(src), str(dst), weight_type=QuantType.QInt8, op_types_to_quantize=op_types)
 
 
 def onnx_run(path: Path, tok, texts: list[str], max_len: int = 128) -> np.ndarray:
@@ -98,7 +110,9 @@ def onnx_run(path: Path, tok, texts: list[str], max_len: int = 128) -> np.ndarra
 
     session = ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
     enc = tok(texts, padding=True, truncation=True, max_length=max_len, return_tensors="np")
-    return session.run(None, {"input_ids": enc["input_ids"].astype(np.int64), "attention_mask": enc["attention_mask"].astype(np.int64)})[0]
+    return session.run(
+        None, {"input_ids": enc["input_ids"].astype(np.int64), "attention_mask": enc["attention_mask"].astype(np.int64)}
+    )[0]
 
 
 def size_mb(path: Path) -> float:

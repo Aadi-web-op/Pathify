@@ -25,6 +25,13 @@ from app.models.classroom import Classroom, Membership
 from app.models.progress import ActiveDay
 from app.models.user import utcnow
 from app.security.deps import CurrentUser
+from app.services.billing import (
+    FREE_CLASS_LIMIT,
+    FREE_STUDENT_LIMIT,
+    SCHOOL_CLASS_LIMIT,
+    SCHOOL_STUDENT_LIMIT,
+    has_school,
+)
 from app.services.matching import career_index
 from app.services.rate_limit import Limit, limiter
 
@@ -32,7 +39,6 @@ router = APIRouter(prefix="/api", tags=["classes"])
 
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # no 0/O or 1/I to misread
 QUIET_DAYS = 14
-MAX_CLASSES = 20
 
 
 class ClassIn(BaseModel):
@@ -109,8 +115,12 @@ async def _out(room: Classroom) -> ClassOut:
 
 @router.post("/classes", response_model=ClassOut, status_code=status.HTTP_201_CREATED)
 async def create_class(body: ClassIn, user: CurrentUser) -> ClassOut:
-    if await Classroom.find(Classroom.counsellor_id == user.id, Classroom.archived_at == None).count() >= MAX_CLASSES:  # noqa: E711
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, f"You can have up to {MAX_CLASSES} classes.")
+    limit = SCHOOL_CLASS_LIMIT if has_school(user) else FREE_CLASS_LIMIT
+    if await Classroom.find(Classroom.counsellor_id == user.id, Classroom.archived_at == None).count() >= limit:  # noqa: E711
+        extra = "" if has_school(user) else " The school plan allows up to 20."
+        raise HTTPException(
+            status.HTTP_402_PAYMENT_REQUIRED, f"You can have {limit} active class{'es' if limit > 1 else ''}.{extra}"
+        )
     for _ in range(5):
         room = Classroom(
             counsellor_id=user.id, name=body.name.strip(), school=body.school.strip(), code=_code(), created_at=utcnow()
@@ -240,6 +250,11 @@ async def join_class(body: JoinIn, user: CurrentUser) -> JoinedOut:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "No class has that code. Check it with your counsellor.")
     if room.counsellor_id == user.id:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "That's your own class.")
+    owner = await User.get(room.counsellor_id)
+    seats = SCHOOL_STUDENT_LIMIT if owner and has_school(owner) else FREE_STUDENT_LIMIT
+    already = await Membership.find_one(Membership.classroom_id == room.id, Membership.student_id == user.id)
+    if not already and await Membership.find(Membership.classroom_id == room.id).count() >= seats:
+        raise HTTPException(status.HTTP_409_CONFLICT, "This class is full. Ask your counsellor about it.")
     with contextlib.suppress(DuplicateKeyError):  # already a member: joining again is harmless
         await Membership(classroom_id=room.id, student_id=user.id, joined_at=utcnow()).insert()
     counsellor = await User.get(room.counsellor_id)

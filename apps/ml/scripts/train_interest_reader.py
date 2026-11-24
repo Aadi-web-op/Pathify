@@ -61,7 +61,7 @@ def regression_metrics(pred: np.ndarray, target: np.ndarray) -> dict:
     per_dim = [float(np.corrcoef(pred[:, i], target[:, i])[0, 1]) for i in range(6)]
     return {
         "pearson_mean": round(float(np.mean(per_dim)), 4),
-        "pearson_by_type": {d: round(r, 4) for d, r in zip(DIMS, per_dim)},
+        "pearson_by_type": {d: round(r, 4) for d, r in zip(DIMS, per_dim, strict=True)},
         "top_type_accuracy": round(float(np.mean(pred.argmax(1) == target.argmax(1))), 4),
         "n": int(len(target)),
     }
@@ -76,7 +76,12 @@ def student_metrics(scores: np.ndarray, rows: list[dict]) -> dict:
     for lang in sorted({r["lang"] for r in rows}):
         idx = np.array([r["lang"] == lang for r in rows])
         by_lang[lang] = {"top1": round(float(top1[idx].mean()), 4), "n": int(idx.sum())}
-    return {"top1": round(float(top1.mean()), 4), "top2": round(float(top2.mean()), 4), "by_language": by_lang, "n": len(rows)}
+    return {
+        "top1": round(float(top1.mean()), 4),
+        "top2": round(float(top2.mean()), 4),
+        "by_language": by_lang,
+        "n": len(rows),
+    }
 
 
 def zero_shot_scores(model: InterestReader, tok, texts: list[str]) -> np.ndarray:
@@ -133,7 +138,12 @@ def main() -> None:
         "onet_test": regression_metrics(ridge.predict(embed_all(base, tok, test_x)), test_y),
         "students": student_metrics(ridge.predict(embed_all(base, tok, student_x)), students),
     }
-    print("baselines", json.dumps({k: report[k] for k in ("zero_shot", "linear_probe")}), f"{time.time() - t0:.0f}s", flush=True)
+    print(
+        "baselines",
+        json.dumps({k: report[k] for k in ("zero_shot", "linear_probe")}),
+        f"{time.time() - t0:.0f}s",
+        flush=True,
+    )
     del base
 
     # Fine-tune.
@@ -148,7 +158,9 @@ def main() -> None:
     opt = torch.optim.AdamW(params, weight_decay=0.01)
     steps = args.epochs * math.ceil(len(train_x) / args.batch)
     warm = int(0.06 * steps)
-    sched = torch.optim.lr_scheduler.LambdaLR(opt, lambda s: min(1.0, (s + 1) / max(1, warm)) * max(0.0, (steps - s) / max(1, steps - warm)))
+    sched = torch.optim.lr_scheduler.LambdaLR(
+        opt, lambda s: min(1.0, (s + 1) / max(1, warm)) * max(0.0, (steps - s) / max(1, steps - warm))
+    )
 
     best, step, history = -1.0, 0, []
     out_dir = ARTIFACTS / "interest_reader"
@@ -188,7 +200,9 @@ def main() -> None:
     }
     REPORTS.mkdir(exist_ok=True)
     (REPORTS / "interest_reader.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
-    print("final", json.dumps(report["fine_tuned"]["onet_test"]), json.dumps(report["fine_tuned"]["students"]), flush=True)
+    print(
+        "final", json.dumps(report["fine_tuned"]["onet_test"]), json.dumps(report["fine_tuned"]["students"]), flush=True
+    )
 
 
 if __name__ == "__main__":

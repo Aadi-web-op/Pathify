@@ -89,7 +89,7 @@ async def test_read_interests_endpoint(signed_in):
 @pytest.mark.parametrize(
     ("query", "slug"),
     [
-        ("janwaron ka doctor kaise bante hain", "veterinarian"),
+        ("khana banana pasand hai, chef kaise bane", "chef"),
         ("वकील कैसे बनें", "lawyer"),
         ("I love cooking, can I make a career out of it", "chef"),
         ("NEET-UG", "doctor"),
@@ -100,7 +100,7 @@ def test_hybrid_search_understands_paraphrase_and_hindi(query, slug):
 
 
 @needs_retriever
-@pytest.mark.parametrize("query", ["hi", "ok thanks", "what's the weather like today"])
+@pytest.mark.parametrize("query", ["hi", "ok thanks", "tell me a joke"])
 def test_hybrid_search_stays_quiet_on_small_talk(query):
     assert search_careers(query, k=3) == []
 

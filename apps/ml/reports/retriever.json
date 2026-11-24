@@ -1,0 +1,65 @@
+{
+  "base_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "train_pairs": 1073,
+  "eval_queries": 75,
+  "results": {
+    "bm25": {
+      "hit@1": 0.76,
+      "hit@3": 0.7867,
+      "mrr@10": 0.7891,
+      "hit@3_by_language": {
+        "en": 0.9091,
+        "hi": 0.1,
+        "hinglish": 0.8571
+      },
+      "n": 75
+    },
+    "base": {
+      "hit@1": 0.8,
+      "hit@3": 0.9467,
+      "mrr@10": 0.8723,
+      "hit@3_by_language": {
+        "en": 1.0,
+        "hi": 1.0,
+        "hinglish": 0.8095
+      },
+      "n": 75
+    },
+    "fine_tuned": {
+      "hit@1": 0.92,
+      "hit@3": 0.9467,
+      "mrr@10": 0.9444,
+      "hit@3_by_language": {
+        "en": 0.9318,
+        "hi": 1.0,
+        "hinglish": 0.9524
+      },
+      "n": 75
+    },
+    "equal_rrf_hybrid": {
+      "hit@1": 0.8133,
+      "hit@3": 0.88,
+      "mrr@10": 0.8617,
+      "hit@3_by_language": {
+        "en": 0.9545,
+        "hi": 0.5,
+        "hinglish": 0.9048
+      },
+      "n": 75
+    }
+  },
+  "rrf_k": 20,
+  "shipped": {
+    "ranking": "fine_tuned dense similarity",
+    "relevance_gate": "cosine >= 0.30 or a BM25 exact-name match (score >= 2.0)",
+    "why": "Equal-weight reciprocal rank fusion with BM25 lowered hit@1 from 0.92 to 0.81 (BM25 can't read Hindi). A small BM25 boost changed hit@1/hit@3 by one question each way, so the simpler dense ranking ships.",
+    "off_topic_max_similarity": {
+      "hi": 0.198,
+      "ok thanks": 0.123,
+      "what's the weather like today": 0.168,
+      "tell me a joke": 0.15,
+      "who are you": 0.265,
+      "hello ksarth": 0.165
+    }
+  }
+}

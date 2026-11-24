@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
-from app.models.user import Preferences, Progress, StudentProfile, User
+from app.models.user import Preferences, Progress, StudentProfile, User, utcnow
 
 
 class UserOut(BaseModel):
@@ -14,6 +14,7 @@ class UserOut(BaseModel):
     has_password: bool
     email_verified: bool
     role: str
+    plus: bool
     profile: StudentProfile | None
     onboarded: bool
     preferences: Preferences
@@ -30,6 +31,7 @@ class UserOut(BaseModel):
             has_password=user.hashed_password is not None,
             email_verified=user.email_verified_at is not None,
             role=user.role,
+            plus=bool(user.plus_until and user.plus_until > utcnow()),
             profile=user.profile,
             onboarded=user.onboarded_at is not None,
             preferences=user.preferences,

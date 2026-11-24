@@ -9,6 +9,7 @@ from app.models.report import ReportShare
 from app.models.user import utcnow
 from app.schemas.report import ReportOut, ShareIn, ShareOut
 from app.security.deps import CurrentUser, client_ip
+from app.services.billing import has_plus
 from app.services.progress import award_quietly
 from app.services.rate_limit import Limit, limiter
 from app.services.report import build_report
@@ -17,6 +18,7 @@ from app.services.report_text import Lang
 router = APIRouter(prefix="/api/report", tags=["report"])
 
 SHARE_DAYS = 30
+PLUS_SHARE_DAYS = 365
 NOT_FOUND = "This report link has expired or been turned off. Ask for a new one."
 
 
@@ -52,7 +54,7 @@ async def create_share(body: ShareIn, user: CurrentUser) -> ShareOut:
         token=secrets.token_urlsafe(24),
         user_id=user.id,
         language=body.language,
-        expires_at=utcnow() + timedelta(days=SHARE_DAYS),
+        expires_at=utcnow() + timedelta(days=PLUS_SHARE_DAYS if has_plus(user) else SHARE_DAYS),
     )
     await share.insert()
     await award_quietly(user, "report_shared", "report_shared")

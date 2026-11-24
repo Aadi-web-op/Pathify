@@ -236,6 +236,63 @@
         "title": "BadgeOut",
         "type": "object"
       },
+      "BillingOut": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/PricePlanOut"
+            },
+            "title": "Plans",
+            "type": "array"
+          },
+          "plus": {
+            "title": "Plus",
+            "type": "boolean"
+          },
+          "plus_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plus Until"
+          },
+          "school": {
+            "title": "School",
+            "type": "boolean"
+          },
+          "school_until": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "School Until"
+          }
+        },
+        "required": [
+          "configured",
+          "plans",
+          "plus",
+          "plus_until",
+          "school",
+          "school_until"
+        ],
+        "title": "BillingOut",
+        "type": "object"
+      },
       "Board": {
         "enum": [
           "cbse",
@@ -1282,6 +1339,66 @@
         "title": "Option",
         "type": "object"
       },
+      "OrderIn": {
+        "properties": {
+          "product": {
+            "enum": [
+              "family_plus",
+              "school"
+            ],
+            "title": "Product",
+            "type": "string"
+          }
+        },
+        "required": [
+          "product"
+        ],
+        "title": "OrderIn",
+        "type": "object"
+      },
+      "OrderOut": {
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "integer"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "key_id": {
+            "title": "Key Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "order_id": {
+            "title": "Order Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "order_id",
+          "amount",
+          "currency",
+          "key_id",
+          "name",
+          "email",
+          "description"
+        ],
+        "title": "OrderOut",
+        "type": "object"
+      },
       "PlanIn": {
         "properties": {
           "career_slug": {
@@ -1378,6 +1495,42 @@
           }
         },
         "title": "Preferences",
+        "type": "object"
+      },
+      "PricePlanOut": {
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "integer"
+          },
+          "days": {
+            "title": "Days",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "perks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Perks",
+            "type": "array"
+          },
+          "product": {
+            "title": "Product",
+            "type": "string"
+          }
+        },
+        "required": [
+          "product",
+          "name",
+          "amount",
+          "days",
+          "perks"
+        ],
+        "title": "PricePlanOut",
         "type": "object"
       },
       "Progress": {
@@ -3174,6 +3327,10 @@
             "title": "Onboarded",
             "type": "boolean"
           },
+          "plus": {
+            "title": "Plus",
+            "type": "boolean"
+          },
           "preferences": {
             "$ref": "#/components/schemas/Preferences"
           },
@@ -3203,6 +3360,7 @@
           "has_password",
           "email_verified",
           "role",
+          "plus",
           "profile",
           "onboarded",
           "preferences",
@@ -3285,6 +3443,29 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "VerifyIn": {
+        "properties": {
+          "order_id": {
+            "title": "Order Id",
+            "type": "string"
+          },
+          "payment_id": {
+            "title": "Payment Id",
+            "type": "string"
+          },
+          "signature": {
+            "title": "Signature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "order_id",
+          "payment_id",
+          "signature"
+        ],
+        "title": "VerifyIn",
         "type": "object"
       }
     }
@@ -4006,6 +4187,173 @@
         "summary": "Register",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/billing": {
+      "get": {
+        "operationId": "billing_api_billing_get",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Billing",
+        "tags": [
+          "billing"
+        ]
+      }
+    },
+    "/api/billing/orders": {
+      "post": {
+        "operationId": "order_api_billing_orders_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Order",
+        "tags": [
+          "billing"
+        ]
+      }
+    },
+    "/api/billing/verify": {
+      "post": {
+        "operationId": "verify_api_billing_verify_post",
+        "parameters": [
+          {
+            "in": "cookie",
+            "name": "pathify_access",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Pathify Access"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Verify",
+        "tags": [
+          "billing"
         ]
       }
     },

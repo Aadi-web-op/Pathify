@@ -57,10 +57,15 @@ def _lower_first(text: str) -> str:
 
 def activity_examples() -> list[Example]:
     out: list[Example] = []
-    area_to_type = {r["Specific Interest Areas Element ID"]: ONET_NAMES[r["Career Interest Types Element Name"]]
-                    for r in _read("Specific Interest Areas to Career Interest Types.txt")}
-    type_ids = {r["Element ID"]: ONET_NAMES[r["Element Name"]] for r in _read("Interests Illustrative Activities.txt")
-                if r["Element Name"] in ONET_NAMES}
+    area_to_type = {
+        r["Specific Interest Areas Element ID"]: ONET_NAMES[r["Career Interest Types Element Name"]]
+        for r in _read("Specific Interest Areas to Career Interest Types.txt")
+    }
+    type_ids = {
+        r["Element ID"]: ONET_NAMES[r["Element Name"]]
+        for r in _read("Interests Illustrative Activities.txt")
+        if r["Element Name"] in ONET_NAMES
+    }
     for row in _read("Interests Illustrative Activities.txt"):
         dim = type_ids.get(row["Element ID"]) or area_to_type.get(row["Element ID"])
         if dim:
@@ -78,7 +83,9 @@ def activity_examples() -> list[Example]:
         out.append(Example(item["text"], one_type(item["dimension"]), "pathify_item", "activity"))
 
     # Each activity also in a student's voice.
-    voiced = [Example(f"I enjoy doing this: {_lower_first(e.text)}", e.target, e.source + "_voiced", e.group) for e in out]
+    voiced = [
+        Example(f"I enjoy doing this: {_lower_first(e.text)}", e.target, e.source + "_voiced", e.group) for e in out
+    ]
     return out + voiced
 
 
@@ -128,4 +135,6 @@ def build(per_occupation: int = 10, seed: int = 13) -> dict[str, list[Example]]:
 def student_eval() -> list[dict]:
     from .paths import EVALS
 
-    return [json.loads(line) for line in (EVALS / "interest_eval.jsonl").read_text(encoding="utf-8").splitlines() if line]
+    return [
+        json.loads(line) for line in (EVALS / "interest_eval.jsonl").read_text(encoding="utf-8").splitlines() if line
+    ]

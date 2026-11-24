@@ -9,6 +9,7 @@ from app.db import connect
 from app.routers import (
     assessment,
     auth,
+    billing,
     careers,
     classes,
     health,
@@ -63,7 +64,21 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["content-type"],
     )
 
-    for module in (health, auth, oauth, users, ksarth, assessment, careers, tryouts, report, insights, plan, classes):
+    for module in (
+        health,
+        auth,
+        oauth,
+        users,
+        ksarth,
+        assessment,
+        careers,
+        tryouts,
+        report,
+        insights,
+        plan,
+        classes,
+        billing,
+    ):
         app.include_router(module.router)
     return app
 

@@ -1,0 +1,36 @@
+{
+  "retriever": {
+    "prune_gap": 0.0,
+    "onnx_fp32_gap": 1.0803341865539551e-07,
+    "onnx_int8_gap": 0.03398842737078667,
+    "size_mb": {
+      "fp32": 250.0,
+      "int8": 63.1
+    },
+    "eval_int8": {
+      "hit@1": 0.92,
+      "hit@3": 0.96,
+      "mrr@10": 0.9478,
+      "hit@3_by_language": {
+        "en": 0.9773,
+        "hi": 1.0,
+        "hinglish": 0.9048
+      },
+      "n": 75
+    }
+  },
+  "interest_reader": {
+    "prune_gap": 0.0,
+    "onnx_fp32_gap": 1.7881393432617188e-07,
+    "onnx_int8_gap": 0.013955831527709961,
+    "quantized_ops": [
+      "Gather"
+    ],
+    "size_mb": {
+      "fp32": 250.6,
+      "int8": 127.3
+    },
+    "students_top1_int8": 0.8333,
+    "onet_test_pearson_int8": 0.7694
+  }
+}

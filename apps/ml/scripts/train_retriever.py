@@ -52,7 +52,9 @@ def rank_metrics(rankings: list[list[str]], rows: list[dict]) -> dict:
     }
 
 
-def dense_rankings(model: SentenceTransformer, queries: list[str], slugs: list[str], docs: list[str]) -> list[list[str]]:
+def dense_rankings(
+    model: SentenceTransformer, queries: list[str], slugs: list[str], docs: list[str]
+) -> list[list[str]]:
     q = model.encode(queries, normalize_embeddings=True)
     d = model.encode(docs, normalize_embeddings=True)
     order = np.argsort(-(q @ d.T), axis=1)
@@ -124,7 +126,9 @@ def main() -> None:
         seed=0,
         use_cpu=True,
     )
-    trainer = SentenceTransformerTrainer(model=model, args=training_args, train_dataset=data, loss=MultipleNegativesRankingLoss(model))
+    trainer = SentenceTransformerTrainer(
+        model=model, args=training_args, train_dataset=data, loss=MultipleNegativesRankingLoss(model)
+    )
     trainer.train()
     model.save(str(out_dir / "model"))
 

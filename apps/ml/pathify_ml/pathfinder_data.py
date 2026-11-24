@@ -54,29 +54,58 @@ _RULES: list[tuple[str, str]] = [
     ("computing", r"\bcse\b|\bbca\b|\bmca\b|b\.?\s?tech.*(cs|computer|it)\b"),
     ("business", r"\bb\.?\s?com\b|\bm\.?\s?com\b|\bca\b|chartered account|\bcfa\b"),
     ("engineering", r"\bb\.?\s?tech\b|\bb\.?\s?e\.?\b"),
-    ("computing", r"comput|software|information (tech|systems)|\bit\b|\bict\b|cyber|data science|informatics|programming"),
+    (
+        "computing",
+        r"comput|software|information (tech|systems)|\bit\b|\bict\b|cyber|data science|informatics|programming",
+    ),
     ("engineering", r"engineer|mechatronic|electronics?\b|aerospace|aeronautic|construction management"),
-    ("health", r"nurs|medic|doctor|\bmbbs\b|pharm|dent|physio|physical therapy|occupational therapy|kinesiology|exercise science|"
-     r"nutrition|dietetic|public health|health|radiolog|paramedic|speech (path|therapy)|veterinar|optometr|midwif|"
-     r"athletic training|surgery|anatomy|pre-?med"),
-    ("psychology_social", r"ps[yi]c|pyscholog|psycolog|sociolog|social work|counsel|human (services|development)|child development|"
-     r"anthropolog|criminolog|social sciences?|behavio|rehabilitation|family studies|gender studies"),
+    (
+        "health",
+        r"nurs|medic|doctor|\bmbbs\b|pharm|dent|physio|physical therapy|occupational therapy|kinesiology|exercise science|"
+        r"nutrition|dietetic|public health|health|radiolog|paramedic|speech (path|therapy)|veterinar|optometr|midwif|"
+        r"athletic training|surgery|anatomy|pre-?med",
+    ),
+    (
+        "psychology_social",
+        r"ps[yi]c|pyscholog|psycolog|sociolog|social work|counsel|human (services|development)|child development|"
+        r"anthropolog|criminolog|social sciences?|behavio|rehabilitation|family studies|gender studies",
+    ),
     ("education", r"educat|teach|pedagog|early childhood|montessori"),
-    ("law_politics", r"\blaw\b|legal|paralegal|criminal justice|politic|international (relations|studies)|public (administration|policy)|government|diplomac"),
-    ("business", r"busi?ness?|buisness|bussiness|commerce|account|financ|econom|marketing|management|\bmba\b|\bbba\b|\bhrm?\b|human resource|"
-     r"administration|actuar|banking|entrepreneur|supply chain|logistic|real estate|\bsales\b|retail"),
-    ("life_sciences", r"biolog|biochem|microbio|zoolog|biotech|neuroscience|marine|ecolog|environment|agricultur|animal science|botany|"
-     r"genetic|physiolog|food science|forestry|biomedical science|life science"),
+    (
+        "law_politics",
+        r"\blaw\b|legal|paralegal|criminal justice|politic|international (relations|studies)|public (administration|policy)|government|diplomac",
+    ),
+    (
+        "business",
+        r"busi?ness?|buisness|bussiness|commerce|account|financ|econom|marketing|management|\bmba\b|\bbba\b|\bhrm?\b|human resource|"
+        r"administration|actuar|banking|entrepreneur|supply chain|logistic|real estate|\bsales\b|retail",
+    ),
+    (
+        "life_sciences",
+        r"biolog|biochem|microbio|zoolog|biotech|neuroscience|marine|ecolog|environment|agricultur|animal science|botany|"
+        r"genetic|physiolog|food science|forestry|biomedical science|life science",
+    ),
     ("physical_sciences", r"\bmaths?\b|mathemat|physics|chemistry|statistic|geolog|astronom|geograph|applied science"),
-    ("arts_media", r"\barts?\b|design|music|film|photograph|theat|drama|danc|animation|fashion|journalism|communication|media|"
-     r"advertising|public relations|creative writing|graphic|architect|interior|broadcast|illustrat"),
-    ("humanities", r"english|literature|history|philosoph|linguistic|language|spanish|french|german|japanese|chinese|korean|"
-     r"classics|theolog|religio|humanities|translation|writing"),
-    ("hospitality_aviation", r"hospitality|hotel|touris|culinary|chef|cook|aviation|pilot|mechanic|electrician|welding|automotive|"
-     r"carpent|military|navy|army|air force"),
+    (
+        "arts_media",
+        r"\barts?\b|design|music|film|photograph|theat|drama|danc|animation|fashion|journalism|communication|media|"
+        r"advertising|public relations|creative writing|graphic|architect|interior|broadcast|illustrat",
+    ),
+    (
+        "humanities",
+        r"english|literature|history|philosoph|linguistic|language|spanish|french|german|japanese|chinese|korean|"
+        r"classics|theolog|religio|humanities|translation|writing",
+    ),
+    (
+        "hospitality_aviation",
+        r"hospitality|hotel|touris|culinary|chef|cook|aviation|pilot|mechanic|electrician|welding|automotive|"
+        r"carpent|military|navy|army|air force",
+    ),
 ]
 _COMPILED = [(field, re.compile(rx)) for field, rx in _RULES]
-_VAGUE = re.compile(r"^(no|none|nil|na|n/?a|-+|\.|idk|i dont know|not sure|undecided|undeclared|general( studies| education)?|nothing|yes|x+|other)$")
+_VAGUE = re.compile(
+    r"^(no|none|nil|na|n/?a|-+|\.|idk|i dont know|not sure|undecided|undeclared|general( studies| education)?|nothing|yes|x+|other)$"
+)
 _FAKE_WORDS = ("VCL6", "VCL9", "VCL12")  # not real words: ticking them marks a careless respondent
 
 

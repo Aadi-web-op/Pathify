@@ -268,6 +268,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/billing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Billing */
+        get: operations["billing_api_billing_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/billing/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Order */
+        post: operations["order_api_billing_orders_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/billing/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify */
+        post: operations["verify_api_billing_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/careers": {
         parameters: {
             query?: never;
@@ -856,6 +907,21 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** BillingOut */
+        BillingOut: {
+            /** Configured */
+            configured: boolean;
+            /** Plans */
+            plans: components["schemas"]["PricePlanOut"][];
+            /** Plus */
+            plus: boolean;
+            /** Plus Until */
+            plus_until: string | null;
+            /** School */
+            school: boolean;
+            /** School Until */
+            school_until: string | null;
+        };
         /**
          * Board
          * @enum {string}
@@ -1251,6 +1317,31 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** OrderIn */
+        OrderIn: {
+            /**
+             * Product
+             * @enum {string}
+             */
+            product: "family_plus" | "school";
+        };
+        /** OrderOut */
+        OrderOut: {
+            /** Amount */
+            amount: number;
+            /** Currency */
+            currency: string;
+            /** Description */
+            description: string;
+            /** Email */
+            email: string;
+            /** Key Id */
+            key_id: string;
+            /** Name */
+            name: string;
+            /** Order Id */
+            order_id: string;
+        };
         /** PlanIn */
         PlanIn: {
             /** Career Slug */
@@ -1290,6 +1381,19 @@ export interface components {
              * @enum {string}
              */
             theme: "light" | "dark" | "system";
+        };
+        /** PricePlanOut */
+        PricePlanOut: {
+            /** Amount */
+            amount: number;
+            /** Days */
+            days: number;
+            /** Name */
+            name: string;
+            /** Perks */
+            perks: string[];
+            /** Product */
+            product: string;
         };
         /** Progress */
         Progress: {
@@ -1952,6 +2056,8 @@ export interface components {
             name: string;
             /** Onboarded */
             onboarded: boolean;
+            /** Plus */
+            plus: boolean;
             preferences: components["schemas"]["Preferences"];
             profile: components["schemas"]["StudentProfile"] | null;
             progress: components["schemas"]["Progress"];
@@ -1977,6 +2083,15 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** VerifyIn */
+        VerifyIn: {
+            /** Order Id */
+            order_id: string;
+            /** Payment Id */
+            payment_id: string;
+            /** Signature */
+            signature: string;
         };
     };
     responses: never;
@@ -2463,6 +2578,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    billing_api_billing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    order_api_billing_orders_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OrderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verify_api_billing_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                pathify_access?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingOut"];
                 };
             };
             /** @description Validation Error */

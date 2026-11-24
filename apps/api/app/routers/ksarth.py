@@ -14,6 +14,7 @@ from app.models.ksarth import Source
 from app.models.user import utcnow
 from app.schemas.ksarth import KsarthMessageIn, KsarthMessageOut, KsarthStatus, SourceOut
 from app.security.deps import CurrentUser, SettingsDep
+from app.services.billing import has_plus
 from app.services.ksarth import recent_history, system_prompt
 from app.services.llm import ChatMessage, LLMError, Usage
 from app.services.llm.dependency import LLMDep
@@ -26,6 +27,7 @@ log = logging.getLogger("pathify.ksarth")
 router = APIRouter(prefix="/api/ksarth", tags=["ksarth"])
 
 MAX_NOTES = 3
+PLUS_MESSAGES_PER_HOUR = 100
 MIN_NOTES = 2
 
 
@@ -79,7 +81,7 @@ async def send_message(
     body: KsarthMessageIn, user: CurrentUser, llm: LLMDep, settings: SettingsDep
 ) -> StreamingResponse:
     limiter.check(
-        Limit("ksarth", settings.ksarth_messages_per_hour, 3600),
+        Limit("ksarth", PLUS_MESSAGES_PER_HOUR if has_plus(user) else settings.ksarth_messages_per_hour, 3600),
         str(user.id),
         "You've reached this hour's limit for Ksarth.",
     )

@@ -152,18 +152,19 @@ def embedding_text(career: Career) -> str:
     return " ".join(p for p in parts if p)
 
 
-# Reciprocal rank fusion constant, and the cosine similarity a career needs to count as relevant
-# on meaning alone (tuned on the eval set and off-topic chatter; see apps/ml/reports/retriever.json).
-RRF_K = 20
-DENSE_MIN = 0.5
+# A career counts as relevant on meaning alone from this cosine similarity. Small talk ("hi",
+# "who are you") peaks around 0.27 on the fine-tuned retriever; real questions sit near 0.5.
+DENSE_MIN = 0.30
 
 
 class HybridSearch:
-    """Keyword (BM25) and fine-tuned dense search, fused with reciprocal rank fusion.
+    """Fine-tuned dense ranking, with BM25 as a second way in.
 
-    BM25 is precise on exact names (NEET, CLAT, MBBS); the encoder understands paraphrase,
-    Hinglish and Hindi ("janwaron ka doctor"). A career is returned only if at least one of
-    them finds it relevant on its own, so small talk still gets no citations.
+    The fine-tuned retriever ranks (it beat BM25 by 16 points of hit@1 on the eval set, and
+    reads Hindi, which BM25 can't). Fusing the two rankings with equal weight made results
+    worse, so BM25 is used only to decide relevance: a career is returned if the encoder
+    finds it similar enough, or if BM25 finds an exact name ("NEET-UG", "CLAT"). Small talk
+    gets no citations. See apps/ml/reports/retriever.json.
     """
 
     def __init__(self, keyword: CareerSearch, encoder):
@@ -173,22 +174,13 @@ class HybridSearch:
         self.vectors = encoder([embedding_text(c) for c in self.careers], max_length=256)
 
     def search(self, query: str, k: int = 3) -> list[Hit]:
-        keyword_hits = self.keyword.search(query, k=len(self.careers), min_score=0.0)
-        keyword_score = {h.career.slug: h.score for h in keyword_hits}
-        keyword_rank = {h.career.slug: i for i, h in enumerate(keyword_hits)}
+        keyword_hits = {h.career.slug for h in self.keyword.search(query, k=len(self.careers), min_score=MIN_SCORE)}
         similarity = self.encoder([query])[0] @ self.vectors.T
-        dense_order = similarity.argsort()[::-1]
-        dense_rank = {self.careers[j].slug: i for i, j in enumerate(dense_order)}
-
-        hits = []
-        for j, career in enumerate(self.careers):
-            relevant = keyword_score.get(career.slug, 0.0) >= MIN_SCORE or similarity[j] >= DENSE_MIN
-            if not relevant:
-                continue
-            fused = 1 / (RRF_K + dense_rank[career.slug] + 1)
-            if career.slug in keyword_rank:
-                fused += 1 / (RRF_K + keyword_rank[career.slug] + 1)
-            hits.append(Hit(career, fused))
+        hits = [
+            Hit(career, float(similarity[j]))
+            for j, career in enumerate(self.careers)
+            if similarity[j] >= DENSE_MIN or career.slug in keyword_hits
+        ]
         hits.sort(key=lambda h: (-h.score, h.career.title))
         return hits[:k]
 

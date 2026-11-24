@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     email_from: str = "Pathify <onboarding@resend.dev>"
     password_resets_per_hour: int = 5
 
+    # Razorpay (payments). Without keys, plans are shown but can't be bought.
+    razorpay_key_id: str = ""
+    razorpay_key_secret: str = ""
+    razorpay_webhook_secret: str = ""
+
     # Exported ML models (ONNX + JSON). Missing files switch the matching feature off; nothing else breaks.
     models_dir: Path = API_DIR / "models"
     # Threads per model session. Small on purpose: requests are tiny and the web server runs several.

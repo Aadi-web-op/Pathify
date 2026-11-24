@@ -15,4 +15,11 @@ ONET_DIR = RAW / "onet" / "db_31_0_text"
 RIASEC_CSV = RAW / "riasec" / "RIASEC_data12Dec2018" / "data.csv"
 
 DIMS = ["R", "I", "A", "S", "E", "C"]
-ONET_NAMES = {"Realistic": "R", "Investigative": "I", "Artistic": "A", "Social": "S", "Enterprising": "E", "Conventional": "C"}
+ONET_NAMES = {
+    "Realistic": "R",
+    "Investigative": "I",
+    "Artistic": "A",
+    "Social": "S",
+    "Enterprising": "E",
+    "Conventional": "C",
+}

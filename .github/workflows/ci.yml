@@ -72,6 +72,34 @@ jobs:
         # Nothing is checked out in this case, so don't use the job's default directory.
         working-directory: .
 
+  ml:
+    name: ML · lint, and retrain Pathfinder from public data
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/ml
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # The light subset: Pathfinder needs no deep-learning libraries.
+      - run: pip install ruff scikit-learn pandas numpy
+      - run: ruff check pathify_ml scripts
+      - run: python -m scripts.fetch_data
+      - run: python -m scripts.train_pathfinder
+      - name: Retrained model still beats the rule-based baseline
+        run: |
+          python - <<'PY'
+          import json
+          r = json.load(open("reports/pathfinder.json"))["models"]
+          ours, rule = r["mlp_calibrated"]["test"], r["congruence"]["test"]
+          print("pathfinder", ours, "congruence", rule)
+          assert ours["top3"] >= 0.60, ours
+          assert ours["top3"] - rule["top3"] >= 0.10, (ours, rule)
+          assert ours["ece"] <= 0.03, ours
+          PY
+
   web:
     name: Web · lint, types and build
     runs-on: ubuntu-latest

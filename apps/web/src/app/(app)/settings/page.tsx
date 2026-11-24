@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
+import { BillingSection } from "@/components/app/billing-section";
 import { JoinClass } from "@/components/app/join-class";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Choice } from "@/components/ui/choice";
@@ -97,6 +98,10 @@ export default function SettingsPage() {
       <h1 className="text-[2.5rem] font-semibold leading-[1] tracking-[-0.045em]">
         Settings
       </h1>
+
+      <Section title="Plan">
+        <BillingSection isCounsellor={me.role === "counsellor"} />
+      </Section>
 
       <Section title="School class">
         <JoinClass isCounsellor={me.role === "counsellor"} />

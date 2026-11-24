@@ -87,9 +87,12 @@ def export_interest(report: dict) -> None:
 
     fp32, int8 = work / "model.fp32.onnx", work / "model.onnx"
     export_onnx(Scores(model), tok, fp32, "scores")
-    quantize(fp32, int8)
+    # The regression head is sensitive to int8 matmuls (-4 points on the student set), so only
+    # the embedding table is quantized here: 127 MB instead of 63 MB, within a point of fp32.
+    quantize(fp32, int8, op_types=["Gather"])
     entry["onnx_fp32_gap"] = check_same(after, onnx_run(fp32, tok, SAMPLES), "interest onnx fp32", 1e-4)
     entry["onnx_int8_gap"] = check_same(after, onnx_run(int8, tok, SAMPLES), "interest onnx int8", 0.08)
+    entry["quantized_ops"] = ["Gather"]
     entry["size_mb"] = {"fp32": size_mb(fp32), "int8": size_mb(int8)}
 
     # Re-score the shipped int8 model on both test sets.
@@ -100,7 +103,9 @@ def export_interest(report: dict) -> None:
     test = build()["test"]
     tp = np.concatenate([onnx_run(int8, tok, [e.text for e in test[i : i + 256]]) for i in range(0, len(test), 256)])
     ty = np.array([e.target for e in test])
-    entry["onet_test_pearson_int8"] = round(float(np.mean([np.corrcoef(tp[:, i], ty[:, i])[0, 1] for i in range(6)])), 4)
+    entry["onet_test_pearson_int8"] = round(
+        float(np.mean([np.corrcoef(tp[:, i], ty[:, i])[0, 1] for i in range(6)])), 4
+    )
     report["interest_reader"] = entry
 
     out = SERVING / "interest_reader"
@@ -112,8 +117,8 @@ def export_interest(report: dict) -> None:
 def export_retriever(report: dict) -> None:
     from sentence_transformers import SentenceTransformer
 
-    from scripts.train_retriever import load_eval, rank_metrics
     from pathify_ml.retrieval_data import catalog, doc_text
+    from scripts.train_retriever import load_eval, rank_metrics
 
     work = ARTIFACTS / "retriever" / "export"
     st = SentenceTransformer(str(ARTIFACTS / "retriever" / "model"))

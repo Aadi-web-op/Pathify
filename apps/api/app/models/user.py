@@ -126,6 +126,9 @@ class User(Document):
     onboarded_at: datetime | None = None
     # Set when the student clicks the emailed link, or signs in with a provider that verifies emails.
     email_verified_at: datetime | None = None
+    # Paid plans (see app/services/billing.py). Payment records are kept for accounting.
+    plus_until: datetime | None = None
+    school_until: datetime | None = None
     preferences: Preferences = Field(default_factory=Preferences)
     progress: Progress = Field(default_factory=Progress)
     created_at: datetime = Field(default_factory=utcnow)

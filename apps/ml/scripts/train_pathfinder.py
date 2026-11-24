@@ -118,16 +118,20 @@ def main() -> None:
     logistic = LogisticRegression(max_iter=2000, C=1.0).fit(f(x[tr]), y[tr])
     evaluate("logistic", lambda z: logistic.predict_proba(f(z)))
 
-    mlp = MLPClassifier(hidden_layer_sizes=(64, 32), alpha=1e-3, early_stopping=True, max_iter=300, random_state=SEED).fit(f(x[tr]), y[tr])
+    mlp = MLPClassifier(
+        hidden_layer_sizes=(64, 32), alpha=1e-3, early_stopping=True, max_iter=300, random_state=SEED
+    ).fit(f(x[tr]), y[tr])
     evaluate("mlp", lambda z: mlp.predict_proba(f(z)))
 
-    boosting = HistGradientBoostingClassifier(max_iter=300, learning_rate=0.05, early_stopping=True, random_state=SEED).fit(f(x[tr]), y[tr])
+    boosting = HistGradientBoostingClassifier(
+        max_iter=300, learning_rate=0.05, early_stopping=True, random_state=SEED
+    ).fit(f(x[tr]), y[tr])
     evaluate("boosting", lambda z: boosting.predict_proba(f(z)))
 
     # Export the MLP: small, smooth in its inputs, and easy to run with numpy alone.
     def mlp_logits(z: np.ndarray, t: float = 1.0) -> np.ndarray:
         h = f(z)
-        for w, b in zip(mlp.coefs_[:-1], mlp.intercepts_[:-1]):
+        for w, b in zip(mlp.coefs_[:-1], mlp.intercepts_[:-1], strict=True):
             h = np.maximum(h @ w + b, 0)
         return (h @ mlp.coefs_[-1] + mlp.intercepts_[-1]) / t
 
@@ -138,10 +142,16 @@ def main() -> None:
 
     export = {
         "version": "pathfinder-1",
-        "about": "Pathfinder: six interest scores (0-100) -> probability of each field of study. Trained on Open Psychometrics RIASEC data.",
-        "fields": [{"key": k, "label": FIELDS[k], "clusters": FIELD_TO_CLUSTERS[k], "base_rate": report["base_rates"][k]} for k in FIELD_KEYS],
+        "about": (
+            "Pathfinder: six interest scores (0-100) -> probability of each field of study. "
+            "Trained on Open Psychometrics RIASEC data."
+        ),
+        "fields": [
+            {"key": k, "label": FIELDS[k], "clusters": FIELD_TO_CLUSTERS[k], "base_rate": report["base_rates"][k]}
+            for k in FIELD_KEYS
+        ],
         "scaler": {"mean": scaler.mean_.tolist(), "scale": scaler.scale_.tolist()},
-        "layers": [{"w": w.tolist(), "b": b.tolist()} for w, b in zip(mlp.coefs_, mlp.intercepts_)],
+        "layers": [{"w": w.tolist(), "b": b.tolist()} for w, b in zip(mlp.coefs_, mlp.intercepts_, strict=True)],
         "temperature": temperature,
         "test_metrics": report["models"]["mlp_calibrated"]["test"],
     }
